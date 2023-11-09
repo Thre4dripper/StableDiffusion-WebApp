@@ -1,10 +1,11 @@
-function App() {
+import { Button } from '@mui/material'
 
-  return (
-    <>
-      <div className={'text-blue-600'}>Hello Vite + React!</div>
-    </>
-  )
+function App() {
+    return (
+        <>
+            <Button variant={'contained'}>Hello World</Button>
+        </>
+    )
 }
 
 export default App
