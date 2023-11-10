@@ -63,7 +63,7 @@ const ZoomableDialog: React.FC<ZoomableDialogProps> = ({ open, setOpen, image })
             onClick={handleCloseDialog}>
             <div
                 className={
-                    'w-[35rem] h-[35rem] bg-slate-700 rounded-md transition-transform ease-in-out'
+                    'w-[35rem] h-[35rem] bg-slate-700 rounded-2xl shadow-lg shadow-slate-800/50'
                 }
                 onWheel={handleWheel}
                 onClick={(e) => e.stopPropagation()}
@@ -76,7 +76,7 @@ const ZoomableDialog: React.FC<ZoomableDialogProps> = ({ open, setOpen, image })
                 <img
                     src={image}
                     alt={'Latent Diffusion Model'}
-                    className={'w-full h-full rounded-md'}
+                    className={'w-full h-full rounded-2xl'}
                 />
             </div>
         </div>
