@@ -1,10 +1,12 @@
-import { Button } from '@mui/material'
+import Header from './components/Header.tsx'
+import LDMFragment from './components/LDMFragment.tsx'
 
 function App() {
     return (
-        <>
-            <Button variant={'contained'}>Hello World</Button>
-        </>
+        <div className={'flex flex-col'}>
+            <Header />
+            <LDMFragment />
+        </div>
     )
 }
 
