@@ -1,10 +1,10 @@
-import Header from './components/Header.tsx'
-import LDMFragment from './components/LDMFragment.tsx'
+import HeaderFragment from './components/fragments/HeaderFragment.tsx'
+import LDMFragment from './components/fragments/LDMFragment.tsx'
 
 function App() {
     return (
         <div className={'flex flex-col'}>
-            <Header />
+            <HeaderFragment />
             <LDMFragment />
         </div>
     )

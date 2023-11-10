@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Header: React.FC = () => {
+const HeaderFragment: React.FC = () => {
     return (
         <div className={'w-screen h-16 bg-slate-800 flex items-center'}>
             <div>
@@ -10,4 +10,4 @@ const Header: React.FC = () => {
     )
 }
 
-export default Header
+export default HeaderFragment
