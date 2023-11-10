@@ -1,8 +1,15 @@
 import React from 'react'
 import { IconButton, Paper } from '@mui/material'
-import image from '../assets/v1_txt2img_1.png'
+import image from '../assets/00001-994454352.png'
+import ZoomableDialog from './ZoomableDialog.tsx'
 
 const LdmFragment: React.FC = () => {
+    const [open, setOpen] = React.useState(false)
+
+    const handleOpenDialog = () => {
+        setOpen(true)
+    }
+
     return (
         <div>
             <Paper className={'mx-10 mt-5 h-[35rem]'} elevation={3}>
@@ -39,7 +46,8 @@ const LdmFragment: React.FC = () => {
                                     backgroundColor: 'transparent',
                                     cursor: 'pointer',
                                 },
-                            }}>
+                            }}
+                            onClick={handleOpenDialog}>
                             <img
                                 src={image}
                                 alt={'Latent Diffusion Model'}
@@ -49,6 +57,7 @@ const LdmFragment: React.FC = () => {
                     </div>
                 </div>
             </Paper>
+            <ZoomableDialog open={open} setOpen={setOpen} image={image} />
         </div>
     )
 }
