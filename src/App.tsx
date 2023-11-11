@@ -1,6 +1,6 @@
 import HeaderFragment from './components/fragments/HeaderFragment.tsx'
 import React from 'react'
-import LDMFragment from './components/fragments/LDMFragment.tsx'
+import LDMFragment from './components/fragments/LdmCellsList.tsx'
 
 const App: React.FC = () => {
     return (
