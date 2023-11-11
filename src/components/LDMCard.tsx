@@ -7,19 +7,70 @@ import OtherControls from './controls/OtherControls.tsx'
 import CloseIcon from '@mui/icons-material/Close'
 import ImageIcon from '@mui/icons-material/Image'
 import DownloadIcon from '@mui/icons-material/Download'
+import AddIcon from '@mui/icons-material/Add'
 
 const LDMCard: React.FC = () => {
     const [open, setOpen] = React.useState(false)
+    const [isHovering, setIsHovering] = React.useState(false)
 
     const handleOpenDialog = () => {
         setOpen(true)
     }
 
     return (
-        <div>
-            <div className={'flex ml-16 mr-12 my-8'}>
+        <div
+            className={'flex flex-col items-center'}
+            onMouseEnter={() => {
+                setIsHovering(true)
+            }}
+            onMouseLeave={() => {
+                setIsHovering(false)
+            }}
+            onMouseMove={() => {
+                setIsHovering(true)
+            }}>
+            {isHovering && (
+                <div className={'w-full flex justify-center'}>
+                    <Button
+                        variant={'outlined'}
+                        startIcon={<AddIcon />}
+                        sx={{
+                            'marginTop': '2rem',
+                            'borderColor': '#24282f',
+                            'color': '#24282f',
+                            '&:hover': {
+                                borderColor: '#5d799d',
+                                color: '#5d799d',
+                            },
+                        }}>
+                        Add Cell
+                    </Button>
+                </div>
+            )}
+            <div className={'w-full relative'}>
+                {/*Close Button*/}
+                {isHovering && (
+                    <div className={'z-10 absolute right-10 top-8'}>
+                        <Paper
+                            sx={{
+                                borderRadius: '50%',
+                                marginLeft: '-1.5rem',
+                                marginTop: '-1rem',
+                                backgroundColor: '#ff2a2a',
+                            }}
+                            elevation={4}>
+                            <IconButton className={'w-12 h-12'}>
+                                <CloseIcon
+                                    sx={{
+                                        color: '#fff',
+                                    }}
+                                />
+                            </IconButton>
+                        </Paper>
+                    </div>
+                )}
                 <Paper
-                    className={'flex-1'}
+                    className={'flex-1 mx-16 mt-8'}
                     elevation={3}
                     sx={{
                         borderRadius: '16px',
@@ -105,25 +156,25 @@ const LDMCard: React.FC = () => {
                         </div>
                     </div>
                 </Paper>
-                <div className={'z-10'}>
-                    <Paper
-                        sx={{
-                            borderRadius: '50%',
-                            marginLeft: '-1.5rem',
-                            marginTop: '-1rem',
-                            backgroundColor: '#ff2a2a',
-                        }}
-                        elevation={4}>
-                        <IconButton className={'w-12 h-12'}>
-                            <CloseIcon
-                                sx={{
-                                    color: '#fff',
-                                }}
-                            />
-                        </IconButton>
-                    </Paper>
-                </div>
             </div>
+            {isHovering && (
+                <div className={'w-full flex justify-center'}>
+                    <Button
+                        variant={'outlined'}
+                        startIcon={<AddIcon />}
+                        sx={{
+                            'marginTop': '2rem',
+                            'borderColor': '#24282f',
+                            'color': '#24282f',
+                            '&:hover': {
+                                borderColor: '#5d799d',
+                                color: '#5d799d',
+                            },
+                        }}>
+                        Add Cell
+                    </Button>
+                </div>
+            )}
             <ZoomableImageDialog
                 open={open}
                 setOpen={setOpen}
