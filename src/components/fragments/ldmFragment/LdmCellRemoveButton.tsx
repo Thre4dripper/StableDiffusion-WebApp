@@ -5,9 +5,16 @@ import CloseIcon from '@mui/icons-material/Close'
 interface LdmCellRemoveButtonProps {
     className?: string
     setIsHovering: React.Dispatch<React.SetStateAction<boolean>>
+    removeCell: (index: number) => void
+    index: number
 }
 
-const LdmCellRemoveButton: React.FC<LdmCellRemoveButtonProps> = ({ className, setIsHovering }) => {
+const LdmCellRemoveButton: React.FC<LdmCellRemoveButtonProps> = ({
+    className,
+    setIsHovering,
+    removeCell,
+    index,
+}) => {
     return (
         <Paper
             onMouseEnter={() => {
@@ -18,6 +25,9 @@ const LdmCellRemoveButton: React.FC<LdmCellRemoveButtonProps> = ({ className, se
             }}
             onMouseMove={() => {
                 setIsHovering(true)
+            }}
+            onClick={() => {
+                removeCell(index)
             }}
             className={className}
             sx={{

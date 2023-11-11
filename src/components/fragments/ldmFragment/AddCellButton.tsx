@@ -5,9 +5,16 @@ import AddIcon from '@mui/icons-material/Add'
 interface AddCellButtonProps {
     className?: string
     setIsHovering: React.Dispatch<React.SetStateAction<boolean>>
+    addCell: (index: number) => void
+    index: number
 }
 
-const AddCellButton: React.FC<AddCellButtonProps> = ({ className, setIsHovering }) => {
+const AddCellButton: React.FC<AddCellButtonProps> = ({
+    className,
+    setIsHovering,
+    addCell,
+    index,
+}) => {
     return (
         <Paper
             className={className}
@@ -30,6 +37,9 @@ const AddCellButton: React.FC<AddCellButtonProps> = ({ className, setIsHovering 
                         borderColor: '#5d799d',
                         color: '#5d799d',
                     },
+                }}
+                onClick={() => {
+                    addCell(index)
                 }}>
                 Add Cell
             </Button>
