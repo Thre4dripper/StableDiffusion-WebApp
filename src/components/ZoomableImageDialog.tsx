@@ -32,6 +32,7 @@ const ZoomableImageDialog: React.FC<ZoomableImageDialogProps> = ({
     }
 
     const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+        e.preventDefault()
         if (e.deltaY < 0) {
             setZoomLevel((prevZoom) => Math.min(prevZoom + zoomIntensity / 10, maxZoomLevel))
         } else {
@@ -63,11 +64,19 @@ const ZoomableImageDialog: React.FC<ZoomableImageDialogProps> = ({
     }
 
     useEffect(() => {
+        const preventDefault = (e: WheelEvent) => e.preventDefault()
+        if (open) {
+            window.addEventListener('wheel', preventDefault, { passive: false })
+        } else {
+            window.removeEventListener('wheel', preventDefault)
+        }
+
         // Cleanup the debounced function when the component unmounts
         return () => {
+            window.removeEventListener('wheel', preventDefault)
             debouncedSetPosition.cancel()
         }
-    }, [debouncedSetPosition])
+    }, [open, debouncedSetPosition])
 
     return (
         <div
