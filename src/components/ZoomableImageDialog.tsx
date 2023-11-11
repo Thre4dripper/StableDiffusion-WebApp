@@ -1,14 +1,28 @@
 import React, { useEffect, useState } from 'react'
 import { debounce } from 'lodash'
 
-interface ZoomableDialogProps {
+interface ZoomableImageDialogProps {
     open: boolean
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
     image: string
+    zoomIntensity: number
+    delay: number
+    initialZoomLevel: number
+    minZoomLevel: number
+    maxZoomLevel: number
 }
 
-const ZoomableDialog: React.FC<ZoomableDialogProps> = ({ open, setOpen, image }) => {
-    const [zoomLevel, setZoomLevel] = useState<number>(1)
+const ZoomableImageDialog: React.FC<ZoomableImageDialogProps> = ({
+    open,
+    setOpen,
+    image,
+    zoomIntensity,
+    delay,
+    initialZoomLevel,
+    minZoomLevel,
+    maxZoomLevel,
+}) => {
+    const [zoomLevel, setZoomLevel] = useState<number>(initialZoomLevel)
     const [position, setPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 })
 
     const handleCloseDialog = () => {
@@ -19,9 +33,9 @@ const ZoomableDialog: React.FC<ZoomableDialogProps> = ({ open, setOpen, image })
 
     const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
         if (e.deltaY < 0) {
-            setZoomLevel((prevZoom) => Math.min(prevZoom + 0.2, 2.5))
+            setZoomLevel((prevZoom) => Math.min(prevZoom + zoomIntensity / 10, maxZoomLevel))
         } else {
-            setZoomLevel((prevZoom) => Math.max(prevZoom - 0.2, 1))
+            setZoomLevel((prevZoom) => Math.max(prevZoom - zoomIntensity / 10, minZoomLevel))
         }
 
         const rect = e.currentTarget.getBoundingClientRect()
@@ -57,7 +71,7 @@ const ZoomableDialog: React.FC<ZoomableDialogProps> = ({ open, setOpen, image })
 
     return (
         <div
-            className={`fixed inset-0 flex items-center justify-center ${
+            className={`z-50 fixed inset-0 flex items-center justify-center ${
                 open ? 'block' : 'hidden'
             } bg-black bg-opacity-50`}
             onClick={handleCloseDialog}>
@@ -71,7 +85,7 @@ const ZoomableDialog: React.FC<ZoomableDialogProps> = ({ open, setOpen, image })
                 style={{
                     transform: `scale(${zoomLevel})`,
                     transformOrigin: `${position.x * 100}% ${position.y * 100}%`,
-                    transition: `all 0.5s ease-out`,
+                    transition: `all ${delay}s ease-out`,
                 }}>
                 <img
                     src={image}
@@ -83,4 +97,4 @@ const ZoomableDialog: React.FC<ZoomableDialogProps> = ({ open, setOpen, image })
     )
 }
 
-export default ZoomableDialog
+export default ZoomableImageDialog
