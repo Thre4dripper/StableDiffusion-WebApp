@@ -28,43 +28,49 @@ const SamplingControls: React.FC<SamplingControlsProps> = ({ index }) => {
             }}>
             <div className={'flex flex-col justify-between px-8 gap-0.5'}>
                 <SamplingInput
+                    sliderProps={{
+                        value: samplingSteps,
+                        min: 1,
+                        max: 35,
+                        valueLabelDisplay: 'auto',
+                        color: 'warning',
+                        step: 1,
+                    }}
                     label='Sampling Steps'
-                    value={samplingSteps}
                     setValue={(value) => {
                         dispatch(setSamplingSteps(value, index))
                     }}
-                    valueLabelDisplay='auto'
-                    color='warning'
-                    min={1}
-                    max={35}
                     isMarked={false}
-                    step={1}
                 />
                 <SamplingInput
+                    sliderProps={{
+                        value: cfgScale,
+                        min: 1,
+                        max: 4,
+                        valueLabelDisplay: 'auto',
+                        color: 'secondary',
+                        step: 0.1,
+                    }}
                     label='CFG Scale'
-                    value={cfgScale}
                     setValue={(value) => {
                         dispatch(setCfgScale(value, index))
                     }}
-                    valueLabelDisplay='auto'
-                    color='secondary'
-                    min={1}
-                    max={35}
                     isMarked={false}
-                    step={1}
                 />
                 <SamplingInput
+                    sliderProps={{
+                        value: upScale,
+                        min: 1,
+                        max: 4,
+                        valueLabelDisplay: 'auto',
+                        color: 'info',
+                        step: 0.1,
+                    }}
                     label='Upscale By'
-                    value={upScale}
                     setValue={(value) => {
                         dispatch(setUpScale(value, index))
                     }}
-                    valueLabelDisplay='auto'
-                    color='info'
-                    min={1}
-                    max={4}
                     isMarked={true}
-                    step={0.1}
                 />
             </div>
         </Paper>
