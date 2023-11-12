@@ -1,6 +1,6 @@
 import { ActionTypes } from '../actions/actionTypes'
 
-interface InitialState {
+export interface PromptsInitialState {
     positivePrompt: string
     negativePrompt: string
 }
@@ -17,12 +17,12 @@ interface SetNegativePromptAction {
 
 type Action = SetPositivePromptAction | SetNegativePromptAction
 
-const initialState: InitialState = {
+const initialState: PromptsInitialState = {
     positivePrompt: '',
     negativePrompt: '',
 }
 
-const promptsReducer = (state: InitialState = initialState, action: Action) => {
+const promptsReducer = (state: PromptsInitialState = initialState, action: Action) => {
     switch (action.type) {
         case ActionTypes.SET_POSITIVE_PROMPT:
             return {

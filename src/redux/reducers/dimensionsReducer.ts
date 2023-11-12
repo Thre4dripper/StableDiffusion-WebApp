@@ -1,6 +1,6 @@
 import { ActionTypes } from '../actions/actionTypes'
 
-export interface InitialState {
+export interface DimensionsInitialState {
     width: number
     height: number
 }
@@ -17,12 +17,12 @@ interface SetHeightAction {
 
 type Action = SetWidthAction | SetHeightAction
 
-const initialState: InitialState = {
+const initialState: DimensionsInitialState = {
     width: 256,
     height: 256,
 }
 
-const dimensionsReducer = (state: InitialState = initialState, action: Action) => {
+const dimensionsReducer = (state: DimensionsInitialState = initialState, action: Action) => {
     switch (action.type) {
         case ActionTypes.SET_WIDTH:
             return {

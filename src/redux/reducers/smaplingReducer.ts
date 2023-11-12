@@ -1,6 +1,6 @@
 import { ActionTypes } from '../actions/actionTypes'
 
-interface InitialState {
+export interface SamplingInitialState {
     samplingSteps: number
     cfgScale: number
     upScale: number
@@ -23,13 +23,13 @@ interface SetUpScaleAction {
 
 type Action = SetSamplingStepsAction | SetCfgScaleAction | SetUpScaleAction
 
-const initialState: InitialState = {
+const initialState: SamplingInitialState = {
     samplingSteps: 20,
     cfgScale: 7,
     upScale: 2,
 }
 
-const samplingReducer = (state: InitialState = initialState, action: Action) => {
+const samplingReducer = (state: SamplingInitialState = initialState, action: Action) => {
     switch (action.type) {
         case ActionTypes.SET_SAMPLING_STEPS:
             return {

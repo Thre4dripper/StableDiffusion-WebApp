@@ -1,9 +1,15 @@
 import { combineReducers, createStore } from 'redux'
-import promptsReducer from './reducers/promptsReducer.ts'
-import dimensionsReducer from './reducers/dimensionsReducer.ts'
-import samplingReducer from './reducers/smaplingReducer.ts'
+import promptsReducer, { PromptsInitialState } from './reducers/promptsReducer.ts'
+import dimensionsReducer, { DimensionsInitialState } from './reducers/dimensionsReducer.ts'
+import samplingReducer, { SamplingInitialState } from './reducers/smaplingReducer.ts'
 
-const rootReducer = combineReducers({
+export interface RootState {
+    prompts: PromptsInitialState
+    dimensions: DimensionsInitialState
+    sampling: SamplingInitialState
+}
+
+const rootReducer = combineReducers<RootState>({
     prompts: promptsReducer,
     dimensions: dimensionsReducer,
     sampling: samplingReducer,

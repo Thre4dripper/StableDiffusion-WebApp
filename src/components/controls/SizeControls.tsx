@@ -1,38 +1,61 @@
 import React from 'react'
 import { Paper } from '@mui/material'
 import CustomSlider from '../CustomSlider.tsx'
+import { useDispatch, useSelector } from 'react-redux'
+import { DimensionsInitialState } from '../../redux/reducers/dimensionsReducer.ts'
+import { setHeight, setWidth } from '../../redux/actions/dimensionsActions.ts'
+import { RootState } from '../../redux/store.ts'
 
+const marks = [
+    {
+        value: 0,
+        label: '32',
+    },
+    {
+        value: 20,
+        label: '64',
+    },
+    {
+        value: 40,
+        label: '128',
+    },
+    {
+        value: 60,
+        label: '256',
+    },
+    {
+        value: 80,
+        label: '512',
+    },
+    {
+        value: 100,
+        label: '1024',
+    },
+]
+
+const labelFormat = (value: number) => {
+    return marks.find((mark) => mark.value === value)?.label || undefined
+}
 const SizeControls: React.FC = () => {
-    const marks = [
-        {
-            value: 0,
-            label: '32',
-        },
-        {
-            value: 20,
-            label: '64',
-        },
-        {
-            value: 40,
-            label: '128',
-        },
-        {
-            value: 60,
-            label: '256',
-        },
-        {
-            value: 80,
-            label: '512',
-        },
-        {
-            value: 100,
-            label: '1024',
-        },
-    ]
+    const { width, height } = useSelector<RootState, DimensionsInitialState>(
+        (state) => state.dimensions
+    )
 
-    const labelFormat = (value: number) => {
-        return marks.find((mark) => mark.value === value)?.label || undefined
+    const widthValue = marks.find((mark) => +mark.label === width)?.value || 0
+    const heightValue = marks.find((mark) => +mark.label === height)?.value || 0
+
+    const dispatch = useDispatch()
+
+    const handleWidthChange = (_event: Event, newValue: number | number[]) => {
+        const value = marks.find((mark) => mark.value === (newValue as number))?.label || '0'
+        dispatch(setWidth(+value))
     }
+
+    const handleHeightChange = (_event: Event, newValue: number | number[]) => {
+        const value = marks.find((mark) => mark.value === (newValue as number))?.label || '0'
+        dispatch(setHeight(+value))
+    }
+
     return (
         <Paper
             className={'flex-1 mx-4 my-2 p-2'}
@@ -49,6 +72,8 @@ const SizeControls: React.FC = () => {
                         valueLabelFormat={labelFormat}
                         aria-label='pretto slider'
                         marks={marks}
+                        value={widthValue}
+                        onChange={handleWidthChange}
                         step={null}
                     />
                 </div>
@@ -57,9 +82,10 @@ const SizeControls: React.FC = () => {
                     <CustomSlider
                         valueLabelDisplay='auto'
                         aria-label='pretto slider'
-                        defaultValue={20}
+                        value={heightValue}
                         valueLabelFormat={labelFormat}
                         step={null}
+                        onChange={handleHeightChange}
                         marks={marks}
                     />
                 </div>
