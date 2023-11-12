@@ -1,6 +1,6 @@
 import { Button, IconButton, Paper } from '@mui/material'
 import SizeControls from '../../controls/SizeControls.tsx'
-import OtherControls from '../../controls/OtherControls.tsx'
+import SamplingControls from '../../controls/SamplingControls.tsx'
 import ImageIcon from '@mui/icons-material/Image'
 import DownloadIcon from '@mui/icons-material/Download'
 import React from 'react'
@@ -43,7 +43,7 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ setIsHovering }) => {
                         {/*Controls controls*/}
                         <div className={'flex flex-row'}>
                             <SizeControls />
-                            <OtherControls />
+                            <SamplingControls />
                         </div>
                     </div>
                     {/*Image Container*/}

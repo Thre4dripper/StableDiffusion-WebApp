@@ -1,9 +1,9 @@
 import React from 'react'
 import { Slider } from '@mui/material'
 
-interface CustomSliderProps extends React.ComponentProps<typeof Slider> {}
+interface CustomDimensionsSliderProps extends React.ComponentProps<typeof Slider> {}
 
-const CustomSlider: React.FC<CustomSliderProps> = (props) => {
+const CustomDimensionsSlider: React.FC<CustomDimensionsSliderProps> = (props) => {
     const customStyle = {
         'color': '#52af77',
         'height': 8,
@@ -45,4 +45,4 @@ const CustomSlider: React.FC<CustomSliderProps> = (props) => {
     return <Slider {...props} sx={customStyle} />
 }
 
-export default CustomSlider
+export default CustomDimensionsSlider

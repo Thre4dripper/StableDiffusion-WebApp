@@ -1,6 +1,6 @@
 import React from 'react'
 import { Paper } from '@mui/material'
-import CustomSlider from '../CustomSlider.tsx'
+import CustomDimensionsSlider from '../sliders/CustomDimensionsSlider.tsx'
 import { useDispatch, useSelector } from 'react-redux'
 import { DimensionsInitialState } from '../../redux/reducers/dimensionsReducer.ts'
 import { setHeight, setWidth } from '../../redux/actions/dimensionsActions.ts'
@@ -64,10 +64,10 @@ const SizeControls: React.FC = () => {
                 borderRadius: '20px',
                 backgroundColor: '#e2ffe7',
             }}>
-            <div className={'flex flex-col justify-between px-8 gap-4'}>
-                <div className={'flex flex-col'}>
+            <div className={'h-full flex flex-col justify-center px-8 gap-4'}>
+                <div className={' flex flex-col'}>
                     <label className={'text-black text-md'}>Width</label>
-                    <CustomSlider
+                    <CustomDimensionsSlider
                         valueLabelDisplay='auto'
                         valueLabelFormat={labelFormat}
                         aria-label='pretto slider'
@@ -79,7 +79,7 @@ const SizeControls: React.FC = () => {
                 </div>
                 <div className={'flex flex-col'}>
                     <label className={'text-black text-md'}>Height</label>
-                    <CustomSlider
+                    <CustomDimensionsSlider
                         valueLabelDisplay='auto'
                         aria-label='pretto slider'
                         value={heightValue}
