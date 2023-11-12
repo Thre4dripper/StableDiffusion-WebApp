@@ -1,10 +1,10 @@
 import React from 'react'
-import { Slider, styled } from '@mui/material'
+import { Slider } from '@mui/material'
 
 interface CustomSliderProps extends React.ComponentProps<typeof Slider> {}
 
 const CustomSlider: React.FC<CustomSliderProps> = (props) => {
-    const CustomSlider = styled(Slider)({
+    const customStyle = {
         'color': '#52af77',
         'height': 8,
         '& .MuiSlider-track': {
@@ -41,8 +41,8 @@ const CustomSlider: React.FC<CustomSliderProps> = (props) => {
                 transform: 'rotate(45deg)',
             },
         },
-    })
-    return <CustomSlider {...props} />
+    }
+    return <Slider {...props} sx={customStyle} />
 }
 
 export default CustomSlider
