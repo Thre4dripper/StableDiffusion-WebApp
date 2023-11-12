@@ -4,9 +4,9 @@ import dimensionsReducer, { DimensionsInitialState } from './reducers/dimensions
 import samplingReducer, { SamplingInitialState } from './reducers/smaplingReducer.ts'
 
 export interface RootState {
-    prompts: PromptsInitialState
-    dimensions: DimensionsInitialState
-    sampling: SamplingInitialState
+    prompts: PromptsInitialState[]
+    dimensions: DimensionsInitialState[]
+    sampling: SamplingInitialState[]
 }
 
 const rootReducer = combineReducers<RootState>({

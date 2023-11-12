@@ -9,10 +9,11 @@ import ZoomableImageDialog from '../../ZoomableImageDialog.tsx'
 import LdmCellPrompt from './LdmCellPrompt.tsx'
 
 interface LdmCardProps {
+    index: number
     setIsHovering: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const LdmCellCard: React.FC<LdmCardProps> = ({ setIsHovering }) => {
+const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering }) => {
     const [open, setOpen] = React.useState(false)
 
     const handleOpenDialog = () => {
@@ -42,8 +43,8 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ setIsHovering }) => {
                         <LdmCellPrompt promptType={'Negative'} />
                         {/*Controls controls*/}
                         <div className={'flex flex-row'}>
-                            <SizeControls />
-                            <SamplingControls />
+                            <SizeControls index={index} />
+                            <SamplingControls index={index} />
                         </div>
                     </div>
                     {/*Image Container*/}

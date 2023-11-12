@@ -6,10 +6,16 @@ import { RootState } from '../../redux/store.ts'
 import { SamplingInitialState } from '../../redux/reducers/smaplingReducer.ts'
 import { setCfgScale, setSamplingSteps, setUpScale } from '../../redux/actions/samplingActions.ts'
 
-const SamplingControls: React.FC = () => {
-    const { samplingSteps, cfgScale, upScale } = useSelector<RootState, SamplingInitialState>(
+interface SamplingControlsProps {
+    index: number
+}
+
+const SamplingControls: React.FC<SamplingControlsProps> = ({ index }) => {
+    const samplingStateArray = useSelector<RootState, SamplingInitialState[]>(
         (state) => state.sampling
     )
+
+    const { samplingSteps, cfgScale, upScale } = samplingStateArray[index]
 
     const dispatch = useDispatch()
     return (
@@ -25,7 +31,7 @@ const SamplingControls: React.FC = () => {
                     label='Sampling Steps'
                     value={samplingSteps}
                     setValue={(value) => {
-                        dispatch(setSamplingSteps(value))
+                        dispatch(setSamplingSteps(value, index))
                     }}
                     valueLabelDisplay='auto'
                     color='warning'
@@ -38,7 +44,7 @@ const SamplingControls: React.FC = () => {
                     label='CFG Scale'
                     value={cfgScale}
                     setValue={(value) => {
-                        dispatch(setCfgScale(value))
+                        dispatch(setCfgScale(value, index))
                     }}
                     valueLabelDisplay='auto'
                     color='secondary'
@@ -51,7 +57,7 @@ const SamplingControls: React.FC = () => {
                     label='Upscale By'
                     value={upScale}
                     setValue={(value) => {
-                        dispatch(setUpScale(value))
+                        dispatch(setUpScale(value, index))
                     }}
                     valueLabelDisplay='auto'
                     color='info'

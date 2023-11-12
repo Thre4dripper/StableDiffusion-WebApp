@@ -36,24 +36,30 @@ const marks = [
 const labelFormat = (value: number) => {
     return marks.find((mark) => mark.value === value)?.label || undefined
 }
-const SizeControls: React.FC = () => {
-    const { width, height } = useSelector<RootState, DimensionsInitialState>(
+
+interface SizeControlsProps {
+    index: number
+}
+
+const SizeControls: React.FC<SizeControlsProps> = ({ index }) => {
+    const dimensionsArray = useSelector<RootState, DimensionsInitialState[]>(
         (state) => state.dimensions
     )
+
+    const { width, height } = dimensionsArray[index]
 
     const widthValue = marks.find((mark) => +mark.label === width)?.value || 0
     const heightValue = marks.find((mark) => +mark.label === height)?.value || 0
 
     const dispatch = useDispatch()
-
     const handleWidthChange = (_event: Event, newValue: number | number[]) => {
         const value = marks.find((mark) => mark.value === (newValue as number))?.label || '0'
-        dispatch(setWidth(+value))
+        dispatch(setWidth(+value, index))
     }
 
     const handleHeightChange = (_event: Event, newValue: number | number[]) => {
         const value = marks.find((mark) => mark.value === (newValue as number))?.label || '0'
-        dispatch(setHeight(+value))
+        dispatch(setHeight(+value, index))
     }
 
     return (

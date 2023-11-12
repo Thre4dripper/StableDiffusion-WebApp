@@ -32,7 +32,7 @@ const LdmCell: React.FC<LdmCellProps> = ({ addCellAbove, addCellBelow, removeCel
                         index={index}
                     />
                 )}
-                <LdmCellCard setIsHovering={setIsHovering} />
+                <LdmCellCard index={index} setIsHovering={setIsHovering} />
                 {isHovering && (
                     <AddCellButton
                         className={'z-10 absolute left-1/2 transform -translate-x-1/2 bottom-4'}

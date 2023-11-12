@@ -8,30 +8,35 @@ export interface PromptsInitialState {
 interface SetPositivePromptAction {
     type: ActionTypes.SET_POSITIVE_PROMPT
     payload: string
+    index: number
 }
 
 interface SetNegativePromptAction {
     type: ActionTypes.SET_NEGATIVE_PROMPT
     payload: string
+    index: number
 }
 
 type Action = SetPositivePromptAction | SetNegativePromptAction
 
 const initialState: PromptsInitialState = {
+export const promptsInitialState: PromptsInitialState = {
     positivePrompt: '',
     negativePrompt: '',
 }
+const promptsInitialStates: PromptsInitialState[] = [promptsInitialState]
 
-const promptsReducer = (state: PromptsInitialState = initialState, action: Action) => {
+const promptsReducer = (state: PromptsInitialState[] = promptsInitialStates, action: Action) => {
+    const newState = [...state]
     switch (action.type) {
         case ActionTypes.SET_POSITIVE_PROMPT:
-            return {
-                ...state,
+            newState[action.index].positivePrompt = action.payload
+            return newState
                 positivePrompt: action.payload,
             }
         case ActionTypes.SET_NEGATIVE_PROMPT:
-            return {
-                ...state,
+            newState[action.index].negativePrompt = action.payload
+            return newState
                 negativePrompt: action.payload,
             }
         default:
