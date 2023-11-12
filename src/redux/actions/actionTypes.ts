@@ -1,0 +1,9 @@
+export enum ActionTypes {
+    SET_POSITIVE_PROMPT,
+    SET_NEGATIVE_PROMPT,
+    SET_WIDTH,
+    SET_HEIGHT,
+    SET_SAMPLING_STEPS,
+    SET_CFG_SCALE,
+    SET_UPSCALE,
+}
