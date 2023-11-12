@@ -1,4 +1,5 @@
 import { ActionTypes } from '../actions/actionTypes'
+import lodash from 'lodash'
 
 export interface DimensionsInitialState {
     width: number
@@ -17,9 +18,14 @@ interface SetHeightAction {
     index: number
 }
 
-type Action = SetWidthAction | SetHeightAction
+interface AddLdmCellAction {
+    type: ActionTypes.ADD_DIMENSION_CELL
+    payload: DimensionsInitialState
+    index: number
+}
 
-const initialState: DimensionsInitialState = {
+type Action = SetWidthAction | SetHeightAction | AddLdmCellAction
+
 export const dimensionsInitialState: DimensionsInitialState = {
     width: 256,
     height: 256,
@@ -30,18 +36,18 @@ const dimensionsReducer = (
     state: DimensionsInitialState[] = dimensionsInitialStates,
     action: Action
 ) => {
-    const newState = [...state]
+    const newState = lodash.cloneDeep(state)
     switch (action.type) {
         case ActionTypes.SET_WIDTH:
             newState[action.index].width = action.payload
+            console.table(newState)
             return newState
-                width: action.payload,
-            }
         case ActionTypes.SET_HEIGHT:
             newState[action.index].height = action.payload
             return newState
-                height: action.payload,
-            }
+        case ActionTypes.ADD_DIMENSION_CELL:
+            newState.splice(action.index, 0, action.payload)
+            return newState
         default:
             return state
     }

@@ -6,4 +6,7 @@ export enum ActionTypes {
     SET_SAMPLING_STEPS,
     SET_CFG_SCALE,
     SET_UPSCALE,
+    ADD_PROMPT_CELL,
+    ADD_DIMENSION_CELL,
+    ADD_SAMPLING_CELL,
 }

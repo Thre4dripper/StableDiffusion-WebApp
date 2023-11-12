@@ -17,3 +17,12 @@ export const setUpScale = (upScale: number, index: number) => ({
     payload: upScale,
     index,
 })
+
+export const addSamplingCell = (
+    sampling: { samplingSteps: number; cfgScale: number; upScale: number },
+    index: number
+) => ({
+    type: ActionTypes.ADD_SAMPLING_CELL,
+    payload: sampling,
+    index,
+})

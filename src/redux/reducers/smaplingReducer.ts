@@ -1,4 +1,5 @@
 import { ActionTypes } from '../actions/actionTypes'
+import lodash from 'lodash'
 
 export interface SamplingInitialState {
     samplingSteps: number
@@ -24,9 +25,14 @@ interface SetUpScaleAction {
     index: number
 }
 
-type Action = SetSamplingStepsAction | SetCfgScaleAction | SetUpScaleAction
+interface AddLdmCellAboveAction {
+    type: ActionTypes.ADD_SAMPLING_CELL
+    payload: SamplingInitialState
+    index: number
+}
 
-const initialState: SamplingInitialState = {
+type Action = SetSamplingStepsAction | SetCfgScaleAction | SetUpScaleAction | AddLdmCellAboveAction
+
 export const samplingInitialState: SamplingInitialState = {
     samplingSteps: 20,
     cfgScale: 7,
@@ -35,23 +41,20 @@ export const samplingInitialState: SamplingInitialState = {
 const samplingInitialStates: SamplingInitialState[] = [samplingInitialState]
 
 const samplingReducer = (state: SamplingInitialState[] = samplingInitialStates, action: Action) => {
-    const newState = [...state]
+    const newState = lodash.cloneDeep(state)
     switch (action.type) {
         case ActionTypes.SET_SAMPLING_STEPS:
             newState[action.index].samplingSteps = action.payload
             return newState
-                samplingSteps: action.payload,
-            }
         case ActionTypes.SET_CFG_SCALE:
             newState[action.index].cfgScale = action.payload
             return newState
-                cfgScale: action.payload,
-            }
         case ActionTypes.SET_UPSCALE:
-            return {
-                ...state,
-                upScale: action.payload,
-            }
+            newState[action.index].upScale = action.payload
+            return newState
+        case ActionTypes.ADD_SAMPLING_CELL:
+            newState.splice(action.index, 0, action.payload)
+            return newState
         default:
             return state
     }

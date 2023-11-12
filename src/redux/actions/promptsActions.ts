@@ -11,3 +11,12 @@ export const setNegativePrompt = (negativePrompt: string, index: number) => ({
     payload: negativePrompt,
     index,
 })
+
+export const addPromptCell = (
+    prompts: { positivePrompt: string; negativePrompt: string },
+    index: number
+) => ({
+    type: ActionTypes.ADD_PROMPT_CELL,
+    payload: prompts,
+    index,
+})

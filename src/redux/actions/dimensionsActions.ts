@@ -11,3 +11,9 @@ export const setHeight = (height: number, index: number) => ({
     payload: height,
     index,
 })
+
+export const addDimensionCell = (dimensions: { width: number; height: number }, index: number) => ({
+    type: ActionTypes.ADD_DIMENSION_CELL,
+    payload: dimensions,
+    index,
+})

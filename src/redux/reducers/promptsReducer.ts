@@ -1,4 +1,5 @@
 import { ActionTypes } from '../actions/actionTypes'
+import lodash from 'lodash'
 
 export interface PromptsInitialState {
     positivePrompt: string
@@ -17,9 +18,14 @@ interface SetNegativePromptAction {
     index: number
 }
 
-type Action = SetPositivePromptAction | SetNegativePromptAction
+interface AddLdmCellAction {
+    type: ActionTypes.ADD_PROMPT_CELL
+    payload: PromptsInitialState
+    index: number
+}
 
-const initialState: PromptsInitialState = {
+type Action = SetPositivePromptAction | SetNegativePromptAction | AddLdmCellAction
+
 export const promptsInitialState: PromptsInitialState = {
     positivePrompt: '',
     negativePrompt: '',
@@ -27,18 +33,17 @@ export const promptsInitialState: PromptsInitialState = {
 const promptsInitialStates: PromptsInitialState[] = [promptsInitialState]
 
 const promptsReducer = (state: PromptsInitialState[] = promptsInitialStates, action: Action) => {
-    const newState = [...state]
+    const newState = lodash.cloneDeep(state)
     switch (action.type) {
         case ActionTypes.SET_POSITIVE_PROMPT:
             newState[action.index].positivePrompt = action.payload
             return newState
-                positivePrompt: action.payload,
-            }
         case ActionTypes.SET_NEGATIVE_PROMPT:
             newState[action.index].negativePrompt = action.payload
             return newState
-                negativePrompt: action.payload,
-            }
+        case ActionTypes.ADD_PROMPT_CELL:
+            newState.splice(action.index, 0, action.payload)
+            return newState
         default:
             return state
     }

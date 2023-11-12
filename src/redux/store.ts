@@ -1,4 +1,4 @@
-import { combineReducers, createStore } from 'redux'
+import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
 import promptsReducer, { PromptsInitialState } from './reducers/promptsReducer.ts'
 import dimensionsReducer, { DimensionsInitialState } from './reducers/dimensionsReducer.ts'
 import samplingReducer, { SamplingInitialState } from './reducers/smaplingReducer.ts'
@@ -15,6 +15,12 @@ const rootReducer = combineReducers<RootState>({
     sampling: samplingReducer,
 })
 
-const store = createStore(rootReducer)
+interface WindowWithDevTools extends Window {
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose
+}
+
+const composeEnhancers =
+    (window as WindowWithDevTools).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware()))
 
 export default store
