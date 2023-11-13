@@ -24,7 +24,16 @@ interface AddLdmCellAction {
     index: number
 }
 
-type Action = SetPositivePromptAction | SetNegativePromptAction | AddLdmCellAction
+interface RemoveLdmCellAction {
+    type: ActionTypes.REMOVE_PROMPT_CELL
+    index: number
+}
+
+type Action =
+    | SetPositivePromptAction
+    | SetNegativePromptAction
+    | AddLdmCellAction
+    | RemoveLdmCellAction
 
 export const promptsInitialState: PromptsInitialState = {
     positivePrompt: '',
@@ -44,6 +53,8 @@ const promptsReducer = (state: PromptsInitialState[] = promptsInitialStates, act
         case ActionTypes.ADD_PROMPT_CELL:
             newState.splice(action.index, 0, action.payload)
             return newState
+        case ActionTypes.REMOVE_PROMPT_CELL:
+            return newState.filter((_, index) => index !== action.index)
         default:
             return state
     }

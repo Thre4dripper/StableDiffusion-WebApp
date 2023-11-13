@@ -7,6 +7,10 @@ import React from 'react'
 import image from '../../../assets/v1_txt2img_1.png'
 import ZoomableImageDialog from '../../ZoomableImageDialog.tsx'
 import LdmCellPrompt from './LdmCellPrompt.tsx'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../../redux/store.ts'
+import { PromptsInitialState } from '../../../redux/reducers/promptsReducer.ts'
+import { setNegativePrompt, setPositivePrompt } from '../../../redux/actions/promptsActions.ts'
 
 interface LdmCardProps {
     index: number
@@ -15,9 +19,22 @@ interface LdmCardProps {
 
 const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering }) => {
     const [open, setOpen] = React.useState(false)
+    const { positivePrompt, negativePrompt } = useSelector<RootState, PromptsInitialState>(
+        (state) => state.prompts[index]
+    )
+
+    const dispatch = useDispatch()
 
     const handleOpenDialog = () => {
         setOpen(true)
+    }
+
+    const handlePositivePromptChange = (value: string) => {
+        dispatch(setPositivePrompt(value, index))
+    }
+
+    const handleNegativePromptChange = (value: string) => {
+        dispatch(setNegativePrompt(value, index))
     }
     return (
         <div>
@@ -39,8 +56,16 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering }) => {
                 <div className={'flex flex-row h-full items-center'}>
                     {/*Attributes*/}
                     <div className={'flex-1 flex flex-col'}>
-                        <LdmCellPrompt promptType={'Positive'} />
-                        <LdmCellPrompt promptType={'Negative'} />
+                        <LdmCellPrompt
+                            value={positivePrompt}
+                            setValue={handlePositivePromptChange}
+                            promptType={'Positive'}
+                        />
+                        <LdmCellPrompt
+                            value={negativePrompt}
+                            setValue={handleNegativePromptChange}
+                            promptType={'Negative'}
+                        />
                         {/*Controls controls*/}
                         <div className={'flex flex-row'}>
                             <SizeControls index={index} />

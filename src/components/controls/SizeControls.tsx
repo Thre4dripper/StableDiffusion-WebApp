@@ -42,11 +42,9 @@ interface SizeControlsProps {
 }
 
 const SizeControls: React.FC<SizeControlsProps> = ({ index }) => {
-    const dimensionsArray = useSelector<RootState, DimensionsInitialState[]>(
-        (state) => state.dimensions
+    const { width, height } = useSelector<RootState, DimensionsInitialState>(
+        (state) => state.dimensions[index]
     )
-
-    const { width, height } = dimensionsArray[index]
 
     const widthValue = marks.find((mark) => +mark.label === width)?.value || 0
     const heightValue = marks.find((mark) => +mark.label === height)?.value || 0

@@ -26,3 +26,8 @@ export const addSamplingCell = (
     payload: sampling,
     index,
 })
+
+export const removeSamplingCell = (index: number) => ({
+    type: ActionTypes.REMOVE_SAMPLING_CELL,
+    index,
+})

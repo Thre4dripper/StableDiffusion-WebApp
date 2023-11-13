@@ -24,7 +24,12 @@ interface AddLdmCellAction {
     index: number
 }
 
-type Action = SetWidthAction | SetHeightAction | AddLdmCellAction
+interface RemoveLdmCellAction {
+    type: ActionTypes.REMOVE_DIMENSION_CELL
+    index: number
+}
+
+type Action = SetWidthAction | SetHeightAction | AddLdmCellAction | RemoveLdmCellAction
 
 export const dimensionsInitialState: DimensionsInitialState = {
     width: 256,
@@ -48,6 +53,8 @@ const dimensionsReducer = (
         case ActionTypes.ADD_DIMENSION_CELL:
             newState.splice(action.index, 0, action.payload)
             return newState
+        case ActionTypes.REMOVE_DIMENSION_CELL:
+            return newState.filter((_, index) => index !== action.index)
         default:
             return state
     }

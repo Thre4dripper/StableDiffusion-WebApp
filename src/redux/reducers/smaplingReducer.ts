@@ -31,7 +31,17 @@ interface AddLdmCellAboveAction {
     index: number
 }
 
-type Action = SetSamplingStepsAction | SetCfgScaleAction | SetUpScaleAction | AddLdmCellAboveAction
+interface RemoveLdmCellAction {
+    type: ActionTypes.REMOVE_SAMPLING_CELL
+    index: number
+}
+
+type Action =
+    | SetSamplingStepsAction
+    | SetCfgScaleAction
+    | SetUpScaleAction
+    | AddLdmCellAboveAction
+    | RemoveLdmCellAction
 
 export const samplingInitialState: SamplingInitialState = {
     samplingSteps: 20,
@@ -55,6 +65,8 @@ const samplingReducer = (state: SamplingInitialState[] = samplingInitialStates, 
         case ActionTypes.ADD_SAMPLING_CELL:
             newState.splice(action.index, 0, action.payload)
             return newState
+        case ActionTypes.REMOVE_SAMPLING_CELL:
+            return newState.filter((_, index) => index !== action.index)
         default:
             return state
     }

@@ -11,12 +11,10 @@ interface SamplingControlsProps {
 }
 
 const SamplingControls: React.FC<SamplingControlsProps> = ({ index }) => {
-    const samplingStateArray = useSelector<RootState, SamplingInitialState[]>(
-        (state) => state.sampling
+    const { samplingSteps, cfgScale, upScale } = useSelector<RootState, SamplingInitialState>(
+        (state) => state.sampling[index]
     )
-
-    const { samplingSteps, cfgScale, upScale } = samplingStateArray[index]
-
+    
     const dispatch = useDispatch()
     return (
         <Paper

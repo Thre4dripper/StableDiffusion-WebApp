@@ -17,3 +17,8 @@ export const addDimensionCell = (dimensions: { width: number; height: number }, 
     payload: dimensions,
     index,
 })
+
+export const removeDimensionCell = (index: number) => ({
+    type: ActionTypes.REMOVE_DIMENSION_CELL,
+    index,
+})

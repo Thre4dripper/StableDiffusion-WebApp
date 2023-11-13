@@ -20,3 +20,8 @@ export const addPromptCell = (
     payload: prompts,
     index,
 })
+
+export const removePromptCell = (index: number) => ({
+    type: ActionTypes.REMOVE_PROMPT_CELL,
+    index,
+})

@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import LdmCell from './ldmFragment/LdmCell.tsx'
 import { useDispatch } from 'react-redux'
-import { addDimensionCell } from '../../redux/actions/dimensionsActions.ts'
-import { addPromptCell } from '../../redux/actions/promptsActions.ts'
-import { addSamplingCell } from '../../redux/actions/samplingActions.ts'
+import { addDimensionCell, removeDimensionCell } from '../../redux/actions/dimensionsActions.ts'
+import { addPromptCell, removePromptCell } from '../../redux/actions/promptsActions.ts'
+import { addSamplingCell, removeSamplingCell } from '../../redux/actions/samplingActions.ts'
 import { dimensionsInitialState } from '../../redux/reducers/dimensionsReducer.ts'
 import { promptsInitialState } from '../../redux/reducers/promptsReducer.ts'
 import { samplingInitialState } from '../../redux/reducers/smaplingReducer.ts'
@@ -36,18 +36,22 @@ const LdmCellList: React.FC = () => {
     }
 
     const removeCell = (index: number) => {
+        if (cells.length === 1) return
         setCells((prevCells) => prevCells.filter((_, i) => i !== index))
+        dispatch(removeSamplingCell(index))
+        dispatch(removeDimensionCell(index))
+        dispatch(removePromptCell(index))
     }
 
     return (
         <div className={'py-4'}>
-            {cells.map((cellIndex, index) => (
+            {cells.map((_cellIndex, index) => (
                 <LdmCell
-                    key={cellIndex}
+                    key={index}
                     addCellAbove={() => addCellAbove(index)}
                     addCellBelow={() => addCellBelow(index)}
                     removeCell={() => removeCell(index)}
-                    index={cellIndex}
+                    index={index}
                 />
             ))}
         </div>
