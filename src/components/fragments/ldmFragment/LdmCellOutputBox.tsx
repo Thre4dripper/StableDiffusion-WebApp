@@ -45,7 +45,16 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({ openImageDialog, in
         setImage(parsedImage)
     }, [data])
 
-    console.log(data)
+    const downloadImage = () => {
+        if (image === null) return
+        const link = document.createElement('a')
+        link.href = image
+        link.download = 'image.png'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+    }
+
     return (
         <div className={'rounded-br-2xl rounded-tr-2xl'}>
             <div className={'flex flex-col justify-end'}>
@@ -106,7 +115,8 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({ openImageDialog, in
                                 borderColor: '#5d799d',
                                 color: '#5d799d',
                             },
-                        }}>
+                        }}
+                        onClick={downloadImage}>
                         Download
                     </Button>
                 </div>
