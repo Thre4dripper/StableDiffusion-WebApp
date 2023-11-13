@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../redux/store.ts'
 import { PromptsInitialState } from '../../../redux/reducers/promptsReducer.ts'
 import { setNegativePrompt, setPositivePrompt } from '../../../redux/actions/promptsActions.ts'
+import useApi from '../../../hooks/useApi.ts'
 
 interface LdmCardProps {
     index: number
@@ -25,6 +26,22 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering }) => {
 
     const dispatch = useDispatch()
 
+    const { data, callApi } = useApi({
+        url: '/sdapi/v1/txt2img',
+        method: 'POST',
+        body: {
+            prompt: positivePrompt,
+            steps: 100,
+        },
+        headers: {
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+            'Authorization': `Bearer ${import.meta.env.VITE_WIZMODEL_API_KEY}`,
+        },
+    })
+
+    console.log(data)
+
     const handleOpenDialog = () => {
         setOpen(true)
     }
@@ -35,6 +52,10 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering }) => {
 
     const handleNegativePromptChange = (value: string) => {
         dispatch(setNegativePrompt(value, index))
+    }
+
+    const generateImage = () => {
+        callApi()
     }
     return (
         <div>
@@ -105,7 +126,8 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering }) => {
                                         '&:hover': {
                                             backgroundColor: '#5d799d',
                                         },
-                                    }}>
+                                    }}
+                                    onClick={generateImage}>
                                     Generate
                                 </Button>
                                 <Button
