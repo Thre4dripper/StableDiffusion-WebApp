@@ -1,8 +1,6 @@
-import { Button, IconButton, Paper } from '@mui/material'
+import { Paper } from '@mui/material'
 import SizeControls from '../../controls/SizeControls.tsx'
 import SamplingControls from '../../controls/SamplingControls.tsx'
-import ImageIcon from '@mui/icons-material/Image'
-import DownloadIcon from '@mui/icons-material/Download'
 import React from 'react'
 import image from '../../../assets/v1_txt2img_1.png'
 import ZoomableImageDialog from '../../ZoomableImageDialog.tsx'
@@ -11,7 +9,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../redux/store.ts'
 import { PromptsInitialState } from '../../../redux/reducers/promptsReducer.ts'
 import { setNegativePrompt, setPositivePrompt } from '../../../redux/actions/promptsActions.ts'
-import useApi from '../../../hooks/useApi.ts'
+import LdmCellOutputBox from './LdmCellOutputBox.tsx'
 
 interface LdmCardProps {
     index: number
@@ -26,26 +24,6 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering }) => {
 
     const dispatch = useDispatch()
 
-    const { data, callApi } = useApi({
-        url: '/sdapi/v1/txt2img',
-        method: 'POST',
-        body: {
-            prompt: positivePrompt,
-            steps: 100,
-        },
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
-            'Authorization': `Bearer ${import.meta.env.VITE_WIZMODEL_API_KEY}`,
-        },
-    })
-
-    console.log(data)
-
-    const handleOpenDialog = () => {
-        setOpen(true)
-    }
-
     const handlePositivePromptChange = (value: string) => {
         dispatch(setPositivePrompt(value, index))
     }
@@ -54,9 +32,6 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering }) => {
         dispatch(setNegativePrompt(value, index))
     }
 
-    const generateImage = () => {
-        callApi()
-    }
     return (
         <div>
             <Paper
@@ -93,59 +68,13 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering }) => {
                             <SamplingControls index={index} />
                         </div>
                     </div>
-                    {/*Image Container*/}
-                    <div className={'rounded-br-2xl rounded-tr-2xl'}>
-                        <div className={'flex flex-col justify-end'}>
-                            <IconButton
-                                className={'flex-1'}
-                                sx={{
-                                    '&:hover': {
-                                        backgroundColor: 'transparent',
-                                        cursor: 'pointer',
-                                    },
-                                }}
-                                onClick={handleOpenDialog}>
-                                {/*<img*/}
-                                {/*    src={image}*/}
-                                {/*    alt={'Latent Diffusion Model'}*/}
-                                {/*    className={'w-96 h-96'}*/}
-                                {/*/>*/}
-                                <div
-                                    className={
-                                        'w-96 h-96 bg-slate-400 rounded-2xl flex justify-center items-center'
-                                    }>
-                                    <ImageIcon />
-                                </div>
-                            </IconButton>
-                            {/*Button*/}
-                            <div className={'h-16 flex justify-center items-center gap-4'}>
-                                <Button
-                                    variant={'contained'}
-                                    sx={{
-                                        'backgroundColor': '#24282f',
-                                        '&:hover': {
-                                            backgroundColor: '#5d799d',
-                                        },
-                                    }}
-                                    onClick={generateImage}>
-                                    Generate
-                                </Button>
-                                <Button
-                                    variant={'outlined'}
-                                    startIcon={<DownloadIcon />}
-                                    sx={{
-                                        'borderColor': '#24282f',
-                                        'color': '#24282f',
-                                        '&:hover': {
-                                            borderColor: '#5d799d',
-                                            color: '#5d799d',
-                                        },
-                                    }}>
-                                    Download
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
+                    {/*Output Container*/}
+                    <LdmCellOutputBox
+                        openImageDialog={() => {
+                            setOpen(true)
+                        }}
+                        index={index}
+                    />
                 </div>
             </Paper>
             <ZoomableImageDialog

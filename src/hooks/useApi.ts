@@ -12,7 +12,7 @@ interface UseApiConfig {
 }
 
 interface UseApiResult {
-    data: string | null
+    data: AxiosResponse | null
     isLoading: boolean
     error: string | null
     isFinished: boolean
@@ -29,7 +29,7 @@ const useApi = ({
     onUploadProgress,
     params,
 }: UseApiConfig): UseApiResult => {
-    const [data, setData] = useState<string | null>(null)
+    const [data, setData] = useState<AxiosResponse | null>(null)
     const [isLoading, setIsLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
     const [isFinished, setIsFinished] = useState<boolean>(false)
@@ -47,7 +47,7 @@ const useApi = ({
             params,
         })
             .then((response: AxiosResponse) => {
-                setData(response.data)
+                setData(response)
                 setIsLoading(false)
                 setIsFinished(true)
             })
