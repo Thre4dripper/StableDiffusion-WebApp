@@ -15,22 +15,15 @@ interface LdmCellOutputBoxProps {
 }
 
 const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({ openImageDialog, index }) => {
-    const {
-        prompts: { positivePrompt, negativePrompt },
-        dimensions: { width, height },
-        sampling: { samplingSteps, cfgScale, upScale },
-    } = useSelector<
-        RootState,
-        {
-            prompts: PromptsInitialState
-            dimensions: DimensionsInitialState
-            sampling: SamplingInitialState
-        }
-    >((state) => ({
-        prompts: state.prompts[index],
-        dimensions: state.dimensions[index],
-        sampling: state.sampling[index],
-    }))
+    const { positivePrompt, negativePrompt } = useSelector<RootState, PromptsInitialState>(
+        (state) => state.prompts[index]
+    )
+    const { width, height } = useSelector<RootState, DimensionsInitialState>(
+        (state) => state.dimensions[index]
+    )
+    const { samplingSteps, cfgScale, upScale } = useSelector<RootState, SamplingInitialState>(
+        (state) => state.sampling[index]
+    )
 
     const [image, setImage] = React.useState<string | null>(null)
     const [snackbarOpen, setSnackbarOpen] = React.useState(false)
