@@ -7,14 +7,15 @@ import { addSamplingCell, removeSamplingCell } from '../../redux/actions/samplin
 import { dimensionsInitialState } from '../../redux/reducers/dimensionsReducer.ts'
 import { promptsInitialState } from '../../redux/reducers/promptsReducer.ts'
 import { samplingInitialState } from '../../redux/reducers/smaplingReducer.ts'
+import { CellType } from '../../enums/CellType.ts'
 
 const LdmCellList: React.FC = () => {
-    const [cells, setCells] = useState<number[]>([0]) // Array of cell indices
+    const [cells, setCells] = useState<CellType[]>([CellType.TEXT_TO_IMAGE])
     const dispatch = useDispatch()
-    const addCellAbove = (index: number) => {
+    const addCellAbove = (index: number, cellType: CellType) => {
         setCells((prevCells) => {
             const newCells = [...prevCells]
-            newCells.splice(index, 0, newCells.length) // Add a new cell index before the specified index
+            newCells.splice(index, 0, cellType) // Add a new cell index before the specified index
             return newCells
         })
 
@@ -23,10 +24,10 @@ const LdmCellList: React.FC = () => {
         dispatch(addSamplingCell(samplingInitialState, index))
     }
 
-    const addCellBelow = (index: number) => {
+    const addCellBelow = (index: number, cellType: CellType) => {
         setCells((prevCells) => {
             const newCells = [...prevCells]
-            newCells.splice(index + 1, 0, newCells.length) // Add a new cell index after the specified index
+            newCells.splice(index + 1, 0, cellType) // Add a new cell index after the specified index
             return newCells
         })
 
@@ -45,13 +46,14 @@ const LdmCellList: React.FC = () => {
 
     return (
         <div className={'py-4'}>
-            {cells.map((_cellIndex, index) => (
+            {cells.map((cell, index) => (
                 <LdmCell
                     key={index}
-                    addCellAbove={() => addCellAbove(index)}
-                    addCellBelow={() => addCellBelow(index)}
+                    addCellAbove={addCellAbove}
+                    addCellBelow={addCellBelow}
                     removeCell={() => removeCell(index)}
                     index={index}
+                    cellType={cell}
                 />
             ))}
         </div>

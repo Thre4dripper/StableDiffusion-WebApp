@@ -10,13 +10,15 @@ import { PromptsInitialState } from '../../../redux/reducers/promptsReducer.ts'
 import { setNegativePrompt, setPositivePrompt } from '../../../redux/actions/promptsActions.ts'
 import LdmCellOutputBox from './LdmCellOutputBox.tsx'
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate'
+import { CellType } from '../../../enums/CellType.ts'
 
 interface LdmCardProps {
     index: number
     setIsHovering: React.Dispatch<React.SetStateAction<boolean>>
+    cellType: CellType
 }
 
-const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering }) => {
+const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering, cellType }) => {
     const [open, setOpen] = React.useState(false)
     const { positivePrompt, negativePrompt } = useSelector<RootState, PromptsInitialState>(
         (state) => state.prompts[index]
@@ -69,25 +71,27 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering }) => {
                                 />
                             </div>
                             {/*Input Image Container*/}
-                            <IconButton
-                                sx={{
-                                    '&:hover': {
-                                        backgroundColor: 'transparent',
-                                        cursor: 'pointer',
-                                    },
-                                }}>
-                                <div
-                                    className={
-                                        'w-48 h-full bg-slate-200 rounded-xl flex justify-center items-center'
-                                    }>
-                                    <AddPhotoAlternateIcon
-                                        sx={{
-                                            color: 'rgb(39,46,63)',
-                                        }}
-                                        fontSize={'large'}
-                                    />
-                                </div>
-                            </IconButton>
+                            {cellType === CellType.IMAGE_TO_IMAGE && (
+                                <IconButton
+                                    sx={{
+                                        '&:hover': {
+                                            backgroundColor: 'transparent',
+                                            cursor: 'pointer',
+                                        },
+                                    }}>
+                                    <div
+                                        className={
+                                            'w-48 h-full bg-slate-200 rounded-xl flex justify-center items-center'
+                                        }>
+                                        <AddPhotoAlternateIcon
+                                            sx={{
+                                                color: 'rgb(39,46,63)',
+                                            }}
+                                            fontSize={'large'}
+                                        />
+                                    </div>
+                                </IconButton>
+                            )}
                         </div>
                         {/*Controls Container*/}
                         <div className={'flex flex-row'}>

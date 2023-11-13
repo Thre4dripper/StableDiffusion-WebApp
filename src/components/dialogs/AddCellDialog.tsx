@@ -20,8 +20,8 @@ import { CellType } from '../../enums/CellType.ts' // Replace with actual paths
 interface AddCellDialogProps {
     openAddCellDialog: AddCellDialogState
     onClose: () => void
-    addCellAbove: (index: number) => void
-    addCellBelow: (index: number) => void
+    addCellAbove: (index: number, cellType: CellType) => void
+    addCellBelow: (index: number, cellType: CellType) => void
     index: number
 }
 
@@ -55,17 +55,16 @@ const AddCellDialog: React.FC<AddCellDialogProps> = ({
         if (selectedOption === CellType.TEXT_TO_IMAGE) {
             // Add image cell
             if (openAddCellDialog === AddCellDialogState.OPENED_FROM_ABOVE) {
-                //TODO specify cell type
-                addCellAbove(index)
+                addCellAbove(index, CellType.TEXT_TO_IMAGE)
             } else if (openAddCellDialog === AddCellDialogState.OPENED_FROM_BELOW) {
-                addCellBelow(index)
+                addCellBelow(index, CellType.TEXT_TO_IMAGE)
             }
         } else if (selectedOption === CellType.IMAGE_TO_IMAGE) {
             // Add text cell
             if (openAddCellDialog === AddCellDialogState.OPENED_FROM_ABOVE) {
-                addCellAbove(index)
+                addCellAbove(index, CellType.IMAGE_TO_IMAGE)
             } else if (openAddCellDialog === AddCellDialogState.OPENED_FROM_BELOW) {
-                addCellBelow(index)
+                addCellBelow(index, CellType.IMAGE_TO_IMAGE)
             }
         }
         onClose()
@@ -77,7 +76,7 @@ const AddCellDialog: React.FC<AddCellDialogProps> = ({
             setSelectedOption(null)
         }
     }, [openAddCellDialog])
-    
+
     return (
         <Dialog
             open={

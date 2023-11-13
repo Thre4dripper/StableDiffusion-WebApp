@@ -4,15 +4,23 @@ import LdmCellCard from './LdmCellCard.tsx'
 import LdmCellRemoveButton from './LdmCellRemoveButton.tsx'
 import AddCellDialog from '../../dialogs/AddCellDialog.tsx'
 import { AddCellDialogState } from '../../../enums/AddCellDialogState.ts'
+import { CellType } from '../../../enums/CellType.ts'
 
 interface LdmCellProps {
-    addCellAbove: (index: number) => void
-    addCellBelow: (index: number) => void
+    addCellAbove: (index: number, cellType: CellType) => void
+    addCellBelow: (index: number, cellType: CellType) => void
     removeCell: (index: number) => void
     index: number
+    cellType: CellType
 }
 
-const LdmCell: React.FC<LdmCellProps> = ({ addCellAbove, addCellBelow, removeCell, index }) => {
+const LdmCell: React.FC<LdmCellProps> = ({
+    addCellAbove,
+    addCellBelow,
+    removeCell,
+    index,
+    cellType,
+}) => {
     const [isHovering, setIsHovering] = React.useState(false)
     const [openAddCellDialog, setOpenAddCellDialog] = React.useState<AddCellDialogState>(
         AddCellDialogState.CLOSED
@@ -43,7 +51,7 @@ const LdmCell: React.FC<LdmCellProps> = ({ addCellAbove, addCellBelow, removeCel
                         index={index}
                     />
                 )}
-                <LdmCellCard index={index} setIsHovering={setIsHovering} />
+                <LdmCellCard index={index} setIsHovering={setIsHovering} cellType={cellType} />
                 {isHovering && (
                     <AddCellButton
                         className={'z-10 absolute left-1/2 transform -translate-x-1/2 bottom-4'}
