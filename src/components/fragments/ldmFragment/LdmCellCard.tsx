@@ -2,7 +2,6 @@ import { Paper } from '@mui/material'
 import SizeControls from '../../controls/SizeControls.tsx'
 import SamplingControls from '../../controls/SamplingControls.tsx'
 import React from 'react'
-import image from '../../../assets/v1_txt2img_1.png'
 import ZoomableImageDialog from '../../ZoomableImageDialog.tsx'
 import LdmCellPrompt from './LdmCellPrompt.tsx'
 import { useDispatch, useSelector } from 'react-redux'
@@ -21,6 +20,7 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering }) => {
     const { positivePrompt, negativePrompt } = useSelector<RootState, PromptsInitialState>(
         (state) => state.prompts[index]
     )
+    const [image, setImage] = React.useState<string>('')
 
     const dispatch = useDispatch()
 
@@ -70,7 +70,8 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering }) => {
                     </div>
                     {/*Output Container*/}
                     <LdmCellOutputBox
-                        openImageDialog={() => {
+                        openImageDialog={(image: string) => {
+                            setImage(image)
                             setOpen(true)
                         }}
                         index={index}

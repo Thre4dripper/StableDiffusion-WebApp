@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../../redux/store.ts'
 
 interface LdmCellOutputBoxProps {
-    openImageDialog: () => void
+    openImageDialog: (image: string) => void
     index: number
 }
 
@@ -57,7 +57,9 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({ openImageDialog, in
                             cursor: 'pointer',
                         },
                     }}
-                    onClick={openImageDialog}>
+                    onClick={() => {
+                        if (image !== null) openImageDialog(image)
+                    }}>
                     {!isLoading && image && (
                         <img
                             src={image}
