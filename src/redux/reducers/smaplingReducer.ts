@@ -46,7 +46,7 @@ type Action =
 export const samplingInitialState: SamplingInitialState = {
     samplingSteps: 20,
     cfgScale: 7,
-    upScale: 2,
+    upScale: 1,
 }
 const samplingInitialStates: SamplingInitialState[] = [samplingInitialState]
 

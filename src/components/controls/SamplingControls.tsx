@@ -14,7 +14,7 @@ const SamplingControls: React.FC<SamplingControlsProps> = ({ index }) => {
     const { samplingSteps, cfgScale, upScale } = useSelector<RootState, SamplingInitialState>(
         (state) => state.sampling[index]
     )
-    
+
     const dispatch = useDispatch()
     return (
         <Paper
@@ -29,7 +29,7 @@ const SamplingControls: React.FC<SamplingControlsProps> = ({ index }) => {
                     sliderProps={{
                         value: samplingSteps,
                         min: 1,
-                        max: 35,
+                        max: 150,
                         valueLabelDisplay: 'auto',
                         color: 'warning',
                         step: 1,
@@ -44,16 +44,16 @@ const SamplingControls: React.FC<SamplingControlsProps> = ({ index }) => {
                     sliderProps={{
                         value: cfgScale,
                         min: 1,
-                        max: 4,
+                        max: 35,
                         valueLabelDisplay: 'auto',
                         color: 'secondary',
-                        step: 0.1,
+                        step: 1,
                     }}
                     label='CFG Scale'
                     setValue={(value) => {
                         dispatch(setCfgScale(value, index))
                     }}
-                    isMarked={false}
+                    isMarked={true}
                 />
                 <SamplingInput
                     sliderProps={{

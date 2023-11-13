@@ -5,6 +5,9 @@ import DownloadIcon from '@mui/icons-material/Download'
 import useApi from '../../../hooks/useApi.ts'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../redux/store.ts'
+import { PromptsInitialState } from '../../../redux/reducers/promptsReducer.ts'
+import { DimensionsInitialState } from '../../../redux/reducers/dimensionsReducer.ts'
+import { SamplingInitialState } from '../../../redux/reducers/smaplingReducer.ts'
 
 interface LdmCellOutputBoxProps {
     openImageDialog: (image: string) => void
@@ -12,9 +15,22 @@ interface LdmCellOutputBoxProps {
 }
 
 const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({ openImageDialog, index }) => {
-    const positivePrompt = useSelector<RootState, string>(
-        (state) => state.prompts[index].positivePrompt
-    )
+    const {
+        prompts: { positivePrompt, negativePrompt },
+        dimensions: { width, height },
+        sampling: { samplingSteps, cfgScale, upScale },
+    } = useSelector<
+        RootState,
+        {
+            prompts: PromptsInitialState
+            dimensions: DimensionsInitialState
+            sampling: SamplingInitialState
+        }
+    >((state) => ({
+        prompts: state.prompts[index],
+        dimensions: state.dimensions[index],
+        sampling: state.sampling[index],
+    }))
 
     const [image, setImage] = React.useState<string | null>(null)
 
@@ -23,11 +39,16 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({ openImageDialog, in
         method: 'POST',
         body: {
             prompt: positivePrompt,
-            steps: 100,
+            negative_prompt: negativePrompt,
+            width: width,
+            height: height,
+            steps: samplingSteps,
+            cfg_scale: cfgScale,
+            enable_hr: true,
+            hr_scale: upScale,
         },
         headers: {
             'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': '*',
             'Authorization': `Bearer ${import.meta.env.VITE_WIZMODEL_API_KEY}`,
         },
     })
@@ -49,7 +70,7 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({ openImageDialog, in
         if (image === null) return
         const link = document.createElement('a')
         link.href = image
-        link.download = 'image.png'
+        link.download = `${positivePrompt}.png`
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
@@ -61,6 +82,10 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({ openImageDialog, in
                 <IconButton
                     className={'flex-1'}
                     sx={{
+                        'borderRadius': '.5rem',
+                        'padding': '0',
+                        'overflow': 'hidden',
+                        'margin': '1rem',
                         '&:hover': {
                             backgroundColor: 'transparent',
                             cursor: 'pointer',
@@ -70,18 +95,11 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({ openImageDialog, in
                         if (image !== null) openImageDialog(image)
                     }}>
                     {!isLoading && image && (
-                        <img
-                            src={image}
-                            alt={'Latent Diffusion Model'}
-                            className={'w-96 h-96 rounded-2xl'}
-                        />
+                        <img src={image} alt={'Latent Diffusion Model'} className={'w-96 h-fit'} />
                     )}
 
                     {!isLoading && !image && (
-                        <div
-                            className={
-                                'w-96 h-96 bg-slate-400 rounded-2xl flex justify-center items-center'
-                            }>
+                        <div className={'w-96 h-96 bg-slate-400 flex justify-center items-center'}>
                             <ImageIcon />
                         </div>
                     )}

@@ -85,9 +85,7 @@ const ZoomableImageDialog: React.FC<ZoomableImageDialogProps> = ({
             } bg-black bg-opacity-50`}
             onClick={handleCloseDialog}>
             <div
-                className={
-                    'w-[35rem] h-[35rem] bg-slate-700 rounded-2xl shadow-lg shadow-slate-800/50'
-                }
+                className={'w-[35rem] h-fit bg-slate-700 rounded-2xl shadow-lg shadow-slate-800/50'}
                 onWheel={handleWheel}
                 onClick={(e) => e.stopPropagation()}
                 onMouseMove={handleMouseMove}
