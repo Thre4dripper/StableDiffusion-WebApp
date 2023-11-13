@@ -8,6 +8,7 @@ import { RootState } from '../../../redux/store.ts'
 import { PromptsInitialState } from '../../../redux/reducers/promptsReducer.ts'
 import { DimensionsInitialState } from '../../../redux/reducers/dimensionsReducer.ts'
 import { SamplingInitialState } from '../../../redux/reducers/smaplingReducer.ts'
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
 
 interface LdmCellOutputBoxProps {
     openImageDialog: (image: string) => void
@@ -112,7 +113,7 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({ openImageDialog, in
                                 className={
                                     'w-96 h-96 bg-slate-400 flex justify-center items-center'
                                 }>
-                                <ImageIcon />
+                                <ImageIcon fontSize={'large'} />
                             </div>
                         )}
 
@@ -132,7 +133,8 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({ openImageDialog, in
                                     backgroundColor: '#5d799d',
                                 },
                             }}
-                            onClick={generateImage}>
+                            onClick={generateImage}
+                            startIcon={<AutoAwesomeIcon />}>
                             Generate
                         </Button>
                         <Button
