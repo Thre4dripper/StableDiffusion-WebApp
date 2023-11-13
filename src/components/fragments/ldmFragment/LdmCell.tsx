@@ -3,6 +3,7 @@ import AddCellButton from './AddCellButton.tsx'
 import LdmCellCard from './LdmCellCard.tsx'
 import LdmCellRemoveButton from './LdmCellRemoveButton.tsx'
 import AddCellDialog from '../../dialogs/AddCellDialog.tsx'
+import { AddCellDialogState } from '../../../enums/AddCellDialogState.ts'
 
 interface LdmCellProps {
     addCellAbove: (index: number) => void
@@ -13,12 +14,12 @@ interface LdmCellProps {
 
 const LdmCell: React.FC<LdmCellProps> = ({ addCellAbove, addCellBelow, removeCell, index }) => {
     const [isHovering, setIsHovering] = React.useState(false)
-    const [openAddCellDialog, setOpenAddCellDialog] = React.useState<
-        'openedFromAbove' | 'openedFromBelow' | 'closed'
-    >('closed')
+    const [openAddCellDialog, setOpenAddCellDialog] = React.useState<AddCellDialogState>(
+        AddCellDialogState.CLOSED
+    )
 
     const handleDialogClose = () => {
-        setOpenAddCellDialog('closed')
+        setOpenAddCellDialog(AddCellDialogState.CLOSED)
     }
 
     return (
@@ -37,7 +38,7 @@ const LdmCell: React.FC<LdmCellProps> = ({ addCellAbove, addCellBelow, removeCel
                         className={'z-10 absolute left-1/2 transform -translate-x-1/2 top-2'}
                         setIsHovering={setIsHovering}
                         addCell={() => {
-                            setOpenAddCellDialog('openedFromAbove')
+                            setOpenAddCellDialog(AddCellDialogState.OPENED_FROM_ABOVE)
                         }}
                         index={index}
                     />
@@ -48,7 +49,7 @@ const LdmCell: React.FC<LdmCellProps> = ({ addCellAbove, addCellBelow, removeCel
                         className={'z-10 absolute left-1/2 transform -translate-x-1/2 bottom-4'}
                         setIsHovering={setIsHovering}
                         addCell={() => {
-                            setOpenAddCellDialog('openedFromBelow')
+                            setOpenAddCellDialog(AddCellDialogState.OPENED_FROM_BELOW)
                         }}
                         index={index}
                     />

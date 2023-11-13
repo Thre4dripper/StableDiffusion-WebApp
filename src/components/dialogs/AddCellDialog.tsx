@@ -1,22 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import {
-    Dialog,
-    DialogContent,
-    DialogActions,
     Button,
+    Dialog,
+    DialogActions,
+    DialogContent,
     FormControl,
     FormLabel,
-    RadioGroup,
     Grid,
     IconButton,
     Paper,
+    RadioGroup,
     Typography,
 } from '@mui/material'
 import Image1 from '../../assets/text-to-image.png' // Replace with actual paths
-import Image2 from '../../assets/image-to-image.png' // Replace with actual paths
+import Image2 from '../../assets/image-to-image.png'
+import { AddCellDialogState } from '../../enums/AddCellDialogState.ts'
+import { CellType } from '../../enums/CellType.ts' // Replace with actual paths
 
 interface AddCellDialogProps {
-    openAddCellDialog: 'openedFromAbove' | 'openedFromBelow' | 'closed'
+    openAddCellDialog: AddCellDialogState
     onClose: () => void
     addCellAbove: (index: number) => void
     addCellBelow: (index: number) => void
@@ -26,12 +28,12 @@ interface AddCellDialogProps {
 const options = [
     {
         label: 'Text to Image',
-        value: 'image',
+        value: CellType.TEXT_TO_IMAGE,
         image: Image1,
     },
     {
         label: 'Image to Image',
-        value: 'text',
+        value: CellType.IMAGE_TO_IMAGE,
         image: Image2,
     },
 ]
@@ -43,26 +45,26 @@ const AddCellDialog: React.FC<AddCellDialogProps> = ({
     addCellBelow,
     index,
 }) => {
-    const [selectedOption, setSelectedOption] = useState<string>('')
+    const [selectedOption, setSelectedOption] = useState<CellType | null>(null)
 
-    const handleOptionClick = (option: string) => {
+    const handleOptionClick = (option: CellType) => {
         setSelectedOption(option)
     }
 
     const handleDialogConfirm = () => {
-        if (selectedOption === 'image') {
+        if (selectedOption === CellType.TEXT_TO_IMAGE) {
             // Add image cell
-            if (openAddCellDialog === 'openedFromAbove') {
+            if (openAddCellDialog === AddCellDialogState.OPENED_FROM_ABOVE) {
                 //TODO specify cell type
                 addCellAbove(index)
-            } else if (openAddCellDialog === 'openedFromBelow') {
+            } else if (openAddCellDialog === AddCellDialogState.OPENED_FROM_BELOW) {
                 addCellBelow(index)
             }
-        } else if (selectedOption === 'text') {
+        } else if (selectedOption === CellType.IMAGE_TO_IMAGE) {
             // Add text cell
-            if (openAddCellDialog === 'openedFromAbove') {
+            if (openAddCellDialog === AddCellDialogState.OPENED_FROM_ABOVE) {
                 addCellAbove(index)
-            } else if (openAddCellDialog === 'openedFromBelow') {
+            } else if (openAddCellDialog === AddCellDialogState.OPENED_FROM_BELOW) {
                 addCellBelow(index)
             }
         }
@@ -70,16 +72,17 @@ const AddCellDialog: React.FC<AddCellDialogProps> = ({
     }
 
     useEffect(() => {
-        setSelectedOption('')
+        setSelectedOption(null)
         return () => {
-            setSelectedOption('')
+            setSelectedOption(null)
         }
-    }, [])
-
+    }, [openAddCellDialog])
+    
     return (
         <Dialog
             open={
-                openAddCellDialog === 'openedFromAbove' || openAddCellDialog === 'openedFromBelow'
+                openAddCellDialog === AddCellDialogState.OPENED_FROM_ABOVE ||
+                openAddCellDialog === AddCellDialogState.OPENED_FROM_BELOW
             }
             onClose={onClose}
             maxWidth={'lg'}>
