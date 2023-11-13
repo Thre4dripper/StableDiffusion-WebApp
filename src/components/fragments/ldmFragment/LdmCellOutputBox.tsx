@@ -36,7 +36,7 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({ openImageDialog, in
     const [snackbarOpen, setSnackbarOpen] = React.useState(false)
 
     const { data, isLoading, callApi } = useApi({
-        url: '/sdapi/v1/txt2img',
+        url: '/wiz/v1/txt2img',
         method: 'POST',
         body: {
             prompt: positivePrompt,

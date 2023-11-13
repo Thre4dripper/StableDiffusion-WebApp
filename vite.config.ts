@@ -5,7 +5,16 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
     server: {
         proxy: {
-            '/sdapi': 'http://ec2-52-68-218-19.ap-northeast-1.compute.amazonaws.com:7860',
+            '/wiz': {
+                target: 'http://ec2-52-68-218-19.ap-northeast-1.compute.amazonaws.com:7860',
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/wiz/, '/sdapi'),
+            },
+            '/local': {
+                target: 'http://127.0.0.1:7860',
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/local/, '/sdapi'),
+            },
         },
     },
     plugins: [react()],
