@@ -42,7 +42,7 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({
     const dispatch = useDispatch()
 
     const { data, isLoading, callApi } = useApi({
-        url: '/wiz/v1/img2img',
+        url: `/wiz/v1/${cellType === CellType.TEXT_TO_IMAGE ? 'txt' : 'img'}2img`,
         method: 'POST',
         body: {
             init_images: [inputImage],
@@ -146,6 +146,7 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({
                                     backgroundColor: '#5d799d',
                                 },
                             }}
+                            disabled={isLoading}
                             onClick={generateImage}
                             startIcon={<AutoAwesomeIcon />}>
                             Generate
@@ -161,6 +162,7 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({
                                     color: '#5d799d',
                                 },
                             }}
+                            disabled={isLoading || outputImage === ''}
                             onClick={downloadImage}>
                             Download
                         </Button>

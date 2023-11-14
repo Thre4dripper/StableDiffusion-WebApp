@@ -10,9 +10,11 @@ import { samplingInitialState } from '../../redux/reducers/smaplingReducer.ts'
 import { CellType } from '../../enums/CellType.ts'
 import { addImageCell, removeImageCell } from '../../redux/actions/imagesActions.ts'
 import { imagesInitialState } from '../../redux/reducers/imagesReducer.ts'
+import AddCellDialog from '../dialogs/AddCellDialog.tsx'
+import { AddCellDialogState } from '../../enums/AddCellDialogState.ts'
 
 const LdmCellList: React.FC = () => {
-    const [cells, setCells] = useState<CellType[]>([CellType.TEXT_TO_IMAGE])
+    const [cells, setCells] = useState<CellType[]>([])
     const dispatch = useDispatch()
     const addCellAbove = (index: number, cellType: CellType) => {
         setCells((prevCells) => {
@@ -41,7 +43,6 @@ const LdmCellList: React.FC = () => {
     }
 
     const removeCell = (index: number) => {
-        if (cells.length === 1) return
         setCells((prevCells) => prevCells.filter((_, i) => i !== index))
         dispatch(removeSamplingCell(index))
         dispatch(removeDimensionCell(index))
@@ -61,6 +62,18 @@ const LdmCellList: React.FC = () => {
                     cellType={cell}
                 />
             ))}
+            <AddCellDialog
+                //Dialog only opened for the first time
+                openAddCellDialog={
+                    cells.length === 0
+                        ? AddCellDialogState.OPENED_FROM_ABOVE
+                        : AddCellDialogState.CLOSED
+                }
+                onClose={() => {}}
+                addCellAbove={addCellAbove}
+                addCellBelow={addCellBelow}
+                index={0}
+            />
         </div>
     )
 }
