@@ -8,6 +8,8 @@ import { dimensionsInitialState } from '../../redux/reducers/dimensionsReducer.t
 import { promptsInitialState } from '../../redux/reducers/promptsReducer.ts'
 import { samplingInitialState } from '../../redux/reducers/smaplingReducer.ts'
 import { CellType } from '../../enums/CellType.ts'
+import { addImageCell, removeImageCell } from '../../redux/actions/imagesActions.ts'
+import { imagesInitialState } from '../../redux/reducers/imagesReducer.ts'
 
 const LdmCellList: React.FC = () => {
     const [cells, setCells] = useState<CellType[]>([CellType.TEXT_TO_IMAGE])
@@ -22,6 +24,7 @@ const LdmCellList: React.FC = () => {
         dispatch(addPromptCell(promptsInitialState, index))
         dispatch(addDimensionCell(dimensionsInitialState, index))
         dispatch(addSamplingCell(samplingInitialState, index))
+        dispatch(addImageCell(imagesInitialState, index))
     }
 
     const addCellBelow = (index: number, cellType: CellType) => {
@@ -34,6 +37,7 @@ const LdmCellList: React.FC = () => {
         dispatch(addPromptCell(promptsInitialState, index + 1))
         dispatch(addDimensionCell(dimensionsInitialState, index + 1))
         dispatch(addSamplingCell(samplingInitialState, index + 1))
+        dispatch(addImageCell(imagesInitialState, index + 1))
     }
 
     const removeCell = (index: number) => {
@@ -42,6 +46,7 @@ const LdmCellList: React.FC = () => {
         dispatch(removeSamplingCell(index))
         dispatch(removeDimensionCell(index))
         dispatch(removePromptCell(index))
+        dispatch(removeImageCell(index))
     }
 
     return (
