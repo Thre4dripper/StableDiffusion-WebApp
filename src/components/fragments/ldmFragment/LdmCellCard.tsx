@@ -11,6 +11,7 @@ import { setNegativePrompt, setPositivePrompt } from '../../../redux/actions/pro
 import LdmCellOutputBox from './LdmCellOutputBox.tsx'
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate'
 import { CellType } from '../../../enums/CellType.ts'
+import { setInputImage } from '../../../redux/actions/imagesActions.ts'
 
 interface LdmCardProps {
     index: number
@@ -20,11 +21,12 @@ interface LdmCardProps {
 
 const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering, cellType }) => {
     const [open, setOpen] = React.useState(false)
+    const [modalImage, setModalImage] = React.useState<string>('')
+
     const { positivePrompt, negativePrompt } = useSelector<RootState, PromptsInitialState>(
         (state) => state.prompts[index]
     )
-    const [image, setImage] = React.useState<string>('')
-
+    const inputImage = useSelector<RootState, string>((state) => state.images[index].inputImage)
     const dispatch = useDispatch()
 
     const handlePositivePromptChange = (value: string) => {
@@ -33,6 +35,24 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering, cellType })
 
     const handleNegativePromptChange = (value: string) => {
         dispatch(setNegativePrompt(value, index))
+    }
+
+    const handleImageInput = () => {
+        const input = document.createElement('input')
+        input.type = 'file'
+        input.accept = 'image/*'
+        input.onchange = (event: Event) => {
+            const target = event.target as HTMLInputElement
+            if (target.files && target.files.length > 0) {
+                const reader = new FileReader()
+                reader.readAsDataURL(target.files[0])
+                reader.onloadend = () => {
+                    const base64data = reader.result
+                    dispatch(setInputImage(base64data as string, index))
+                }
+            }
+        }
+        input.click()
     }
 
     return (
@@ -78,17 +98,27 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering, cellType })
                                             backgroundColor: 'transparent',
                                             cursor: 'pointer',
                                         },
-                                    }}>
+                                    }}
+                                    onClick={handleImageInput}>
                                     <div
                                         className={
-                                            'w-48 h-full bg-slate-200 rounded-xl flex justify-center items-center'
+                                            'w-48 h-full bg-slate-200 rounded-xl overflow-hidden flex justify-center items-center'
                                         }>
-                                        <AddPhotoAlternateIcon
-                                            sx={{
-                                                color: 'rgb(39,46,63)',
-                                            }}
-                                            fontSize={'large'}
-                                        />
+                                        {inputImage && (
+                                            <img
+                                                src={inputImage}
+                                                alt={'Latent Diffusion Model'}
+                                                className={'w-48 h-48'}
+                                            />
+                                        )}
+                                        {inputImage === '' && (
+                                            <AddPhotoAlternateIcon
+                                                sx={{
+                                                    color: 'rgb(39,46,63)',
+                                                }}
+                                                fontSize={'large'}
+                                            />
+                                        )}
                                     </div>
                                 </IconButton>
                             )}
@@ -102,17 +132,18 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering, cellType })
                     {/*Output Container*/}
                     <LdmCellOutputBox
                         openImageDialog={(image: string) => {
-                            setImage(image)
+                            setModalImage(image)
                             setOpen(true)
                         }}
                         index={index}
+                        cellType={cellType}
                     />
                 </div>
             </Paper>
             <ZoomableImageDialog
                 open={open}
                 setOpen={setOpen}
-                image={image}
+                image={modalImage}
                 zoomIntensity={10}
                 delay={0.2}
                 initialZoomLevel={1}

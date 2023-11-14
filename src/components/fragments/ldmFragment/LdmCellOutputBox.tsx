@@ -3,19 +3,29 @@ import { Alert, Button, CircularProgress, IconButton, Snackbar } from '@mui/mate
 import ImageIcon from '@mui/icons-material/Image'
 import DownloadIcon from '@mui/icons-material/Download'
 import useApi from '../../../hooks/useApi.ts'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../redux/store.ts'
 import { PromptsInitialState } from '../../../redux/reducers/promptsReducer.ts'
 import { DimensionsInitialState } from '../../../redux/reducers/dimensionsReducer.ts'
 import { SamplingInitialState } from '../../../redux/reducers/smaplingReducer.ts'
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
+import { ImagesInitialState } from '../../../redux/reducers/imagesReducer.ts'
+import { setOutputImage } from '../../../redux/actions/imagesActions.ts'
+import { CellType } from '../../../enums/CellType.ts'
 
 interface LdmCellOutputBoxProps {
     openImageDialog: (image: string) => void
     index: number
+    cellType: CellType
 }
 
-const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({ openImageDialog, index }) => {
+const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({
+    openImageDialog,
+    index,
+    cellType,
+}) => {
+    const [snackbarOpen, setSnackbarOpen] = React.useState(false)
+
     const { positivePrompt, negativePrompt } = useSelector<RootState, PromptsInitialState>(
         (state) => state.prompts[index]
     )
@@ -25,14 +35,17 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({ openImageDialog, in
     const { samplingSteps, cfgScale, upScale } = useSelector<RootState, SamplingInitialState>(
         (state) => state.sampling[index]
     )
+    const { inputImage, outputImage } = useSelector<RootState, ImagesInitialState>(
+        (state) => state.images[index]
+    )
 
-    const [image, setImage] = React.useState<string | null>(null)
-    const [snackbarOpen, setSnackbarOpen] = React.useState(false)
+    const dispatch = useDispatch()
 
     const { data, isLoading, callApi } = useApi({
-        url: '/wiz/v1/txt2img',
+        url: '/wiz/v1/img2img',
         method: 'POST',
         body: {
+            init_images: [inputImage],
             prompt: positivePrompt,
             negative_prompt: negativePrompt,
             width: width,
@@ -68,13 +81,13 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({ openImageDialog, in
         // base64 to image
         if (data === null) return
         const parsedImage = `data:image/png;base64,${data.data?.images[0]}`
-        setImage(parsedImage)
-    }, [data])
+        dispatch(setOutputImage(parsedImage, index))
+    }, [data, dispatch, index])
 
     const downloadImage = () => {
-        if (image === null) return
+        if (outputImage === null) return
         const link = document.createElement('a')
-        link.href = image
+        link.href = outputImage
         link.download = `${positivePrompt}.png`
         document.body.appendChild(link)
         link.click()
@@ -98,17 +111,17 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({ openImageDialog, in
                             },
                         }}
                         onClick={() => {
-                            if (image !== null) openImageDialog(image)
+                            if (outputImage !== '') openImageDialog(outputImage)
                         }}>
-                        {!isLoading && image && (
+                        {!isLoading && outputImage && (
                             <img
-                                src={image}
+                                src={outputImage}
                                 alt={'Latent Diffusion Model'}
                                 className={'w-96 h-fit'}
                             />
                         )}
 
-                        {!isLoading && !image && (
+                        {!isLoading && !outputImage && (
                             <div
                                 className={
                                     'w-96 h-96 bg-slate-400 flex justify-center items-center'

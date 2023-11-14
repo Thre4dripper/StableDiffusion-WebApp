@@ -45,7 +45,6 @@ const dimensionsReducer = (
     switch (action.type) {
         case ActionTypes.SET_WIDTH:
             newState[action.index].width = action.payload
-            console.table(newState)
             return newState
         case ActionTypes.SET_HEIGHT:
             newState[action.index].height = action.payload
