@@ -14,12 +14,15 @@ import AddCellDialog from '../dialogs/AddCellDialog.tsx'
 import { AddCellDialogState } from '../../enums/AddCellDialogState.ts'
 
 const LdmCellList: React.FC = () => {
-    const [cells, setCells] = useState<CellType[]>([])
+    const [cells, setCells] = useState<{ id: number; cellType: CellType }[]>([])
     const dispatch = useDispatch()
     const addCellAbove = (index: number, cellType: CellType) => {
         setCells((prevCells) => {
             const newCells = [...prevCells]
-            newCells.splice(index, 0, cellType) // Add a new cell index before the specified index
+            newCells.splice(index, 0, {
+                id: Date.now(),
+                cellType: cellType,
+            }) // Add a new cell index before the specified index
             return newCells
         })
 
@@ -32,7 +35,10 @@ const LdmCellList: React.FC = () => {
     const addCellBelow = (index: number, cellType: CellType) => {
         setCells((prevCells) => {
             const newCells = [...prevCells]
-            newCells.splice(index + 1, 0, cellType) // Add a new cell index after the specified index
+            newCells.splice(index + 1, 0, {
+                id: Date.now(),
+                cellType: cellType,
+            }) // Add a new cell index after the specified index
             return newCells
         })
 
@@ -54,12 +60,12 @@ const LdmCellList: React.FC = () => {
         <div className={'py-4'}>
             {cells.map((cell, index) => (
                 <LdmCell
-                    key={index}
+                    key={cell.id}
                     addCellAbove={addCellAbove}
                     addCellBelow={addCellBelow}
                     removeCell={() => removeCell(index)}
                     index={index}
-                    cellType={cell}
+                    cellType={cell.cellType}
                 />
             ))}
             <AddCellDialog
