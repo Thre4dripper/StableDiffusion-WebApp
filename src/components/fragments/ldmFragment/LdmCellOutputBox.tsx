@@ -42,7 +42,9 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({
     const dispatch = useDispatch()
 
     const { data, isLoading, callApi } = useApi({
-        url: `/wiz/v1/${cellType === CellType.TEXT_TO_IMAGE ? 'txt' : 'img'}2img`,
+        url: `https://api.wizmodel.com/sdapi/v1/${
+            cellType === CellType.TEXT_TO_IMAGE ? 'txt' : 'img'
+        }2img`,
         method: 'POST',
         body: {
             init_images: [inputImage],
