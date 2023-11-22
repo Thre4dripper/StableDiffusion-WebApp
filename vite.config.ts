@@ -6,7 +6,7 @@ export default defineConfig({
     server: {
         proxy: {
             '/wiz': {
-                target: 'http://ec2-52-68-218-19.ap-northeast-1.compute.amazonaws.com:7860',
+                target: 'https://api.wizmodel.com',
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/wiz/, '/sdapi'),
             },
