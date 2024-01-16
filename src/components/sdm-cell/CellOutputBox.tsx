@@ -2,41 +2,41 @@ import React, { useEffect } from 'react'
 import { Alert, Button, CircularProgress, IconButton, Snackbar } from '@mui/material'
 import ImageIcon from '@mui/icons-material/Image'
 import DownloadIcon from '@mui/icons-material/Download'
-import useApi from '../../../hooks/useApi.ts'
+import useApi from '../../hooks/useApi.ts'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../../redux/store.ts'
-import { PromptsInitialState } from '../../../redux/reducers/promptsReducer.ts'
-import { DimensionsInitialState } from '../../../redux/reducers/dimensionsReducer.ts'
-import { SamplingInitialState } from '../../../redux/reducers/smaplingReducer.ts'
+import { RootState } from '../../redux/store.ts'
+import { PromptsInitialState } from '../../redux/reducers/promptsReducer.ts'
+import { DimensionsInitialState } from '../../redux/reducers/dimensionsReducer.ts'
+import { SamplingInitialState } from '../../redux/reducers/smaplingReducer.ts'
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
-import { ImagesInitialState } from '../../../redux/reducers/imagesReducer.ts'
-import { setOutputImage } from '../../../redux/actions/imagesActions.ts'
-import { CellType } from '../../../enums/CellType.ts'
+import { ImagesInitialState } from '../../redux/reducers/imagesReducer.ts'
+import { setOutputImage } from '../../redux/actions/imagesActions.ts'
+import { CellType } from '../../enums/CellType.ts'
 
-interface LdmCellOutputBoxProps {
+interface CellOutputBoxProps {
     openImageDialog: (image: string) => void
     index: number
     cellType: CellType
 }
 
-const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({
-    openImageDialog,
-    index,
-    cellType,
-}) => {
+const CellOutputBox: React.FC<CellOutputBoxProps> = ({
+                                                         openImageDialog,
+                                                         index,
+                                                         cellType,
+                                                     }) => {
     const [snackbarOpen, setSnackbarOpen] = React.useState(false)
 
     const { positivePrompt, negativePrompt } = useSelector<RootState, PromptsInitialState>(
-        (state) => state.prompts[index]
+        (state) => state.prompts[index],
     )
     const { width, height } = useSelector<RootState, DimensionsInitialState>(
-        (state) => state.dimensions[index]
+        (state) => state.dimensions[index],
     )
     const { samplingSteps, cfgScale, upScale } = useSelector<RootState, SamplingInitialState>(
-        (state) => state.sampling[index]
+        (state) => state.sampling[index],
     )
     const { inputImage, outputImage } = useSelector<RootState, ImagesInitialState>(
-        (state) => state.images[index]
+        (state) => state.images[index],
     )
 
     const dispatch = useDispatch()
@@ -186,4 +186,4 @@ const LdmCellOutputBox: React.FC<LdmCellOutputBoxProps> = ({
     )
 }
 
-export default LdmCellOutputBox
+export default CellOutputBox

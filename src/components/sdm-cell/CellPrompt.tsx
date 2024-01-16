@@ -1,12 +1,12 @@
 import React from 'react'
 
-interface LdmCellPromptProps {
+interface CellPromptProps {
     promptType: 'Positive' | 'Negative'
     value: string
     setValue: (value: string) => void
 }
 
-const LdmCellPrompt: React.FC<LdmCellPromptProps> = ({ promptType, value, setValue }) => {
+const CellPrompt: React.FC<CellPromptProps> = ({ promptType, value, setValue }) => {
     return (
         <div className={'flex-1 mx-4'}>
             <textarea
@@ -19,4 +19,4 @@ const LdmCellPrompt: React.FC<LdmCellPromptProps> = ({ promptType, value, setVal
     )
 }
 
-export default LdmCellPrompt
+export default CellPrompt

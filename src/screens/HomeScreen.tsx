@@ -1,12 +1,12 @@
 import React from 'react'
-import HeaderFragment from '../components/fragments/HeaderFragment.tsx'
-import LDMFragment from '../components/fragments/LdmCellsList.tsx'
+import HeaderFragment from '../fragments/HeaderFragment.tsx'
+import SdmCellsList from '../fragments/SdmFragment.tsx'
 
 const HomeScreen: React.FC = () => {
     return (
         <div className={'flex flex-col'}>
             <HeaderFragment />
-            <LDMFragment />
+            <SdmCellsList />
         </div>
     )
 }

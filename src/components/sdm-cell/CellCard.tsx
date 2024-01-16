@@ -1,30 +1,30 @@
 import { IconButton, Paper } from '@mui/material'
-import SizeControls from '../../controls/SizeControls.tsx'
-import SamplingControls from '../../controls/SamplingControls.tsx'
+import SizeControls from '../controls/SizeControls.tsx'
+import SamplingControls from '../controls/SamplingControls.tsx'
 import React from 'react'
-import ZoomableImageDialog from '../../dialogs/ZoomableImageDialog.tsx'
-import LdmCellPrompt from './LdmCellPrompt.tsx'
+import ZoomableImageDialog from '../dialogs/ZoomableImageDialog.tsx'
+import CellPrompt from './CellPrompt.tsx'
 import { useDispatch, useSelector } from 'react-redux'
-import { RootState } from '../../../redux/store.ts'
-import { PromptsInitialState } from '../../../redux/reducers/promptsReducer.ts'
-import { setNegativePrompt, setPositivePrompt } from '../../../redux/actions/promptsActions.ts'
-import LdmCellOutputBox from './LdmCellOutputBox.tsx'
+import { RootState } from '../../redux/store.ts'
+import { PromptsInitialState } from '../../redux/reducers/promptsReducer.ts'
+import { setNegativePrompt, setPositivePrompt } from '../../redux/actions/promptsActions.ts'
+import CellOutputBox from './CellOutputBox.tsx'
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate'
-import { CellType } from '../../../enums/CellType.ts'
-import { setInputImage } from '../../../redux/actions/imagesActions.ts'
+import { CellType } from '../../enums/CellType.ts'
+import { setInputImage } from '../../redux/actions/imagesActions.ts'
 
-interface LdmCardProps {
+interface CellCardProps {
     index: number
     setIsHovering: React.Dispatch<React.SetStateAction<boolean>>
     cellType: CellType
 }
 
-const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering, cellType }) => {
+const CellCard: React.FC<CellCardProps> = ({ index, setIsHovering, cellType }) => {
     const [open, setOpen] = React.useState(false)
     const [modalImage, setModalImage] = React.useState<string>('')
 
     const { positivePrompt, negativePrompt } = useSelector<RootState, PromptsInitialState>(
-        (state) => state.prompts[index]
+        (state) => state.prompts[index],
     )
     const inputImage = useSelector<RootState, string>((state) => state.images[index].inputImage)
     const dispatch = useDispatch()
@@ -79,12 +79,12 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering, cellType })
                         <div className={'flex-1 flex flex-row'}>
                             {/*Prompt Container*/}
                             <div className={'flex-1 flex flex-col justify-center gap-4 py-2'}>
-                                <LdmCellPrompt
+                                <CellPrompt
                                     value={positivePrompt}
                                     setValue={handlePositivePromptChange}
                                     promptType={'Positive'}
                                 />
-                                <LdmCellPrompt
+                                <CellPrompt
                                     value={negativePrompt}
                                     setValue={handleNegativePromptChange}
                                     promptType={'Negative'}
@@ -130,7 +130,7 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering, cellType })
                         </div>
                     </div>
                     {/*Output Container*/}
-                    <LdmCellOutputBox
+                    <CellOutputBox
                         openImageDialog={(image: string) => {
                             setModalImage(image)
                             setOpen(true)
@@ -154,4 +154,4 @@ const LdmCellCard: React.FC<LdmCardProps> = ({ index, setIsHovering, cellType })
     )
 }
 
-export default LdmCellCard
+export default CellCard

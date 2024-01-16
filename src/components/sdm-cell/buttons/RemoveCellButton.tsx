@@ -2,19 +2,19 @@ import React from 'react'
 import { IconButton, Paper } from '@mui/material'
 import CloseIcon from '@mui/icons-material/Close'
 
-interface LdmCellRemoveButtonProps {
+interface RemoveCellButtonProps {
     className?: string
     setIsHovering: React.Dispatch<React.SetStateAction<boolean>>
     removeCell: (index: number) => void
     index: number
 }
 
-const LdmCellRemoveButton: React.FC<LdmCellRemoveButtonProps> = ({
-    className,
-    setIsHovering,
-    removeCell,
-    index,
-}) => {
+const RemoveCellButton: React.FC<RemoveCellButtonProps> = ({
+                                                               className,
+                                                               setIsHovering,
+                                                               removeCell,
+                                                               index,
+                                                           }) => {
     return (
         <Paper
             onMouseEnter={() => {
@@ -48,4 +48,4 @@ const LdmCellRemoveButton: React.FC<LdmCellRemoveButtonProps> = ({
     )
 }
 
-export default LdmCellRemoveButton
+export default RemoveCellButton

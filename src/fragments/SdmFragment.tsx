@@ -1,20 +1,25 @@
 import React, { useState } from 'react'
-import LdmCell from './ldmFragment/LdmCell.tsx'
+import CellContainer from '../components/sdm-cell/CellContainer.tsx'
 import { useDispatch } from 'react-redux'
-import { addDimensionCell, removeDimensionCell } from '../../redux/actions/dimensionsActions.ts'
-import { addPromptCell, removePromptCell } from '../../redux/actions/promptsActions.ts'
-import { addSamplingCell, removeSamplingCell } from '../../redux/actions/samplingActions.ts'
-import { dimensionsInitialState } from '../../redux/reducers/dimensionsReducer.ts'
-import { promptsInitialState } from '../../redux/reducers/promptsReducer.ts'
-import { samplingInitialState } from '../../redux/reducers/smaplingReducer.ts'
-import { CellType } from '../../enums/CellType.ts'
-import { addImageCell, removeImageCell } from '../../redux/actions/imagesActions.ts'
-import { imagesInitialState } from '../../redux/reducers/imagesReducer.ts'
-import AddCellDialog from '../dialogs/AddCellDialog.tsx'
-import { AddCellDialogState } from '../../enums/AddCellDialogState.ts'
+import { addDimensionCell, removeDimensionCell } from '../redux/actions/dimensionsActions.ts'
+import { addPromptCell, removePromptCell } from '../redux/actions/promptsActions.ts'
+import { addSamplingCell, removeSamplingCell } from '../redux/actions/samplingActions.ts'
+import { dimensionsInitialState } from '../redux/reducers/dimensionsReducer.ts'
+import { promptsInitialState } from '../redux/reducers/promptsReducer.ts'
+import { samplingInitialState } from '../redux/reducers/smaplingReducer.ts'
+import { CellType } from '../enums/CellType.ts'
+import { addImageCell, removeImageCell } from '../redux/actions/imagesActions.ts'
+import { imagesInitialState } from '../redux/reducers/imagesReducer.ts'
+import AddCellDialog from '../components/dialogs/AddCellDialog.tsx'
+import { AddCellDialogState } from '../enums/AddCellDialogState.ts'
 
-const LdmCellList: React.FC = () => {
-    const [cells, setCells] = useState<{ id: number; cellType: CellType }[]>([])
+interface ISdmCell {
+    id: number
+    cellType: CellType
+}
+
+const SdmFragment: React.FC = () => {
+    const [cells, setCells] = useState<ISdmCell[]>([])
     const dispatch = useDispatch()
     const addCellAbove = (index: number, cellType: CellType) => {
         setCells((prevCells) => {
@@ -59,7 +64,7 @@ const LdmCellList: React.FC = () => {
     return (
         <div className={'py-4'}>
             {cells.map((cell, index) => (
-                <LdmCell
+                <CellContainer
                     key={cell.id}
                     addCellAbove={addCellAbove}
                     addCellBelow={addCellBelow}
@@ -75,7 +80,8 @@ const LdmCellList: React.FC = () => {
                         ? AddCellDialogState.OPENED_FROM_ABOVE
                         : AddCellDialogState.CLOSED
                 }
-                onClose={() => {}}
+                onClose={() => {
+                }}
                 addCellAbove={addCellAbove}
                 addCellBelow={addCellBelow}
                 index={0}
@@ -84,4 +90,4 @@ const LdmCellList: React.FC = () => {
     )
 }
 
-export default LdmCellList
+export default SdmFragment

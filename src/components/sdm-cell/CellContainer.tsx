@@ -1,12 +1,12 @@
 import React from 'react'
-import AddCellButton from './AddCellButton.tsx'
-import LdmCellCard from './LdmCellCard.tsx'
-import LdmCellRemoveButton from './LdmCellRemoveButton.tsx'
-import AddCellDialog from '../../dialogs/AddCellDialog.tsx'
-import { AddCellDialogState } from '../../../enums/AddCellDialogState.ts'
-import { CellType } from '../../../enums/CellType.ts'
+import AddCellButton from './buttons/AddCellButton.tsx'
+import CellCard from './CellCard.tsx'
+import RemoveCellButton from './buttons/RemoveCellButton.tsx'
+import AddCellDialog from '../dialogs/AddCellDialog.tsx'
+import { AddCellDialogState } from '../../enums/AddCellDialogState.ts'
+import { CellType } from '../../enums/CellType.ts'
 
-interface LdmCellProps {
+interface CellContainerProps {
     addCellAbove: (index: number, cellType: CellType) => void
     addCellBelow: (index: number, cellType: CellType) => void
     removeCell: (index: number) => void
@@ -14,16 +14,16 @@ interface LdmCellProps {
     cellType: CellType
 }
 
-const LdmCell: React.FC<LdmCellProps> = ({
-    addCellAbove,
-    addCellBelow,
-    removeCell,
-    index,
-    cellType,
-}) => {
+const CellContainer: React.FC<CellContainerProps> = ({
+                                                         addCellAbove,
+                                                         addCellBelow,
+                                                         removeCell,
+                                                         index,
+                                                         cellType,
+                                                     }) => {
     const [isHovering, setIsHovering] = React.useState(false)
     const [openAddCellDialog, setOpenAddCellDialog] = React.useState<AddCellDialogState>(
-        AddCellDialogState.CLOSED
+        AddCellDialogState.CLOSED,
     )
 
     const handleDialogClose = () => {
@@ -34,7 +34,7 @@ const LdmCell: React.FC<LdmCellProps> = ({
         <div className={'flex flex-col items-center'}>
             <div className={'w-full relative'}>
                 {isHovering && (
-                    <LdmCellRemoveButton
+                    <RemoveCellButton
                         className={'z-10 absolute right-10 top-8'}
                         setIsHovering={setIsHovering}
                         removeCell={removeCell}
@@ -51,7 +51,7 @@ const LdmCell: React.FC<LdmCellProps> = ({
                         index={index}
                     />
                 )}
-                <LdmCellCard index={index} setIsHovering={setIsHovering} cellType={cellType} />
+                <CellCard index={index} setIsHovering={setIsHovering} cellType={cellType} />
                 {isHovering && (
                     <AddCellButton
                         className={'z-10 absolute left-1/2 transform -translate-x-1/2 bottom-4'}
@@ -74,4 +74,4 @@ const LdmCell: React.FC<LdmCellProps> = ({
     )
 }
 
-export default LdmCell
+export default CellContainer
