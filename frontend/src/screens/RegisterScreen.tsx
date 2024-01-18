@@ -9,7 +9,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import Copyright from '../components/Copyright.tsx'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { IconButton } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import useApi from '../hooks/useApi.ts'
@@ -35,7 +35,9 @@ const Register: React.FC = () => {
 
     const [showPassword, setShowPassword] = useState(false)
 
-    const { callApi, data, isLoading, isSuccess } = useApi({
+    const navigate = useNavigate()
+
+    const { callApi, isLoading, isSuccess } = useApi({
         url: '/api/v1/user/register',
         method: 'POST',
         body: {
@@ -51,7 +53,7 @@ const Register: React.FC = () => {
 
     useEffect(() => {
         if (isSuccess) {
-            console.log(data)
+            navigate('/login')
         }
     }, [isSuccess])
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
