@@ -14,7 +14,11 @@ class UserService {
 
         data.password = await EncryptionUtil.hashPassword(data.password)
 
-        return userRepository.create(data)
+        const result = await userRepository.create(data)
+        return {
+            ...result.toJSON(),
+            tokens: EncryptionUtil.generateJwtTokens(result.toJSON()),
+        }
     }
 
     async loginUser(data: ILoginUser) {
@@ -33,7 +37,10 @@ class UserService {
             throw new ValidationError(ErrorMessages.INVALID_CREDENTIALS)
         }
 
-        return user
+        return {
+            ...user.toJSON(),
+            tokens: EncryptionUtil.generateJwtTokens(user.toJSON()),
+        }
     }
 }
 
