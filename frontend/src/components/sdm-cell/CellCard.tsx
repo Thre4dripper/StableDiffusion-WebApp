@@ -24,7 +24,7 @@ const CellCard: React.FC<CellCardProps> = ({ index, setIsHovering, cellType }) =
     const [modalImage, setModalImage] = React.useState<string>('')
 
     const { positivePrompt, negativePrompt } = useSelector<RootState, PromptsInitialState>(
-        (state) => state.prompts[index],
+        (state) => state.prompts[index]
     )
     const inputImage = useSelector<RootState, string>((state) => state.images[index].inputImage)
     const dispatch = useDispatch()

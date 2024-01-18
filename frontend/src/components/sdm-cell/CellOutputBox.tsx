@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Alert, Button, CircularProgress, IconButton, Snackbar } from '@mui/material'
 import ImageIcon from '@mui/icons-material/Image'
 import DownloadIcon from '@mui/icons-material/Download'
-import useApi from '../../hooks/useApi.ts'
+import useApi, { RequestMethod } from '../../hooks/useApi.ts'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store.ts'
 import { PromptsInitialState } from '../../redux/reducers/promptsReducer.ts'
@@ -19,48 +19,29 @@ interface CellOutputBoxProps {
     cellType: CellType
 }
 
-const CellOutputBox: React.FC<CellOutputBoxProps> = ({
-                                                         openImageDialog,
-                                                         index,
-                                                         cellType,
-                                                     }) => {
+const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, cellType }) => {
     const [snackbarOpen, setSnackbarOpen] = React.useState(false)
 
     const { positivePrompt, negativePrompt } = useSelector<RootState, PromptsInitialState>(
-        (state) => state.prompts[index],
+        (state) => state.prompts[index]
     )
     const { width, height } = useSelector<RootState, DimensionsInitialState>(
-        (state) => state.dimensions[index],
+        (state) => state.dimensions[index]
     )
     const { samplingSteps, cfgScale, upScale } = useSelector<RootState, SamplingInitialState>(
-        (state) => state.sampling[index],
+        (state) => state.sampling[index]
     )
     const { inputImage, outputImage } = useSelector<RootState, ImagesInitialState>(
-        (state) => state.images[index],
+        (state) => state.images[index]
     )
 
     const dispatch = useDispatch()
 
-    const { data, isLoading, callApi } = useApi({
+    const { isLoading, callApi } = useApi({
         url: `https://api.wizmodel.com/sdapi/v1/${
             cellType === CellType.TEXT_TO_IMAGE ? 'txt' : 'img'
         }2img`,
-        method: 'POST',
-        body: {
-            init_images: [inputImage],
-            prompt: positivePrompt,
-            negative_prompt: negativePrompt,
-            width: width,
-            height: height,
-            steps: samplingSteps,
-            cfg_scale: cfgScale,
-            enable_hr: true,
-            hr_scale: upScale,
-        },
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${import.meta.env.VITE_WIZMODEL_API_KEY}`,
-        },
+        method: RequestMethod.POST,
     })
 
     const generateImage = () => {
@@ -76,15 +57,28 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({
             }
             return
         }
-        callApi()
+        callApi({
+            body: {
+                init_images: [inputImage],
+                prompt: positivePrompt,
+                negative_prompt: negativePrompt,
+                width: width,
+                height: height,
+                steps: samplingSteps,
+                cfg_scale: cfgScale,
+                enable_hr: true,
+                hr_scale: upScale,
+            },
+            token: import.meta.env.VITE_WIZMODEL_API_KEY,
+            onSuccess: (data) => {
+                const parsedImage = `data:image/png;base64,${data?.data?.images[0]}`
+                dispatch(setOutputImage(parsedImage, index))
+            },
+            onError: (error) => {
+                console.log(error)
+            },
+        })
     }
-
-    useEffect(() => {
-        // base64 to image
-        if (data === null) return
-        const parsedImage = `data:image/png;base64,${data.data?.images[0]}`
-        dispatch(setOutputImage(parsedImage, index))
-    }, [data, dispatch, index])
 
     const downloadImage = () => {
         if (outputImage === null) return
