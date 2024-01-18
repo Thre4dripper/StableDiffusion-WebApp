@@ -7,8 +7,8 @@ const Copyright: React.FC<any> = (props: any) => {
     return (
         <Typography variant='body2' color='text.secondary' align='center' {...props}>
             {'Copyright © '}
-            <Link color='inherit' href='https://mui.com/'>
-                Your Website
+            <Link color='inherit' href='https://github.com/thre4dripper/'>
+                Ijlal Ahmad
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
