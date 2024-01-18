@@ -15,6 +15,8 @@ import { Visibility, VisibilityOff } from '@mui/icons-material'
 import useApi, { RequestMethod } from '../hooks/useApi.ts'
 import Loader from '../components/Loader.tsx'
 import { useSnackbar } from 'notistack'
+import { useDispatch } from 'react-redux'
+import { setToken, setUserData } from '../redux/actions/authActions.ts'
 
 const Register: React.FC = () => {
     const [firstName, setFirstName] = useState({
@@ -37,6 +39,7 @@ const Register: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false)
 
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const { enqueueSnackbar } = useSnackbar()
 
     const { callApi: registerUser, isLoading } = useApi({
@@ -104,7 +107,7 @@ const Register: React.FC = () => {
                 email: email.value,
                 password: password.value,
             },
-            onSuccess: () => {
+            onSuccess: (response) => {
                 enqueueSnackbar('Successfully registered', {
                     variant: 'success',
                     autoHideDuration: 3000,
@@ -114,9 +117,21 @@ const Register: React.FC = () => {
                     },
                     preventDuplicate: true,
                 })
+                const token = response?.data?.data?.tokens?.accessToken
+                const user = {
+                    firstName: response?.data?.data?.firstName,
+                    lastName: response?.data?.data?.lastName,
+                    email: response?.data?.data?.email,
+                    id: response?.data?.data?._id,
+                }
+                
+                dispatch(setToken(token))
+                dispatch(setUserData(user))
+                localStorage.setItem('token', token)
                 navigate('/login')
             },
-            onError: () => {
+            onError: (error) => {
+                console.log(error)
                 enqueueSnackbar('Email Already Used', {
                     variant: 'error',
                     autoHideDuration: 3000,

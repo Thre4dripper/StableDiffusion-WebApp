@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
 
 export enum RequestMethod {
     GET = 'GET',
@@ -13,15 +13,15 @@ interface UseApiConfig {
     method?: RequestMethod
 }
 
-interface CallFunction {
-    body: any
+interface CallFunction<T> {
+    body: T
     token?: string
     onSuccess: (data: AxiosResponse | null) => void
     onError: (error: string) => void
 }
 
 interface UseApiResult {
-    callApi: (callFunction: CallFunction) => void
+    callApi: <T>(callFunction: CallFunction<T>) => void
     isLoading: boolean
     isSuccess: boolean
     isFailed: boolean
@@ -34,7 +34,7 @@ const useApi = ({ url, method = RequestMethod.GET }: UseApiConfig): UseApiResult
     const [isFailed, setIsFailed] = useState<boolean>(false)
 
     const callApi = useCallback(
-        ({ body, token, onSuccess, onError }: CallFunction) => {
+        <T>({ body, token, onSuccess, onError }: CallFunction<T>) => {
             setIsLoading(true)
 
             const axiosConfig: AxiosRequestConfig = {
@@ -54,10 +54,12 @@ const useApi = ({ url, method = RequestMethod.GET }: UseApiConfig): UseApiResult
                     setIsSuccess(true)
                     onSuccess(response)
                 })
-                .catch((error: any) => {
+                .catch((error: AxiosError) => {
                     setIsFailed(true)
                     setIsLoading(false)
-                    onError(error.error)
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore
+                    onError(error.response?.data?.error || 'Something went wrong')
                 })
         },
         [url, method]
