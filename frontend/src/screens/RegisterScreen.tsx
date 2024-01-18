@@ -14,6 +14,7 @@ import { IconButton } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import useApi from '../hooks/useApi.ts'
 import Loader from '../components/Loader.tsx'
+import { useSnackbar } from 'notistack'
 
 const Register: React.FC = () => {
     const [firstName, setFirstName] = useState({
@@ -36,8 +37,9 @@ const Register: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false)
 
     const navigate = useNavigate()
+    const { enqueueSnackbar } = useSnackbar()
 
-    const { callApi, isLoading, isSuccess } = useApi({
+    const { callApi, reset, isLoading, isSuccess, isFailed } = useApi({
         url: '/api/v1/user/register',
         method: 'POST',
         body: {
@@ -53,9 +55,28 @@ const Register: React.FC = () => {
 
     useEffect(() => {
         if (isSuccess) {
+            enqueueSnackbar('Successfully registered', {
+                variant: 'success',
+                autoHideDuration: 3000,
+                anchorOrigin: {
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                },
+                preventDuplicate: true,
+            })
             navigate('/login')
+        } else if (isFailed) {
+            enqueueSnackbar('Email Already Used', {
+                variant: 'error',
+                autoHideDuration: 3000,
+                anchorOrigin: {
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                },
+            })
         }
-    }, [isSuccess])
+        reset()
+    }, [enqueueSnackbar, isFailed, isSuccess, navigate, reset])
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 

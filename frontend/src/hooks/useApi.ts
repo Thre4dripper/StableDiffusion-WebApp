@@ -62,9 +62,10 @@ const useApi = ({
 
     const reset = () => {
         setData(null)
-        setIsLoading(false)
         setError(null)
+        setIsLoading(false)
         setIsSuccess(false)
+        setIsFailed(false)
     }
 
     return {
