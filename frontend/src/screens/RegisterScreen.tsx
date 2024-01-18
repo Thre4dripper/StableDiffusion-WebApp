@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -12,7 +12,7 @@ import Copyright from '../components/Copyright.tsx'
 import { Link, useNavigate } from 'react-router-dom'
 import { IconButton } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
-import useApi from '../hooks/useApi.ts'
+import useApi, { RequestMethod } from '../hooks/useApi.ts'
 import Loader from '../components/Loader.tsx'
 import { useSnackbar } from 'notistack'
 
@@ -39,44 +39,10 @@ const Register: React.FC = () => {
     const navigate = useNavigate()
     const { enqueueSnackbar } = useSnackbar()
 
-    const { callApi, reset, isLoading, isSuccess, isFailed } = useApi({
+    const { callApi: registerUser, isLoading } = useApi({
         url: '/api/v1/user/register',
-        method: 'POST',
-        body: {
-            firstName: firstName.value,
-            lastName: lastName.value,
-            email: email.value,
-            password: password.value,
-        },
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        method: RequestMethod.POST,
     })
-
-    useEffect(() => {
-        if (isSuccess) {
-            enqueueSnackbar('Successfully registered', {
-                variant: 'success',
-                autoHideDuration: 3000,
-                anchorOrigin: {
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                },
-                preventDuplicate: true,
-            })
-            navigate('/login')
-        } else if (isFailed) {
-            enqueueSnackbar('Email Already Used', {
-                variant: 'error',
-                autoHideDuration: 3000,
-                anchorOrigin: {
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                },
-            })
-        }
-        reset()
-    }, [enqueueSnackbar, isFailed, isSuccess, navigate, reset])
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
@@ -131,8 +97,36 @@ const Register: React.FC = () => {
             return
         }
 
-        console.log(firstName.value, lastName.value, email.value, password.value)
-        callApi()
+        registerUser({
+            body: {
+                firstName: firstName.value,
+                lastName: lastName.value,
+                email: email.value,
+                password: password.value,
+            },
+            onSuccess: () => {
+                enqueueSnackbar('Successfully registered', {
+                    variant: 'success',
+                    autoHideDuration: 3000,
+                    anchorOrigin: {
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    },
+                    preventDuplicate: true,
+                })
+                navigate('/login')
+            },
+            onError: () => {
+                enqueueSnackbar('Email Already Used', {
+                    variant: 'error',
+                    autoHideDuration: 3000,
+                    anchorOrigin: {
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    },
+                })
+            },
+        })
     }
 
     if (isLoading) {
