@@ -20,7 +20,8 @@ export default class RegisterUserController extends MasterController<null, null,
 
         payload.addToBody(
             Joi.object().keys({
-                name: Joi.string().required(),
+                firstName: Joi.string().min(3).max(20).required(),
+                lastName: Joi.string().min(3).max(20).required(),
                 email: Joi.string().email().required(),
                 password: Joi.string().min(8).max(20).required(),
             }),
@@ -30,9 +31,9 @@ export default class RegisterUserController extends MasterController<null, null,
     }
 
     async restController(params: null, query: null, body: IRegisterUser, headers: any, allData: any): Promise<any> {
-        const { name, email, password } = body
+        const { firstName, lastName, email, password } = body
 
-        const response = await userService.registerUser({ name, email, password })
+        const response = await userService.registerUser({ firstName, lastName, email, password })
 
         return new ResponseBuilder(StatusCodes.SUCCESS, response, 'User registered successfully')
     }
