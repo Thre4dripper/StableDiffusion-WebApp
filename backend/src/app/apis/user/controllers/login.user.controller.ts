@@ -5,6 +5,7 @@ import Joi from 'joi'
 import userService from '../services/user.service'
 import ResponseBuilder from '../../../utils/ResponseBuilder'
 import { StatusCodes } from '../../../enums/StatusCodes'
+import { SuccessMessages } from '../../../enums/SuccessMessages'
 
 export default class LoginUserController extends MasterController<null, null, ILoginUser> {
     static doc() {
@@ -22,17 +23,23 @@ export default class LoginUserController extends MasterController<null, null, IL
             Joi.object().keys({
                 email: Joi.string().email().required(),
                 password: Joi.string().min(8).max(20).required(),
-            }),
+            })
         )
 
         return payload
     }
 
-    async restController(params: null, query: null, body: ILoginUser, headers: any, allData: any): Promise<any> {
+    async restController(
+        params: null,
+        query: null,
+        body: ILoginUser,
+        headers: any,
+        allData: any
+    ): Promise<any> {
         const { email, password } = body
 
         const response = await userService.loginUser({ email, password })
 
-        return new ResponseBuilder(StatusCodes.SUCCESS, response, 'User logged in successfully')
+        return new ResponseBuilder(StatusCodes.SUCCESS, response, SuccessMessages.LOGIN_SUCCESS)
     }
 }
