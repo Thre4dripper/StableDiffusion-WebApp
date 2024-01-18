@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useState } from 'react'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -14,14 +14,79 @@ import { IconButton } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 
 const Register: React.FC = () => {
-    const [showPassword, setShowPassword] = React.useState(false)
+    const [firstName, setFirstName] = useState({
+        value: '',
+        error: '',
+    })
+    const [lastName, setLastName] = useState({
+        value: '',
+        error: '',
+    })
+    const [email, setEmail] = useState({
+        value: '',
+        error: '',
+    })
+    const [password, setPassword] = useState({
+        value: '',
+        error: '',
+    })
+
+    const [showPassword, setShowPassword] = useState(false)
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
-        const data = new FormData(event.currentTarget)
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        })
+
+        if (firstName.value === '') {
+            setFirstName((prevState) => {
+                return {
+                    ...prevState,
+                    error: 'First name is required',
+                }
+            })
+        }
+
+        if (lastName.value === '') {
+            setLastName((prevState) => {
+                return {
+                    ...prevState,
+                    error: 'Last name is required',
+                }
+            })
+        }
+
+        if (email.value === '') {
+            setEmail((prevState) => {
+                return {
+                    ...prevState,
+                    error: 'Email is required',
+                }
+            })
+        } else if (!email.value.includes('@')) {
+            setEmail((prevState) => {
+                return {
+                    ...prevState,
+                    error: 'Invalid email address',
+                }
+            })
+        }
+
+        if (password.value.length < 6) {
+            setPassword((prevState) => {
+                return {
+                    ...prevState,
+                    error: 'Password must be at least 6 characters',
+                }
+            })
+        }
+
+        if (
+            [firstName.value, lastName.value, email.value, password.value].some(
+                (item) => item === ''
+            )
+        ) {
+            return
+        }
+
+        console.log(firstName.value, lastName.value, email.value, password.value)
     }
 
     return (
@@ -33,8 +98,7 @@ const Register: React.FC = () => {
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
-                }}
-            >
+                }}>
                 <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                     <LockOutlinedIcon />
                 </Avatar>
@@ -52,6 +116,20 @@ const Register: React.FC = () => {
                                 id='firstName'
                                 label='First Name'
                                 autoFocus
+                                value={firstName.value}
+                                onChange={(e) =>
+                                    setFirstName((prevState) => {
+                                        const value = e.target.value
+                                        return {
+                                            ...prevState,
+                                            value,
+                                            touched: true,
+                                            error: value === '' ? 'First name is required' : '',
+                                        }
+                                    })
+                                }
+                                error={firstName.error !== ''}
+                                helperText={firstName.error}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -62,6 +140,20 @@ const Register: React.FC = () => {
                                 label='Last Name'
                                 name='lastName'
                                 autoComplete='family-name'
+                                value={lastName.value}
+                                onChange={(e) =>
+                                    setLastName((prevState) => {
+                                        const value = e.target.value
+                                        return {
+                                            ...prevState,
+                                            value,
+                                            touched: true,
+                                            error: value === '' ? 'Last name is required' : '',
+                                        }
+                                    })
+                                }
+                                error={lastName.error !== ''}
+                                helperText={lastName.error}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -72,6 +164,28 @@ const Register: React.FC = () => {
                                 label='Email Address'
                                 name='email'
                                 autoComplete='email'
+                                value={email.value}
+                                onChange={(e) => {
+                                    setEmail((prevState) => {
+                                        const value = e.target.value
+                                        let error: string
+                                        if (value === '') {
+                                            error = 'Email is required'
+                                        } else if (!value.includes('@')) {
+                                            error = 'Invalid email address'
+                                        } else {
+                                            error = ''
+                                        }
+                                        return {
+                                            ...prevState,
+                                            value,
+                                            touched: true,
+                                            error,
+                                        }
+                                    })
+                                }}
+                                error={email.error !== ''}
+                                helperText={email.error}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -89,21 +203,32 @@ const Register: React.FC = () => {
                                             aria-label='toggle password visibility'
                                             onClick={() => setShowPassword(!showPassword)}
                                             onMouseDown={(event) => event.preventDefault()}
-                                            edge='end'
-                                        >
+                                            edge='end'>
                                             {showPassword ? <VisibilityOff /> : <Visibility />}
                                         </IconButton>
                                     ),
                                 }}
+                                value={password.value}
+                                onChange={(e) =>
+                                    setPassword((prevState) => {
+                                        const value = e.target.value
+                                        return {
+                                            ...prevState,
+                                            value,
+                                            touched: true,
+                                            error:
+                                                value.length < 6
+                                                    ? 'Password must be at least 6 characters'
+                                                    : '',
+                                        }
+                                    })
+                                }
+                                error={password.error !== ''}
+                                helperText={password.error}
                             />
                         </Grid>
                     </Grid>
-                    <Button
-                        type='submit'
-                        fullWidth
-                        variant='contained'
-                        sx={{ mt: 3, mb: 2 }}
-                    >
+                    <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
                         Sign Up
                     </Button>
                     <Grid container justifyContent='flex-end'>
