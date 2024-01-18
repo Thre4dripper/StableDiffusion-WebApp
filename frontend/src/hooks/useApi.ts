@@ -13,9 +13,10 @@ interface UseApiConfig {
 
 interface UseApiResult {
     data: AxiosResponse | null
-    isLoading: boolean
     error: string | null
-    isFinished: boolean
+    isLoading: boolean
+    isSuccess: boolean
+    isFailed: boolean
     callApi: () => void
     reset: () => void
 }
@@ -30,9 +31,10 @@ const useApi = ({
     params,
 }: UseApiConfig): UseApiResult => {
     const [data, setData] = useState<AxiosResponse | null>(null)
-    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [error, setError] = useState<string | null>(null)
-    const [isFinished, setIsFinished] = useState<boolean>(false)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [isSuccess, setIsSuccess] = useState<boolean>(false)
+    const [isFailed, setIsFailed] = useState<boolean>(false)
 
     const callApi = useCallback(() => {
         setIsLoading(true)
@@ -49,10 +51,11 @@ const useApi = ({
             .then((response: AxiosResponse) => {
                 setData(response)
                 setIsLoading(false)
-                setIsFinished(true)
+                setIsSuccess(true)
             })
             .catch((error: AxiosError) => {
                 setError(error.message)
+                setIsFailed(true)
                 setIsLoading(false)
             })
     }, [url, method, headers, body, onDownloadProgress, onUploadProgress, params])
@@ -61,14 +64,15 @@ const useApi = ({
         setData(null)
         setIsLoading(false)
         setError(null)
-        setIsFinished(false)
+        setIsSuccess(false)
     }
 
     return {
         data,
-        isLoading,
         error,
-        isFinished,
+        isLoading,
+        isSuccess,
+        isFailed,
         callApi,
         reset,
     }

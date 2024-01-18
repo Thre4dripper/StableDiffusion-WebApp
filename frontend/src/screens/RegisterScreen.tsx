@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Avatar from '@mui/material/Avatar'
 import Button from '@mui/material/Button'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -12,6 +12,8 @@ import Copyright from '../components/Copyright.tsx'
 import { Link } from 'react-router-dom'
 import { IconButton } from '@mui/material'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
+import useApi from '../hooks/useApi.ts'
+import Loader from '../components/Loader.tsx'
 
 const Register: React.FC = () => {
     const [firstName, setFirstName] = useState({
@@ -32,6 +34,26 @@ const Register: React.FC = () => {
     })
 
     const [showPassword, setShowPassword] = useState(false)
+
+    const { callApi, data, isLoading, isSuccess } = useApi({
+        url: '/api/v1/user/register',
+        method: 'POST',
+        body: {
+            firstName: firstName.value,
+            lastName: lastName.value,
+            email: email.value,
+            password: password.value,
+        },
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+
+    useEffect(() => {
+        if (isSuccess) {
+            console.log(data)
+        }
+    }, [isSuccess])
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
@@ -87,6 +109,15 @@ const Register: React.FC = () => {
         }
 
         console.log(firstName.value, lastName.value, email.value, password.value)
+        callApi()
+    }
+
+    if (isLoading) {
+        return (
+            <div className={'flex h-screen w-screen justify-center items-center'}>
+                <Loader />
+            </div>
+        )
     }
 
     return (
