@@ -1,14 +1,16 @@
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
 import promptsReducer, { PromptsInitialState } from './reducers/promptsReducer.ts'
 import dimensionsReducer, { DimensionsInitialState } from './reducers/dimensionsReducer.ts'
-import samplingReducer, { SamplingInitialState } from './reducers/smaplingReducer.ts'
+import samplingReducer, { SamplingInitialState } from './reducers/samplingReducer.ts'
 import imagesReducer, { ImagesInitialState } from './reducers/imagesReducer.ts'
+import authReducer, { AuthReducerInitialState } from './reducers/authReducer.ts'
 
 export interface RootState {
     prompts: PromptsInitialState[]
     dimensions: DimensionsInitialState[]
     sampling: SamplingInitialState[]
     images: ImagesInitialState[]
+    auth: AuthReducerInitialState
 }
 
 const rootReducer = combineReducers<RootState>({
@@ -16,6 +18,7 @@ const rootReducer = combineReducers<RootState>({
     dimensions: dimensionsReducer,
     sampling: samplingReducer,
     images: imagesReducer,
+    auth: authReducer,
 })
 
 interface WindowWithDevTools extends Window {

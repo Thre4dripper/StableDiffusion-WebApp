@@ -16,4 +16,6 @@ export enum ActionTypes {
     REMOVE_DIMENSION_CELL,
     REMOVE_SAMPLING_CELL,
     REMOVE_IMAGES_CELL,
+    SET_TOKEN,
+    SET_USER_DATA,
 }

@@ -3,7 +3,7 @@ import { Paper } from '@mui/material'
 import SamplingInput from './SamplingInput.tsx'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store.ts'
-import { SamplingInitialState } from '../../redux/reducers/smaplingReducer.ts'
+import { SamplingInitialState } from '../../redux/reducers/samplingReducer.ts'
 import { setCfgScale, setSamplingSteps, setUpScale } from '../../redux/actions/samplingActions.ts'
 
 interface SamplingControlsProps {

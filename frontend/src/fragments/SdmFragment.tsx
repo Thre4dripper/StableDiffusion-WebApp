@@ -6,7 +6,7 @@ import { addPromptCell, removePromptCell } from '../redux/actions/promptsActions
 import { addSamplingCell, removeSamplingCell } from '../redux/actions/samplingActions.ts'
 import { dimensionsInitialState } from '../redux/reducers/dimensionsReducer.ts'
 import { promptsInitialState } from '../redux/reducers/promptsReducer.ts'
-import { samplingInitialState } from '../redux/reducers/smaplingReducer.ts'
+import { samplingInitialState } from '../redux/reducers/samplingReducer.ts'
 import { CellType } from '../enums/CellType.ts'
 import { addImageCell, removeImageCell } from '../redux/actions/imagesActions.ts'
 import { imagesInitialState } from '../redux/reducers/imagesReducer.ts'
@@ -80,8 +80,7 @@ const SdmFragment: React.FC = () => {
                         ? AddCellDialogState.OPENED_FROM_ABOVE
                         : AddCellDialogState.CLOSED
                 }
-                onClose={() => {
-                }}
+                onClose={() => {}}
                 addCellAbove={addCellAbove}
                 addCellBelow={addCellBelow}
                 index={0}
