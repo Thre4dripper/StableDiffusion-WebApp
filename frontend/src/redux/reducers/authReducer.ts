@@ -12,17 +12,12 @@ export interface AuthReducerInitialState {
     userData: UserData | null
 }
 
-interface SetTokenAction {
-    type: ActionTypes.SET_TOKEN
-    payload: string | null
-}
-
 interface SetUserDataAction {
     type: ActionTypes.SET_USER_DATA
     payload: UserData | null
 }
 
-type Action = SetTokenAction | SetUserDataAction
+type Action = SetUserDataAction
 
 export const authInitialState: AuthReducerInitialState = {
     token: null,
@@ -31,8 +26,6 @@ export const authInitialState: AuthReducerInitialState = {
 
 const authReducer = (state: AuthReducerInitialState = authInitialState, action: Action) => {
     switch (action.type) {
-        case ActionTypes.SET_TOKEN:
-            return { ...state, token: action.payload }
         case ActionTypes.SET_USER_DATA:
             return { ...state, userData: action.payload }
         default:

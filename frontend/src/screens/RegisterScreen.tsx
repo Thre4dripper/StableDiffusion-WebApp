@@ -15,8 +15,6 @@ import { Visibility, VisibilityOff } from '@mui/icons-material'
 import useApi, { RequestMethod } from '../hooks/useApi.ts'
 import Loader from '../components/Loader.tsx'
 import { useSnackbar } from 'notistack'
-import { useDispatch } from 'react-redux'
-import { setToken, setUserData } from '../redux/actions/authActions.ts'
 import { z } from 'zod'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -42,11 +40,10 @@ const Register: React.FC = () => {
     const [showPassword, setShowPassword] = useState(false)
 
     const navigate = useNavigate()
-    const dispatch = useDispatch()
     const { enqueueSnackbar } = useSnackbar()
 
     const { callApi: registerUser, isLoading } = useApi({
-        url: '/api/v1/user/register',
+        url: '/api/v1/auth/register',
         method: RequestMethod.POST,
     })
     const onSubmit: SubmitHandler<FormValues> = (data) => {
@@ -57,7 +54,7 @@ const Register: React.FC = () => {
                 email: data.email,
                 password: data.password,
             },
-            onSuccess: (response) => {
+            onSuccess: () => {
                 enqueueSnackbar('Successfully registered', {
                     variant: 'success',
                     autoHideDuration: 3000,
@@ -67,18 +64,8 @@ const Register: React.FC = () => {
                     },
                     preventDuplicate: true,
                 })
-                const token = response?.data?.data?.tokens?.accessToken
-                const user = {
-                    firstName: response?.data?.data?.firstName,
-                    lastName: response?.data?.data?.lastName,
-                    email: response?.data?.data?.email,
-                    id: response?.data?.data?._id,
-                }
 
-                dispatch(setToken(token))
-                dispatch(setUserData(user))
-                localStorage.setItem('token', token)
-                navigate('/')
+                navigate('/login')
             },
             onError: (error) => {
                 console.log(error)
