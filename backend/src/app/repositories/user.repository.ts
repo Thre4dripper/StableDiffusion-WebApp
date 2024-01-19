@@ -1,4 +1,4 @@
-import User from '../../../models/user.model'
+import User from '../models/user.model'
 
 class UserRepository {
     async find(filter: {}) {

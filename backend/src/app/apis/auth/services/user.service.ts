@@ -1,5 +1,5 @@
 import { ILoginUser, IRegisterUser } from '../interfaces'
-import userRepository from '../repositories/user.repository'
+import userRepository from '../../../repositories/user.repository'
 import { ValidationError } from '../../../handlers/CustomErrorHandler'
 import EncryptionUtil from '../../../utils/EncryptionUtil'
 import { ErrorMessages } from '../../../enums/ErrorMessages'
