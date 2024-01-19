@@ -14,6 +14,9 @@ import Copyright from '../components/Copyright.tsx'
 import { Link } from 'react-router-dom'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
+import { z } from 'zod'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import image1 from '../assets/login-page-images/login_image1.webp'
 import image2 from '../assets/login-page-images/login_image2.webp'
 import image3 from '../assets/login-page-images/login_image3.png'
@@ -23,20 +26,30 @@ import image6 from '../assets/login-page-images/login_image6.jpg'
 import image7 from '../assets/login-page-images/login_image7.png'
 import image8 from '../assets/login-page-images/login_image8.webp'
 
-
 const images = [image1, image2, image3, image4, image5, image6, image7, image8]
+const image = images[Math.floor(Math.random() * images.length)]
+
+const schema = z.object({
+    email: z.string().email(),
+    password: z.string().min(8),
+    rememberMe: z.boolean(),
+})
+
+type FormValues = z.infer<typeof schema>
+
 const LoginScreen: React.FC = () => {
+    const {
+        formState: { errors },
+        register,
+        handleSubmit,
+    } = useForm<FormValues>({
+        resolver: zodResolver(schema),
+        mode: 'onChange',
+    })
     const [showPassword, setShowPassword] = React.useState(false)
 
-    const image = images[Math.floor(Math.random() * images.length)]
-
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-        const data = new FormData(event.currentTarget)
-        console.log({
-            email: data.get('email'),
-            password: data.get('password'),
-        })
+    const onSubmit: SubmitHandler<FormValues> = (data) => {
+        console.log(data)
     }
 
     return (
@@ -64,30 +77,34 @@ const LoginScreen: React.FC = () => {
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
-                    }}
-                >
+                    }}>
                     <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component='h1' variant='h5'>
                         Sign in
                     </Typography>
-                    <Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                    <Box
+                        component='form'
+                        noValidate
+                        onSubmit={handleSubmit(onSubmit)}
+                        sx={{ mt: 1 }}>
                         <TextField
                             margin='normal'
                             required
                             fullWidth
                             id='email'
                             label='Email Address'
-                            name='email'
                             autoComplete='email'
                             autoFocus
+                            {...register('email')}
+                            error={errors.email !== undefined}
+                            helperText={errors.email?.message}
                         />
                         <TextField
                             margin='normal'
                             required
                             fullWidth
-                            name='password'
                             label='Password'
                             type={showPassword ? 'text' : 'password'}
                             id='password'
@@ -98,23 +115,20 @@ const LoginScreen: React.FC = () => {
                                         aria-label='toggle password visibility'
                                         onClick={() => setShowPassword(!showPassword)}
                                         onMouseDown={(event) => event.preventDefault()}
-                                        edge='end'
-                                    >
+                                        edge='end'>
                                         {showPassword ? <VisibilityOff /> : <Visibility />}
                                     </IconButton>
                                 ),
                             }}
+                            {...register('password')}
+                            error={errors.password !== undefined}
+                            helperText={errors.password?.message}
                         />
                         <FormControlLabel
-                            control={<Checkbox value='remember' color='primary' />}
+                            control={<Checkbox color='primary' {...register('rememberMe')} />}
                             label='Remember me'
                         />
-                        <Button
-                            type='submit'
-                            fullWidth
-                            variant='contained'
-                            sx={{ mt: 3, mb: 2 }}
-                        >
+                        <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
                             Sign In
                         </Button>
                         <Grid container>
@@ -125,7 +139,7 @@ const LoginScreen: React.FC = () => {
                             </Grid>
                             <Grid item>
                                 <Link to={'/register'} className={'underline'}>
-                                    {'Don\'t have an account? Sign Up'}
+                                    {"Don't have an account? Sign Up"}
                                 </Link>
                             </Grid>
                         </Grid>
