@@ -17,23 +17,26 @@ import Loader from '../components/Loader.tsx'
 import { useSnackbar } from 'notistack'
 import { useDispatch } from 'react-redux'
 import { setToken, setUserData } from '../redux/actions/authActions.ts'
+import { z } from 'zod'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 
+const schema = z.object({
+    firstName: z.string().min(1, 'First name is required'),
+    lastName: z.string().min(1, 'Last name is required'),
+    email: z.string().email('Invalid email address'),
+    password: z.string().min(6, 'Password must be at least 6 characters'),
+})
+
+type FormValues = z.infer<typeof schema>
 const Register: React.FC = () => {
-    const [firstName, setFirstName] = useState({
-        value: '',
-        error: '',
-    })
-    const [lastName, setLastName] = useState({
-        value: '',
-        error: '',
-    })
-    const [email, setEmail] = useState({
-        value: '',
-        error: '',
-    })
-    const [password, setPassword] = useState({
-        value: '',
-        error: '',
+    const {
+        formState: { errors },
+        register,
+        handleSubmit,
+    } = useForm<FormValues>({
+        resolver: zodResolver(schema),
+        mode: 'onChange',
     })
 
     const [showPassword, setShowPassword] = useState(false)
@@ -46,66 +49,13 @@ const Register: React.FC = () => {
         url: '/api/v1/user/register',
         method: RequestMethod.POST,
     })
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault()
-
-        if (firstName.value === '') {
-            setFirstName((prevState) => {
-                return {
-                    ...prevState,
-                    error: 'First name is required',
-                }
-            })
-        }
-
-        if (lastName.value === '') {
-            setLastName((prevState) => {
-                return {
-                    ...prevState,
-                    error: 'Last name is required',
-                }
-            })
-        }
-
-        if (email.value === '') {
-            setEmail((prevState) => {
-                return {
-                    ...prevState,
-                    error: 'Email is required',
-                }
-            })
-        } else if (!email.value.includes('@')) {
-            setEmail((prevState) => {
-                return {
-                    ...prevState,
-                    error: 'Invalid email address',
-                }
-            })
-        }
-
-        if (password.value.length < 6) {
-            setPassword((prevState) => {
-                return {
-                    ...prevState,
-                    error: 'Password must be at least 6 characters',
-                }
-            })
-        }
-
-        if (
-            [firstName.value, lastName.value, email.value, password.value].some(
-                (item) => item === ''
-            )
-        ) {
-            return
-        }
-
+    const onSubmit: SubmitHandler<FormValues> = (data) => {
         registerUser({
             body: {
-                firstName: firstName.value,
-                lastName: lastName.value,
-                email: email.value,
-                password: password.value,
+                firstName: data.firstName,
+                lastName: data.lastName,
+                email: data.email,
+                password: data.password,
             },
             onSuccess: (response) => {
                 enqueueSnackbar('Successfully registered', {
@@ -124,7 +74,7 @@ const Register: React.FC = () => {
                     email: response?.data?.data?.email,
                     id: response?.data?.data?._id,
                 }
-                
+
                 dispatch(setToken(token))
                 dispatch(setUserData(user))
                 localStorage.setItem('token', token)
@@ -168,31 +118,19 @@ const Register: React.FC = () => {
                 <Typography component='h1' variant='h5'>
                     Sign up
                 </Typography>
-                <Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
+                <Box component='form' noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 autoComplete='given-name'
-                                name='firstName'
                                 required
                                 fullWidth
                                 id='firstName'
                                 label='First Name'
                                 autoFocus
-                                value={firstName.value}
-                                onChange={(e) =>
-                                    setFirstName((prevState) => {
-                                        const value = e.target.value
-                                        return {
-                                            ...prevState,
-                                            value,
-                                            touched: true,
-                                            error: value === '' ? 'First name is required' : '',
-                                        }
-                                    })
-                                }
-                                error={firstName.error !== ''}
-                                helperText={firstName.error}
+                                {...register('firstName')}
+                                error={errors.firstName !== undefined}
+                                helperText={errors.firstName?.message}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -201,22 +139,10 @@ const Register: React.FC = () => {
                                 fullWidth
                                 id='lastName'
                                 label='Last Name'
-                                name='lastName'
                                 autoComplete='family-name'
-                                value={lastName.value}
-                                onChange={(e) =>
-                                    setLastName((prevState) => {
-                                        const value = e.target.value
-                                        return {
-                                            ...prevState,
-                                            value,
-                                            touched: true,
-                                            error: value === '' ? 'Last name is required' : '',
-                                        }
-                                    })
-                                }
-                                error={lastName.error !== ''}
-                                helperText={lastName.error}
+                                {...register('lastName')}
+                                error={errors.lastName !== undefined}
+                                helperText={errors.lastName?.message}
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -225,37 +151,16 @@ const Register: React.FC = () => {
                                 fullWidth
                                 id='email'
                                 label='Email Address'
-                                name='email'
                                 autoComplete='email'
-                                value={email.value}
-                                onChange={(e) => {
-                                    setEmail((prevState) => {
-                                        const value = e.target.value
-                                        let error: string
-                                        if (value === '') {
-                                            error = 'Email is required'
-                                        } else if (!value.includes('@')) {
-                                            error = 'Invalid email address'
-                                        } else {
-                                            error = ''
-                                        }
-                                        return {
-                                            ...prevState,
-                                            value,
-                                            touched: true,
-                                            error,
-                                        }
-                                    })
-                                }}
-                                error={email.error !== ''}
-                                helperText={email.error}
+                                {...register('email')}
+                                error={errors.email !== undefined}
+                                helperText={errors.email?.message}
                             />
                         </Grid>
                         <Grid item xs={12}>
                             <TextField
                                 required
                                 fullWidth
-                                name='password'
                                 label='Password'
                                 type={showPassword ? 'text' : 'password'}
                                 id='password'
@@ -271,23 +176,9 @@ const Register: React.FC = () => {
                                         </IconButton>
                                     ),
                                 }}
-                                value={password.value}
-                                onChange={(e) =>
-                                    setPassword((prevState) => {
-                                        const value = e.target.value
-                                        return {
-                                            ...prevState,
-                                            value,
-                                            touched: true,
-                                            error:
-                                                value.length < 6
-                                                    ? 'Password must be at least 6 characters'
-                                                    : '',
-                                        }
-                                    })
-                                }
-                                error={password.error !== ''}
-                                helperText={password.error}
+                                {...register('password')}
+                                error={errors.password !== undefined}
+                                helperText={errors.password?.message}
                             />
                         </Grid>
                     </Grid>
