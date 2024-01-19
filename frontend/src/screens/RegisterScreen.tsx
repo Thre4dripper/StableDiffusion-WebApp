@@ -78,7 +78,7 @@ const Register: React.FC = () => {
                 dispatch(setToken(token))
                 dispatch(setUserData(user))
                 localStorage.setItem('token', token)
-                navigate('/login')
+                navigate('/')
             },
             onError: (error) => {
                 console.log(error)

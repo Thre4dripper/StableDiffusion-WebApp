@@ -11,7 +11,7 @@ import Grid from '@mui/material/Grid'
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Copyright from '../components/Copyright.tsx'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Visibility, VisibilityOff } from '@mui/icons-material'
 import { IconButton } from '@mui/material'
 import { z } from 'zod'
@@ -25,6 +25,11 @@ import image5 from '../assets/login-page-images/login_image5.jpg'
 import image6 from '../assets/login-page-images/login_image6.jpg'
 import image7 from '../assets/login-page-images/login_image7.png'
 import image8 from '../assets/login-page-images/login_image8.webp'
+import { useDispatch } from 'react-redux'
+import { useSnackbar } from 'notistack'
+import useApi, { RequestMethod } from '../hooks/useApi.ts'
+import { setToken, setUserData } from '../redux/actions/authActions.ts'
+import Loader from '../components/Loader.tsx'
 
 const images = [image1, image2, image3, image4, image5, image6, image7, image8]
 const image = images[Math.floor(Math.random() * images.length)]
@@ -48,10 +53,66 @@ const LoginScreen: React.FC = () => {
     })
     const [showPassword, setShowPassword] = React.useState(false)
 
+    const navigate = useNavigate()
+    const dispatch = useDispatch()
+    const { enqueueSnackbar } = useSnackbar()
+
+    const { callApi: loginUser, isLoading } = useApi({
+        url: '/api/v1/user/login',
+        method: RequestMethod.POST,
+    })
+
     const onSubmit: SubmitHandler<FormValues> = (data) => {
-        console.log(data)
+        loginUser({
+            body: {
+                email: data.email,
+                password: data.password,
+            },
+            onSuccess: (response) => {
+                enqueueSnackbar('Successfully Logged In', {
+                    variant: 'success',
+                    autoHideDuration: 3000,
+                    anchorOrigin: {
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    },
+                    preventDuplicate: true,
+                })
+                const token = response?.data?.data?.tokens?.accessToken
+                const user = {
+                    firstName: response?.data?.data?.firstName,
+                    lastName: response?.data?.data?.lastName,
+                    email: response?.data?.data?.email,
+                    id: response?.data?.data?._id,
+                }
+
+                dispatch(setToken(token))
+                dispatch(setUserData(user))
+
+                if (data.rememberMe) localStorage.setItem('token', token)
+                navigate('/')
+            },
+            onError: (error) => {
+                console.log(error)
+                enqueueSnackbar('Invalid Credentials', {
+                    variant: 'error',
+                    autoHideDuration: 3000,
+                    anchorOrigin: {
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    },
+                })
+            },
+        })
     }
 
+    if (isLoading) {
+        return (
+            <div className={'flex h-screen w-screen justify-center items-center'}>
+                <Loader />
+            </div>
+        )
+    }
     return (
         <Grid container component='main' sx={{ height: '100vh' }}>
             <CssBaseline />
