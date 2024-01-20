@@ -3,14 +3,14 @@ import promptsReducer, { PromptsInitialState } from './reducers/promptsReducer.t
 import dimensionsReducer, { DimensionsInitialState } from './reducers/dimensionsReducer.ts'
 import samplingReducer, { SamplingInitialState } from './reducers/samplingReducer.ts'
 import imagesReducer, { ImagesInitialState } from './reducers/imagesReducer.ts'
-import authReducer, { AuthReducerInitialState } from './reducers/authReducer.ts'
+import authReducer, { AuthInitialState } from './reducers/authReducer.ts'
 
 export interface RootState {
     prompts: PromptsInitialState[]
     dimensions: DimensionsInitialState[]
     sampling: SamplingInitialState[]
     images: ImagesInitialState[]
-    auth: AuthReducerInitialState
+    auth: AuthInitialState
 }
 
 const rootReducer = combineReducers<RootState>({

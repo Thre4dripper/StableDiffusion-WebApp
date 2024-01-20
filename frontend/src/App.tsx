@@ -6,6 +6,7 @@ import LoginScreen from './screens/LoginScreen.tsx'
 import RegisterScreen from './screens/RegisterScreen.tsx'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { SnackbarProvider } from 'notistack'
+import ProtectiveRoute from './components/ProtectiveRoute.tsx'
 
 const defaultTheme = createTheme()
 const App: React.FC = () => {
@@ -14,7 +15,14 @@ const App: React.FC = () => {
             <SnackbarProvider maxSnack={4}>
                 <BrowserRouter>
                     <Routes>
-                        <Route path='/' element={<HomeScreen />} />
+                        <Route
+                            path='/'
+                            element={
+                                <ProtectiveRoute>
+                                    <HomeScreen />
+                                </ProtectiveRoute>
+                            }
+                        />
                         <Route path='/login' element={<LoginScreen />} />
                         <Route path='/register' element={<RegisterScreen />} />
                         <Route path='*' element={<NotFound404 />} />

@@ -34,7 +34,7 @@ const image = images[Math.floor(Math.random() * images.length)]
 
 const schema = z.object({
     email: z.string().email(),
-    password: z.string().min(8),
+    password: z.string(),
     rememberMe: z.boolean(),
 })
 
