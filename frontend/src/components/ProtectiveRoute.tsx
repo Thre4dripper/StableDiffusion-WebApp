@@ -2,9 +2,10 @@ import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useApi, { RequestMethod } from '../hooks/useApi.ts'
 import Loader from './Loader.tsx'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { setUserData } from '../redux/actions/authActions.ts'
-import { UserData } from '../redux/reducers/authReducer.ts'
+import { AuthInitialState, UserData } from '../redux/reducers/authReducer.ts'
+import { RootState } from '../redux/store.ts'
 
 interface Props {
     children: React.ReactNode
@@ -13,13 +14,17 @@ interface Props {
 const ProtectiveRoute: React.FC<Props> = ({ children }) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
+
+    const { token: authStateToken } = useSelector<RootState, AuthInitialState>(
+        (state) => state.auth
+    )
     const { callApi, isLoading, isIdle } = useApi({
         url: '/api/v1/profile',
         method: RequestMethod.GET,
     })
 
     useEffect(() => {
-        const token = localStorage.getItem('token')
+        const token = authStateToken || localStorage.getItem('token')
         if (!token) {
             navigate('/login')
             return

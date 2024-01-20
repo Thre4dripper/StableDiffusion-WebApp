@@ -28,6 +28,8 @@ import image8 from '../assets/login-page-images/login_image8.webp'
 import { useSnackbar } from 'notistack'
 import useApi, { RequestMethod } from '../hooks/useApi.ts'
 import Loader from '../components/Loader.tsx'
+import { useDispatch } from 'react-redux'
+import { setToken } from '../redux/actions/authActions.ts'
 
 const images = [image1, image2, image3, image4, image5, image6, image7, image8]
 const image = images[Math.floor(Math.random() * images.length)]
@@ -53,6 +55,7 @@ const LoginScreen: React.FC = () => {
 
     const navigate = useNavigate()
     const { enqueueSnackbar } = useSnackbar()
+    const dispatch = useDispatch()
 
     const { callApi: loginUser, isLoading } = useApi({
         url: '/api/v1/auth/login',
@@ -76,6 +79,8 @@ const LoginScreen: React.FC = () => {
                     preventDuplicate: true,
                 })
                 const token = response?.data?.data?.tokens?.accessToken
+
+                dispatch(setToken(token))
                 if (data.rememberMe) localStorage.setItem('token', token)
                 navigate('/')
             },
