@@ -86,7 +86,7 @@ const LoginScreen: React.FC = () => {
             },
             onError: (error) => {
                 console.log(error)
-                enqueueSnackbar('Invalid Credentials', {
+                enqueueSnackbar(error, {
                     variant: 'error',
                     autoHideDuration: 3000,
                     anchorOrigin: {
