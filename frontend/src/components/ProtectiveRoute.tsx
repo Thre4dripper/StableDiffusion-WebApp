@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import useApi, { RequestMethod } from '../hooks/useApi.ts'
 import Loader from './Loader.tsx'
 import { useDispatch, useSelector } from 'react-redux'
-import { setUserData } from '../redux/actions/authActions.ts'
+import { setToken, setUserData } from '../redux/actions/authActions.ts'
 import { AuthInitialState, UserData } from '../redux/reducers/authReducer.ts'
 import { RootState } from '../redux/store.ts'
 
@@ -15,7 +15,7 @@ const ProtectiveRoute: React.FC<Props> = ({ children }) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const { token: authStateToken } = useSelector<RootState, AuthInitialState>(
+    const { token: authStateToken, userData } = useSelector<RootState, AuthInitialState>(
         (state) => state.auth
     )
     const { callApi, isLoading, isIdle } = useApi({
@@ -30,6 +30,11 @@ const ProtectiveRoute: React.FC<Props> = ({ children }) => {
             return
         }
 
+        // If userData is already present, don't call the API
+        if (userData) {
+            return
+        }
+
         callApi({
             body: null,
             token: token!,
@@ -40,6 +45,7 @@ const ProtectiveRoute: React.FC<Props> = ({ children }) => {
                     lastName: response?.data.data.lastName,
                     email: response?.data.data.email,
                 }
+                dispatch(setToken(token!))
                 dispatch(setUserData(user))
             },
             onError: () => {
