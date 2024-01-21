@@ -8,13 +8,7 @@ import {
     ListItemIcon,
     ListItemText,
 } from '@mui/material'
-import {
-    AccountCircle,
-    AutoAwesome,
-    FaceRetouchingNatural,
-    Info,
-    Logout,
-} from '@mui/icons-material'
+import { AutoAwesome, FaceRetouchingNatural, Info, Logout } from '@mui/icons-material'
 
 interface MainDrawerProps {
     open: boolean
@@ -34,14 +28,6 @@ const MainDrawer: React.FC<MainDrawerProps> = ({ open, onClose }) => {
                 },
             }}>
             <List>
-                <ListItem disablePadding>
-                    <ListItemButton>
-                        <ListItemIcon>
-                            <AccountCircle />
-                        </ListItemIcon>
-                        <ListItemText primary='Profile' />
-                    </ListItemButton>
-                </ListItem>
                 <ListItem disablePadding>
                     <ListItemButton>
                         <ListItemIcon>
