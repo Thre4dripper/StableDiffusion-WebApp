@@ -1,33 +1,40 @@
 import mongoose from 'mongoose'
 
-const UserSchema = new mongoose.Schema({
-    firstName: {
-        type: String,
-        required: true,
-        trim: true,
-        min: 3,
-        max: 20,
+const UserSchema = new mongoose.Schema(
+    {
+        firstName: {
+            type: String,
+            required: true,
+            trim: true,
+            min: 3,
+            max: 20,
+        },
+        lastName: {
+            type: String,
+            required: true,
+            trim: true,
+            min: 3,
+            max: 20,
+        },
+        email: {
+            type: String,
+            unique: true,
+            required: true,
+            trim: true,
+        },
+        password: {
+            type: String,
+            required: true,
+        },
+        profilePic: {
+            type: String,
+            trim: true,
+        },
+        //add more fields
     },
-    lastName: {
-        type: String,
-        required: true,
-        trim: true,
-        min: 3,
-        max: 20,
-    },
-    email: {
-        type: String,
-        unique: true,
-        required: true,
-        trim: true,
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    //add more fields
-}, {
-    timestamps: true,
-})
+    {
+        timestamps: true,
+    }
+)
 
 export default mongoose.model('User', UserSchema)
