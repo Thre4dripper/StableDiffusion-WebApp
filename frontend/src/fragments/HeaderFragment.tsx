@@ -6,10 +6,26 @@ import { MenuSharp } from '@mui/icons-material'
 import Button from '@mui/material/Button'
 import MainDrawer from '../components/drawers/MainDrawer.tsx'
 import ProfileDrawer from '../components/drawers/ProfileDrawer.tsx'
+import { useSelector } from 'react-redux'
+import { RootState } from '../redux/store.ts'
+import { AuthInitialState } from '../redux/reducers/authReducer.ts'
 
 const HeaderFragment: React.FC = () => {
     const [mainDrawerOpen, setMainDrawerOpen] = React.useState(false)
     const [profileDrawerOpen, setProfileDrawerOpen] = React.useState(false)
+
+    const { userData } = useSelector<RootState, AuthInitialState>((state) => state.auth)
+
+    const getInitials = () => {
+        let initials = ''
+        if (userData?.firstName) {
+            initials += userData.firstName[0]
+        }
+        if (userData?.lastName) {
+            initials += userData.lastName[0]
+        }
+        return initials
+    }
 
     return (
         <AppBar position='static'>
@@ -34,10 +50,11 @@ const HeaderFragment: React.FC = () => {
                 <Avatar
                     className={'cursor-pointer'}
                     sx={{ bgcolor: 'secondary.main', ml: 2 }}
+                    src={userData?.profilePic}
                     onClick={() => {
                         setProfileDrawerOpen(true)
                     }}>
-                    U
+                    {getInitials()}
                 </Avatar>
             </Toolbar>
             <MainDrawer open={mainDrawerOpen} onClose={() => setMainDrawerOpen(false)} />

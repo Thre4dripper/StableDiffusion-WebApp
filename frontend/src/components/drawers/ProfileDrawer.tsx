@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import CssBaseline from '@mui/material/CssBaseline'
 import Box from '@mui/material/Box'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
-import { Container, Drawer, InputAdornment } from '@mui/material'
-import { Mail, Save } from '@mui/icons-material'
+import { Badge, Container, Drawer, IconButton, InputAdornment } from '@mui/material'
+import { Edit, Mail, Save } from '@mui/icons-material'
 import Button from '@mui/material/Button'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../redux/store.ts'
@@ -45,14 +45,6 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ open, onClose }) => {
             email: userData?.email,
         },
     })
-
-    const [avatarSrc, setAvatarSrc] = useState('https://i.pravatar.cc/150?img=3')
-
-    useEffect(() => {
-        fetch('https://source.unsplash.com/random/150x150').then((response) =>
-            setAvatarSrc(response.url)
-        )
-    }, [])
 
     const { enqueueSnackbar } = useSnackbar()
 
@@ -114,7 +106,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ open, onClose }) => {
                         <CssBaseline />
                         <div
                             className={
-                                'flex flex-col items-center bg-orange-300 rounded-3xl mx-16 mt-4 ' +
+                                'flex flex-col items-center bg-orange-400 rounded-3xl mx-16 mt-4 ' +
                                 'shadow-md shadow-black/40 select-none'
                             }>
                             <Typography
@@ -122,6 +114,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ open, onClose }) => {
                                 variant='h5'
                                 sx={{
                                     padding: 1,
+                                    color: 'white',
                                 }}>
                                 Profile
                             </Typography>
@@ -137,14 +130,32 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ open, onClose }) => {
                                     padding: 3,
                                     borderRadius: 2,
                                 }}>
-                                <Avatar
-                                    sx={{
-                                        m: 1,
-                                        bgcolor: 'secondary.main',
-                                        width: 150,
-                                        height: 150,
-                                    }}
-                                    src={avatarSrc}></Avatar>
+                                <Badge
+                                    overlap={'circular'}
+                                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                                    badgeContent={
+                                        <div className={'bg-white rounded-full'}>
+                                            <IconButton
+                                                color='warning'
+                                                aria-label='upload picture'
+                                                component='span'
+                                                sx={{
+                                                    borderRadius: '50%',
+                                                    padding: 1,
+                                                    boxShadow: 2,
+                                                }}>
+                                                <Edit />
+                                            </IconButton>
+                                        </div>
+                                    }>
+                                    <Avatar
+                                        sx={{
+                                            m: 1,
+                                            width: 150,
+                                            height: 150,
+                                        }}
+                                        src={userData?.profilePic}></Avatar>
+                                </Badge>
                                 <Typography component='h1' variant='h4' gutterBottom sx={{ mt: 2 }}>
                                     {userData?.firstName} {userData?.lastName}
                                 </Typography>
@@ -197,7 +208,11 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ open, onClose }) => {
                                     alignItems: 'center',
                                     justifyContent: 'flex-end',
                                 }}>
-                                <Button variant='outlined' color='error' sx={{ mr: 2 }}>
+                                <Button
+                                    variant='outlined'
+                                    color='error'
+                                    sx={{ mr: 2 }}
+                                    onClick={onClose}>
                                     Cancel
                                 </Button>
                                 <Button

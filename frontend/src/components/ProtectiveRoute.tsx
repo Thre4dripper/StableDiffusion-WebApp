@@ -44,6 +44,7 @@ const ProtectiveRoute: React.FC<Props> = ({ children }) => {
                     firstName: response?.data.data.firstName,
                     lastName: response?.data.data.lastName,
                     email: response?.data.data.email,
+                    profilePic: response?.data.data.profilePic,
                 }
                 dispatch(setToken(token!))
                 dispatch(setUserData(user))
