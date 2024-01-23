@@ -62,6 +62,7 @@ const HeaderFragment: React.FC = () => {
                         </IconButton>
                     </CustomTooltip>
                 </div>
+                <div className={'flex-grow'} />
 
                 <Avatar
                     className={'cursor-pointer'}

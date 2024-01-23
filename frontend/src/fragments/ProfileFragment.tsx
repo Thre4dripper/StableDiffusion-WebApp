@@ -3,8 +3,8 @@ import Loader from '../components/Loader.tsx'
 import CssBaseline from '@mui/material/CssBaseline'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import { Badge, Container, IconButton, InputAdornment } from '@mui/material'
-import { Edit, Mail, Save } from '@mui/icons-material'
+import { Badge, Container, IconButton, InputAdornment, Zoom } from '@mui/material'
+import { Edit, Logout, Mail, Save } from '@mui/icons-material'
 import Avatar from '@mui/material/Avatar'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
@@ -18,7 +18,10 @@ import { AuthInitialState } from '../redux/reducers/authReducer.ts'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { fileToBase64 } from '../utils/Utils.ts'
-import { setUserData } from '../redux/actions/authActions.ts'
+import { setToken, setUserData } from '../redux/actions/authActions.ts'
+import CustomTooltip from '../components/CustomTooltip.tsx'
+import { useNavigate } from 'react-router-dom'
+import AlertDialog from '../components/dialogs/AlertDialog.tsx'
 
 interface ProfileFragmentProps {
     onCancel: () => void
@@ -55,24 +58,12 @@ const ProfileFragment: React.FC<ProfileFragmentProps> = ({
 
     const { enqueueSnackbar } = useSnackbar()
     const dispatch = useDispatch()
+    const navigate = useNavigate()
 
     const { callApi, isLoading } = useApi({
         url: '/api/v1/profile',
         method: RequestMethod.PUT,
     })
-
-    const browseProfilePic = () => {
-        const input = document.createElement('input')
-        input.type = 'file'
-        input.accept = 'image/*'
-        input.onchange = async (event) => {
-            const target = event.target as HTMLInputElement
-            const file: File = (target.files as FileList)[0]
-            const base64 = await fileToBase64(file)
-            setBrowsedImage(base64)
-        }
-        input.click()
-    }
 
     const onSubmit: SubmitHandler<FormValues> = (data) => {
         callApi({
@@ -119,6 +110,27 @@ const ProfileFragment: React.FC<ProfileFragmentProps> = ({
         })
     }
 
+    const browseProfilePic = () => {
+        const input = document.createElement('input')
+        input.type = 'file'
+        input.accept = 'image/*'
+        input.onchange = async (event) => {
+            const target = event.target as HTMLInputElement
+            const file: File = (target.files as FileList)[0]
+            const base64 = await fileToBase64(file)
+            setBrowsedImage(base64)
+        }
+        input.click()
+    }
+
+    const [logoutDialogOpen, setLogoutDialogOpen] = React.useState(false)
+    const logout = () => {
+        localStorage.removeItem('token')
+        dispatch(setToken(null))
+        dispatch(setUserData(null))
+        navigate('/login')
+    }
+
     return (
         <Container
             component='main'
@@ -133,21 +145,44 @@ const ProfileFragment: React.FC<ProfileFragmentProps> = ({
             ) : (
                 <>
                     <CssBaseline />
-                    <div
-                        className={
-                            'flex flex-col items-center bg-orange-400 rounded-3xl mx-16 mt-4 ' +
-                            'shadow-md shadow-black/40 select-none'
-                        }>
-                        <Typography
-                            component='h1'
-                            variant='h5'
-                            sx={{
-                                padding: 1,
-                                color: 'white',
-                            }}>
-                            Profile
-                        </Typography>
+                    <div className={'flex justify-center items-center mt-4'}>
+                        <div
+                            className={
+                                'flex-1 flex flex-col items-center bg-orange-400 rounded-3xl mx-16 ' +
+                                'shadow-md shadow-black/40 select-none'
+                            }>
+                            <Typography
+                                component='h1'
+                                variant='h5'
+                                sx={{
+                                    padding: 1,
+                                    color: 'white',
+                                }}>
+                                Profile
+                            </Typography>
+                        </div>
+                        <CustomTooltip title={'Logout'} TransitionComponent={Zoom}>
+                            <IconButton
+                                color={'inherit'}
+                                onClick={() => {
+                                    setLogoutDialogOpen(true)
+                                }}>
+                                <Logout />
+                            </IconButton>
+                        </CustomTooltip>
+                        <AlertDialog
+                            title={'Logout'}
+                            description={'Are you sure you want to logout?'}
+                            open={logoutDialogOpen}
+                            positiveButtonText={'Yes'}
+                            negativeButtonText={'No'}
+                            positiveAction={logout}
+                            negativeAction={() => {
+                                setLogoutDialogOpen(false)
+                            }}
+                        />
                     </div>
+
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <Box
                             sx={{
