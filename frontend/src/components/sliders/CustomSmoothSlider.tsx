@@ -1,9 +1,9 @@
 import React from 'react'
 import { Slider, useTheme } from '@mui/material'
 
-interface CustomSamplingSliderProps extends React.ComponentProps<typeof Slider> {}
+interface CustomSmoothSliderProps extends React.ComponentProps<typeof Slider> {}
 
-const CustomSamplingSlider: React.FC<CustomSamplingSliderProps> = (props) => {
+const CustomSmoothSlider: React.FC<CustomSmoothSliderProps> = (props) => {
     const theme = useTheme()
 
     //get color value from props.color using theme.palette
@@ -36,4 +36,4 @@ const CustomSamplingSlider: React.FC<CustomSamplingSliderProps> = (props) => {
     )
 }
 
-export default CustomSamplingSlider
+export default CustomSmoothSlider

@@ -1,9 +1,9 @@
 import React from 'react'
-import CustomSamplingSlider from '../sliders/CustomSamplingSlider.tsx'
+import CustomSmoothSlider from '../sliders/CustomSmoothSlider.tsx'
 import { Input } from '@mui/material'
 
 interface SamplingInputProps {
-    sliderProps: React.ComponentProps<typeof CustomSamplingSlider>
+    sliderProps: React.ComponentProps<typeof CustomSmoothSlider>
     label: string
     isMarked: boolean
     setValue: (value: number) => void
@@ -26,7 +26,7 @@ const SamplingInput: React.FC<SamplingInputProps> = ({
         <div className={'mx-4 my-2'}>
             <label className={'text-black text-md'}>{label}</label>
             <div className={'flex flex-row gap-6'}>
-                <CustomSamplingSlider
+                <CustomSmoothSlider
                     {...sliderProps}
                     aria-label={label}
                     marks={isMarked}

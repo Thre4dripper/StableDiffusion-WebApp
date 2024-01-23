@@ -5,7 +5,7 @@ import { centerCrop, convertToPixelCrop, Crop, makeAspectCrop, ReactCrop } from 
 import 'react-image-crop/dist/ReactCrop.css'
 import Typography from '@mui/material/Typography'
 import { CropRotate } from '@mui/icons-material'
-import CustomSamplingSlider from '../components/sliders/CustomSamplingSlider.tsx'
+import CustomSmoothSlider from '../components/sliders/CustomSmoothSlider.tsx'
 
 interface ImageCropFragmentProps {
     cropShape: 'rect' | 'round'
@@ -135,7 +135,7 @@ const ImageCropFragment: React.FC<ImageCropFragmentProps> = ({ cropShape, aspect
                 {/*Controls*/}
                 <div className={'flex flex-row gap-8 justify-center items-center mt-8'}>
                     <CropRotate />
-                    <CustomSamplingSlider
+                    <CustomSmoothSlider
                         value={rotation}
                         min={0}
                         max={360}
