@@ -1,14 +1,14 @@
 import React from 'react'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
-import { AppBar, IconButton, Toolbar } from '@mui/material'
-import { MenuSharp } from '@mui/icons-material'
-import Button from '@mui/material/Button'
+import { AppBar, IconButton, Toolbar, Zoom } from '@mui/material'
+import { AutoAwesome, FaceRetouchingNatural, Info } from '@mui/icons-material'
 import MainDrawer from '../components/drawers/MainDrawer.tsx'
 import ProfileDrawer from '../components/drawers/ProfileDrawer.tsx'
 import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store.ts'
 import { AuthInitialState } from '../redux/reducers/authReducer.ts'
+import CustomTooltip from '../components/CustomTooltip.tsx'
 
 const HeaderFragment: React.FC = () => {
     const [mainDrawerOpen, setMainDrawerOpen] = React.useState(false)
@@ -29,27 +29,46 @@ const HeaderFragment: React.FC = () => {
 
     return (
         <AppBar position='static'>
-            <Toolbar>
-                <IconButton
-                    edge='start'
-                    color='inherit'
-                    aria-label='menu'
-                    sx={{ mr: 2 }}
-                    onClick={() => {
-                        setMainDrawerOpen(true)
-                    }}>
-                    <MenuSharp />
-                </IconButton>
-                <Typography variant={'h6'} className={'text-white select-none'}>
+            <Toolbar className={'flex flex-row gap-4'}>
+                {/*<IconButton*/}
+                {/*    edge='start'*/}
+                {/*    color='inherit'*/}
+                {/*    aria-label='menu'*/}
+                {/*    onClick={() => {*/}
+                {/*        setMainDrawerOpen(true)*/}
+                {/*    }}>*/}
+                {/*    <MenuSharp />*/}
+                {/*</IconButton>*/}
+                <Typography
+                    variant='h6'
+                    noWrap
+                    component='div'
+                    sx={{ display: { xs: 'none', sm: 'block' } }}>
                     Stable Diffusion Model
                 </Typography>
                 <div className={'flex-grow'} />
-                <Button variant={'text'} color={'inherit'}>
-                    Generated Images
-                </Button>
+
+                <div>
+                    <CustomTooltip title={'Generated Images'} TransitionComponent={Zoom}>
+                        <IconButton color={'inherit'}>
+                            <AutoAwesome />
+                        </IconButton>
+                    </CustomTooltip>
+                    <CustomTooltip title={'AI Model'} TransitionComponent={Zoom}>
+                        <IconButton color={'inherit'}>
+                            <FaceRetouchingNatural />
+                        </IconButton>
+                    </CustomTooltip>
+                    <CustomTooltip title={'About'} TransitionComponent={Zoom}>
+                        <IconButton color={'inherit'}>
+                            <Info />
+                        </IconButton>
+                    </CustomTooltip>
+                </div>
+
                 <Avatar
                     className={'cursor-pointer'}
-                    sx={{ bgcolor: 'secondary.main', ml: 2 }}
+                    sx={{ bgcolor: 'secondary.main' }}
                     src={userData?.profilePic}
                     onClick={() => {
                         setProfileDrawerOpen(true)
