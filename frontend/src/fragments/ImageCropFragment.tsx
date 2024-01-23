@@ -7,9 +7,15 @@ import Typography from '@mui/material/Typography'
 import { CropRotate } from '@mui/icons-material'
 import CustomSmoothSlider from '../components/sliders/CustomSmoothSlider.tsx'
 
+interface OutputSize {
+    width: number
+    height: number
+}
+
 interface ImageCropFragmentProps {
     cropShape: 'rect' | 'round'
     aspect: number
+    outputSize: OutputSize
     image: string | null
     onCancel: () => void
     onConfirmed: (image: string) => void
@@ -18,6 +24,7 @@ interface ImageCropFragmentProps {
 const ImageCropFragment: React.FC<ImageCropFragmentProps> = ({
     cropShape,
     aspect,
+    outputSize,
     image,
     onCancel,
     onConfirmed,
@@ -77,12 +84,6 @@ const ImageCropFragment: React.FC<ImageCropFragmentProps> = ({
         const shiftOriginX = canvas.width / 2
         const shiftOriginY = canvas.height / 2
 
-        console.table({
-            canvasWidth: canvas.width,
-            canvasHeight: canvas.height,
-            shiftOriginX,
-            shiftOriginY,
-        })
         ctx.translate(shiftOriginX, shiftOriginY)
         ctx.rotate((rotation * Math.PI) / 180)
         ctx.translate(-shiftOriginX, -shiftOriginY)
@@ -103,9 +104,58 @@ const ImageCropFragment: React.FC<ImageCropFragmentProps> = ({
     }
 
     const generateImage = (canvas: HTMLCanvasElement) => {
-        const dataUrl = canvas.toDataURL('image/jpeg')
+        const maxWidth = outputSize.width
+        const maxHeight = outputSize.height
 
-        onConfirmed(dataUrl)
+        const dataUrl = canvas.toDataURL('image/jpeg')
+        const imageCompressor = new Image()
+        imageCompressor.src = dataUrl
+
+        imageCompressor.onload = () => {
+            const canvas = document.createElement('canvas')
+            const ctx = canvas.getContext('2d')
+            if (!ctx) {
+                return
+            }
+
+            let width = imageCompressor.width
+            let height = imageCompressor.height
+
+            // Reduce resolution if either width or height exceeds the maximum
+            if (width > maxWidth || height > maxHeight) {
+                const ratio = Math.min(maxWidth / width, maxHeight / height)
+                width *= ratio
+                height *= ratio
+            }
+
+            canvas.width = width
+            canvas.height = height
+
+            ctx.drawImage(imageCompressor, 0, 0, width, height)
+
+            canvas.toBlob(
+                (blob) => {
+                    if (!blob) {
+                        return
+                    }
+                    const file = new File([blob], 'profilePic', {
+                        type: 'image/jpeg',
+                        lastModified: Date.now(),
+                    })
+
+                    const reader = new FileReader()
+                    reader.readAsDataURL(file)
+                    reader.onloadend = () => {
+                        const base64data = reader.result
+                        if (typeof base64data === 'string') {
+                            onConfirmed(base64data)
+                        }
+                    }
+                },
+                'image/jpeg',
+                0.8 // Adjust compression quality if needed
+            )
+        }
     }
 
     return (

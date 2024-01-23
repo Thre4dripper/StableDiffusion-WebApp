@@ -12,12 +12,13 @@ import Button from '@mui/material/Button'
 import { useSnackbar } from 'notistack'
 import useApi, { RequestMethod } from '../hooks/useApi.ts'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../redux/store.ts'
 import { AuthInitialState } from '../redux/reducers/authReducer.ts'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { fileToBase64 } from '../utils/Utils.ts'
+import { setUserData } from '../redux/actions/authActions.ts'
 
 interface ProfileFragmentProps {
     onCancel: () => void
@@ -53,6 +54,7 @@ const ProfileFragment: React.FC<ProfileFragmentProps> = ({
     })
 
     const { enqueueSnackbar } = useSnackbar()
+    const dispatch = useDispatch()
 
     const { callApi, isLoading } = useApi({
         url: '/api/v1/profile',
@@ -78,7 +80,7 @@ const ProfileFragment: React.FC<ProfileFragmentProps> = ({
                 firstName: data.firstName,
                 lastName: data.lastName,
                 email: data.email,
-                profilePic: '',
+                profilePic: profileImage ?? userData?.profilePic ?? '',
             },
             token: token!,
             onSuccess: () => {
@@ -91,6 +93,15 @@ const ProfileFragment: React.FC<ProfileFragmentProps> = ({
                     },
                     preventDuplicate: true,
                 })
+                dispatch(
+                    setUserData({
+                        ...userData!,
+                        firstName: data.firstName,
+                        lastName: data.lastName,
+                        email: data.email,
+                        profilePic: profileImage ?? userData?.profilePic ?? '',
+                    })
+                )
                 onCancel()
             },
             onError: (error) => {

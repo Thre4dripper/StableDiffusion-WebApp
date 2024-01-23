@@ -26,6 +26,7 @@ const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ open, onClose }) => {
                     image={browsedImage}
                     cropShape={'round'}
                     aspect={1}
+                    outputSize={{ width: 300, height: 300 }}
                     onCancel={() => setBrowsedImage(null)}
                     onConfirmed={(image) => {
                         setProfileImage(image)
