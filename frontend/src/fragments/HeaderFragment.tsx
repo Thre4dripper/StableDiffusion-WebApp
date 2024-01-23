@@ -2,7 +2,7 @@ import React from 'react'
 import Typography from '@mui/material/Typography'
 import Avatar from '@mui/material/Avatar'
 import { AppBar, IconButton, Toolbar, Zoom } from '@mui/material'
-import { AutoAwesome, FaceRetouchingNatural, Info } from '@mui/icons-material'
+import { AutoAwesome, FaceRetouchingNatural, Info, MenuSharp } from '@mui/icons-material'
 import MainDrawer from '../components/drawers/MainDrawer.tsx'
 import ProfileDrawer from '../components/drawers/ProfileDrawer.tsx'
 import { useSelector } from 'react-redux'
@@ -30,25 +30,22 @@ const HeaderFragment: React.FC = () => {
     return (
         <AppBar position='static'>
             <Toolbar className={'flex flex-row gap-4'}>
-                {/*<IconButton*/}
-                {/*    edge='start'*/}
-                {/*    color='inherit'*/}
-                {/*    aria-label='menu'*/}
-                {/*    onClick={() => {*/}
-                {/*        setMainDrawerOpen(true)*/}
-                {/*    }}>*/}
-                {/*    <MenuSharp />*/}
-                {/*</IconButton>*/}
-                <Typography
-                    variant='h6'
-                    noWrap
-                    component='div'
-                    sx={{ display: { xs: 'none', sm: 'block' } }}>
+                <IconButton
+                    edge='start'
+                    color='inherit'
+                    aria-label='menu'
+                    sx={{ display: { xs: 'block', sm: 'none' } }}
+                    onClick={() => {
+                        setMainDrawerOpen(true)
+                    }}>
+                    <MenuSharp />
+                </IconButton>
+                <Typography variant='h6' noWrap component='div'>
                     Stable Diffusion Model
                 </Typography>
                 <div className={'flex-grow'} />
 
-                <div>
+                <div className={'hidden sm:block'}>
                     <CustomTooltip title={'Generated Images'} TransitionComponent={Zoom}>
                         <IconButton color={'inherit'}>
                             <AutoAwesome />
