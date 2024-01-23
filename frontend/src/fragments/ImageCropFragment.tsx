@@ -11,9 +11,17 @@ interface ImageCropFragmentProps {
     cropShape: 'rect' | 'round'
     aspect: number
     image: string | null
+    onCancel: () => void
+    onConfirmed: (image: string) => void
 }
 
-const ImageCropFragment: React.FC<ImageCropFragmentProps> = ({ cropShape, aspect, image }) => {
+const ImageCropFragment: React.FC<ImageCropFragmentProps> = ({
+    cropShape,
+    aspect,
+    image,
+    onCancel,
+    onConfirmed,
+}) => {
     const [crop, setCrop] = React.useState<Crop>()
     const imageRef = useRef<HTMLImageElement>(null)
     const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -90,6 +98,12 @@ const ImageCropFragment: React.FC<ImageCropFragmentProps> = ({ cropShape, aspect
         ctx.restore()
     }
 
+    const generateImage = (canvas: HTMLCanvasElement) => {
+        const dataUrl = canvas.toDataURL('image/jpeg')
+
+        onConfirmed(dataUrl)
+    }
+
     return (
         <Container
             component='main'
@@ -159,10 +173,15 @@ const ImageCropFragment: React.FC<ImageCropFragmentProps> = ({ cropShape, aspect
                     />
                 </div>
                 <div className={'flex flex-row gap-4 justify-end items-center'}>
-                    <Button variant='outlined' color='warning'>
+                    <Button variant='outlined' color='warning' onClick={onCancel}>
                         Cancel
                     </Button>
-                    <Button variant='contained' color='warning'>
+                    <Button
+                        variant='contained'
+                        color='warning'
+                        onClick={() => {
+                            generateImage(canvasRef.current!)
+                        }}>
                         Confirm
                     </Button>
                 </div>

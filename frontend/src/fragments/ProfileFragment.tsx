@@ -20,8 +20,9 @@ import { z } from 'zod'
 import { fileToBase64 } from '../utils/Utils.ts'
 
 interface ProfileFragmentProps {
-    onClose: () => void
+    onCancel: () => void
     setBrowsedImage: React.Dispatch<React.SetStateAction<string | null>>
+    profileImage: string | null
 }
 
 const schema = z.object({
@@ -31,7 +32,11 @@ const schema = z.object({
 })
 
 type FormValues = z.infer<typeof schema>
-const ProfileFragment: React.FC<ProfileFragmentProps> = ({ onClose, setBrowsedImage }) => {
+const ProfileFragment: React.FC<ProfileFragmentProps> = ({
+    onCancel,
+    setBrowsedImage,
+    profileImage,
+}) => {
     const { token, userData } = useSelector<RootState, AuthInitialState>((state) => state.auth)
     const {
         register,
@@ -86,7 +91,7 @@ const ProfileFragment: React.FC<ProfileFragmentProps> = ({ onClose, setBrowsedIm
                     },
                     preventDuplicate: true,
                 })
-                onClose()
+                onCancel()
             },
             onError: (error) => {
                 console.log(error)
@@ -168,7 +173,8 @@ const ProfileFragment: React.FC<ProfileFragmentProps> = ({ onClose, setBrowsedIm
                                         width: 150,
                                         height: 150,
                                     }}
-                                    src={userData?.profilePic}></Avatar>
+                                    src={profileImage ?? userData?.profilePic ?? ''}
+                                />
                             </Badge>
                             <Typography component='h1' variant='h4' gutterBottom sx={{ mt: 2 }}>
                                 {userData?.firstName} {userData?.lastName}
@@ -224,9 +230,9 @@ const ProfileFragment: React.FC<ProfileFragmentProps> = ({ onClose, setBrowsedIm
                             }}>
                             <Button
                                 variant='outlined'
-                                color='error'
+                                color='warning'
                                 sx={{ mr: 2 }}
-                                onClick={onClose}>
+                                onClick={onCancel}>
                                 Cancel
                             </Button>
                             <Button

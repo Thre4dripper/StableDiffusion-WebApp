@@ -10,13 +10,37 @@ interface ProfileDrawerProps {
 
 const ProfileDrawer: React.FC<ProfileDrawerProps> = ({ open, onClose }) => {
     const [browsedImage, setBrowsedImage] = React.useState<string | null>(null)
+    const [profileImage, setProfileImage] = React.useState<string | null>(null)
 
     return (
-        <Drawer anchor={'right'} open={open} onClose={onClose}>
+        <Drawer
+            anchor={'right'}
+            open={open}
+            onClose={() => {
+                setBrowsedImage(null)
+                setProfileImage(null)
+                onClose()
+            }}>
             {browsedImage ? (
-                <ImageCropFragment image={browsedImage} cropShape={'round'} aspect={1} />
+                <ImageCropFragment
+                    image={browsedImage}
+                    cropShape={'round'}
+                    aspect={1}
+                    onCancel={() => setBrowsedImage(null)}
+                    onConfirmed={(image) => {
+                        setProfileImage(image)
+                        setBrowsedImage(null)
+                    }}
+                />
             ) : (
-                <ProfileFragment onClose={onClose} setBrowsedImage={setBrowsedImage} />
+                <ProfileFragment
+                    onCancel={() => {
+                        setProfileImage(null)
+                        onClose()
+                    }}
+                    setBrowsedImage={setBrowsedImage}
+                    profileImage={profileImage}
+                />
             )}
         </Drawer>
     )
