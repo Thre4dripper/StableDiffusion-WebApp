@@ -64,23 +64,29 @@ const ImageCropFragment: React.FC<ImageCropFragmentProps> = ({
             return
         }
 
-        const pixelRatio = window.devicePixelRatio
         const scaleX = image.naturalWidth / image.width
         const scaleY = image.naturalHeight / image.height
 
-        canvas.width = crop.width * pixelRatio * scaleX
-        canvas.height = crop.height * pixelRatio * scaleY
+        canvas.width = crop.width * scaleX
+        canvas.height = crop.height * scaleY
 
-        ctx.scale(pixelRatio, pixelRatio)
         ctx.imageSmoothingQuality = 'high'
         const cropX = crop.x * scaleX
         const cropY = crop.y * scaleY
 
-        ctx.translate(canvas.width / 2, canvas.height / 2)
-        ctx.rotate((rotation * Math.PI) / 180)
-        ctx.translate(-canvas.width / 2, -canvas.height / 2)
+        const shiftOriginX = canvas.width / 2
+        const shiftOriginY = canvas.height / 2
 
-        // ctx.translate((-crop.width * scaleX) / 2, (-crop.height * scaleY) / 2)
+        console.table({
+            canvasWidth: canvas.width,
+            canvasHeight: canvas.height,
+            shiftOriginX,
+            shiftOriginY,
+        })
+        ctx.translate(shiftOriginX, shiftOriginY)
+        ctx.rotate((rotation * Math.PI) / 180)
+        ctx.translate(-shiftOriginX, -shiftOriginY)
+
         ctx.translate(-cropX, -cropY)
 
         ctx.drawImage(
@@ -94,8 +100,6 @@ const ImageCropFragment: React.FC<ImageCropFragmentProps> = ({
             image.naturalWidth,
             image.naturalHeight
         )
-
-        ctx.restore()
     }
 
     const generateImage = (canvas: HTMLCanvasElement) => {
