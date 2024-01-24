@@ -35,9 +35,7 @@ const CellContainer: React.FC<CellContainerProps> = ({
             <div className={'w-full relative'}>
                 {isHovering && (
                     <RemoveCellButton
-                        className={
-                            'z-10 absolute right-0 right-0 sm:right-2 md:right-4 lg:right-10 top-8'
-                        }
+                        className={'z-10 absolute right-0 sm:right-2 md:right-4 lg:right-10 top-8'}
                         setIsHovering={setIsHovering}
                         removeCell={removeCell}
                         index={index}

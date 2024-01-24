@@ -136,7 +136,7 @@ const ProfileFragment: React.FC<ProfileFragmentProps> = ({
             component='main'
             maxWidth='xs'
             sx={{
-                width: 500,
+                width: '100%',
             }}>
             {isLoading ? (
                 <div className={'flex flex-col items-center justify-center h-screen'}>

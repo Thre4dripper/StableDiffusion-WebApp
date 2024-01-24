@@ -163,7 +163,7 @@ const ImageCropFragment: React.FC<ImageCropFragmentProps> = ({
             component='main'
             maxWidth='xs'
             sx={{
-                width: 500,
+                width: '100%',
             }}>
             <div className={'flex flex-col gap-4 justify-center my-8'}>
                 <div className={'flex flex-col gap-4 justify-center items-center'}>
