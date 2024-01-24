@@ -148,7 +148,7 @@ const ProfileFragment: React.FC<ProfileFragmentProps> = ({
                     <div className={'flex justify-center items-center mt-4'}>
                         <div
                             className={
-                                'flex-1 flex flex-col items-center bg-orange-400 rounded-3xl mx-16 ' +
+                                'flex-1 flex flex-col items-center bg-orange-400 rounded-3xl mx-20 ' +
                                 'shadow-md shadow-black/40 select-none'
                             }>
                             <Typography
@@ -161,15 +161,17 @@ const ProfileFragment: React.FC<ProfileFragmentProps> = ({
                                 Profile
                             </Typography>
                         </div>
-                        <CustomTooltip title={'Logout'} TransitionComponent={Zoom}>
-                            <IconButton
-                                color={'inherit'}
-                                onClick={() => {
-                                    setLogoutDialogOpen(true)
-                                }}>
-                                <Logout />
-                            </IconButton>
-                        </CustomTooltip>
+                        <div className={'absolute right-4'}>
+                            <CustomTooltip title={'Logout'} TransitionComponent={Zoom}>
+                                <IconButton
+                                    color={'inherit'}
+                                    onClick={() => {
+                                        setLogoutDialogOpen(true)
+                                    }}>
+                                    <Logout />
+                                </IconButton>
+                            </CustomTooltip>
+                        </div>
                         <AlertDialog
                             title={'Logout'}
                             description={'Are you sure you want to logout?'}
