@@ -18,13 +18,13 @@ const SamplingControls: React.FC<SamplingControlsProps> = ({ index }) => {
     const dispatch = useDispatch()
     return (
         <Paper
-            className={'flex-1 mx-4 my-2 p-2'}
+            className={'flex-1 p-2 h-full'}
             elevation={3}
             sx={{
                 borderRadius: '20px',
                 backgroundColor: '#fff4d7',
             }}>
-            <div className={'flex flex-col justify-between px-8 gap-0.5'}>
+            <div className={'flex flex-col justify-between px-8 gap-2'}>
                 <SamplingInput
                     sliderProps={{
                         value: samplingSteps,

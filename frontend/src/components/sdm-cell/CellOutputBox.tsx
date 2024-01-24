@@ -92,77 +92,74 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
 
     return (
         <>
-            <div className={'rounded-br-2xl rounded-tr-2xl'}>
-                <div className={'flex flex-col justify-end'}>
-                    <IconButton
-                        className={'flex-1'}
+            <div className={'flex flex-col gap-4 h-full justify-center items-center'}>
+                <IconButton
+                    className={'w-full h-80 lg:h-96'}
+                    sx={{
+                        'borderRadius': '1rem',
+                        'padding': '0',
+                        'overflow': 'hidden',
+                        '&:hover': {
+                            backgroundColor: 'transparent',
+                            cursor: 'pointer',
+                        },
+                    }}
+                    onClick={() => {
+                        if (outputImage !== '') openImageDialog(outputImage)
+                    }}>
+                    {!isLoading && outputImage && (
+                        <img
+                            src={outputImage}
+                            alt={'Latent Diffusion Model'}
+                            className={'w-full h-full'}
+                        />
+                    )}
+
+                    {!isLoading && !outputImage && (
+                        <div
+                            className={
+                                'w-full h-full bg-slate-400 flex justify-center items-center'
+                            }>
+                            <ImageIcon fontSize={'large'} />
+                        </div>
+                    )}
+
+                    {isLoading && (
+                        <div className={'flex w-full h-full justify-center items-center'}>
+                            <CircularProgress />
+                        </div>
+                    )}
+                </IconButton>
+                {/*Button*/}
+                <div className={'flex justify-center items-center gap-4 px-4'}>
+                    <Button
+                        variant={'contained'}
                         sx={{
-                            'borderRadius': '.5rem',
-                            'padding': '0',
-                            'overflow': 'hidden',
-                            'margin': '1rem',
+                            'backgroundColor': '#24282f',
                             '&:hover': {
-                                backgroundColor: 'transparent',
-                                cursor: 'pointer',
+                                backgroundColor: '#5d799d',
                             },
                         }}
-                        onClick={() => {
-                            if (outputImage !== '') openImageDialog(outputImage)
-                        }}>
-                        {!isLoading && outputImage && (
-                            <img
-                                src={outputImage}
-                                alt={'Latent Diffusion Model'}
-                                className={'w-96 h-fit'}
-                            />
-                        )}
-
-                        {!isLoading && !outputImage && (
-                            <div
-                                className={
-                                    'w-96 h-96 bg-slate-400 flex justify-center items-center'
-                                }>
-                                <ImageIcon fontSize={'large'} />
-                            </div>
-                        )}
-
-                        {isLoading && (
-                            <div className={'flex w-96 h-96 justify-center items-center'}>
-                                <CircularProgress />
-                            </div>
-                        )}
-                    </IconButton>
-                    {/*Button*/}
-                    <div className={'h-16 flex justify-center items-center gap-4'}>
-                        <Button
-                            variant={'contained'}
-                            sx={{
-                                'backgroundColor': '#24282f',
-                                '&:hover': {
-                                    backgroundColor: '#5d799d',
-                                },
-                            }}
-                            disabled={isLoading}
-                            onClick={generateImage}
-                            startIcon={<AutoAwesomeIcon />}>
-                            Generate
-                        </Button>
-                        <Button
-                            variant={'outlined'}
-                            startIcon={<DownloadIcon />}
-                            sx={{
-                                'borderColor': '#24282f',
-                                'color': '#24282f',
-                                '&:hover': {
-                                    borderColor: '#5d799d',
-                                    color: '#5d799d',
-                                },
-                            }}
-                            disabled={isLoading || outputImage === ''}
-                            onClick={downloadImage}>
-                            Download
-                        </Button>
-                    </div>
+                        disabled={isLoading}
+                        onClick={generateImage}
+                        startIcon={<AutoAwesomeIcon />}>
+                        Generate
+                    </Button>
+                    <Button
+                        variant={'outlined'}
+                        startIcon={<DownloadIcon />}
+                        sx={{
+                            'borderColor': '#24282f',
+                            'color': '#24282f',
+                            '&:hover': {
+                                borderColor: '#5d799d',
+                                color: '#5d799d',
+                            },
+                        }}
+                        disabled={isLoading || outputImage === ''}
+                        onClick={downloadImage}>
+                        Download
+                    </Button>
                 </div>
             </div>
             <Snackbar

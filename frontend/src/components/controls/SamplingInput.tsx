@@ -23,7 +23,7 @@ const SamplingInput: React.FC<SamplingInputProps> = ({
         setValue(+event.target.value)
     }
     return (
-        <div className={'mx-4 my-2'}>
+        <div>
             <label className={'text-black text-md'}>{label}</label>
             <div className={'flex flex-row gap-6'}>
                 <CustomSmoothSlider

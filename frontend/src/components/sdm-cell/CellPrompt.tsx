@@ -8,7 +8,7 @@ interface CellPromptProps {
 
 const CellPrompt: React.FC<CellPromptProps> = ({ promptType, value, setValue }) => {
     return (
-        <div className={'flex-1 mx-4'}>
+        <div className={'flex-1'}>
             <textarea
                 className={'w-full h-full bg-slate-300 text-slate-700 text-md p-2 rounded-lg'}
                 placeholder={`${promptType} Prompt`}

@@ -67,77 +67,108 @@ const CellCard: React.FC<CellCardProps> = ({ index, setIsHovering, cellType }) =
                 onMouseMove={() => {
                     setIsHovering(true)
                 }}
-                className={'flex-1 mx-16 my-8'}
+                className={'flex-1 mx-4 md:mx-8 lg:mx-16 my-8'}
                 elevation={3}
                 sx={{
                     borderRadius: '16px',
                 }}>
-                <div className={'flex flex-row'}>
-                    {/*Whole Container*/}
-                    <div className={'flex-1 flex flex-col my-2'}>
-                        {/*Prompt and Image Container*/}
-                        <div className={'flex-1 flex flex-row'}>
-                            {/*Prompt Container*/}
-                            <div className={'flex-1 flex flex-col justify-center gap-4 py-2'}>
-                                <CellPrompt
-                                    value={positivePrompt}
-                                    setValue={handlePositivePromptChange}
-                                    promptType={'Positive'}
-                                />
-                                <CellPrompt
-                                    value={negativePrompt}
-                                    setValue={handleNegativePromptChange}
-                                    promptType={'Negative'}
-                                />
-                            </div>
-                            {/*Input Image Container*/}
-                            {cellType === CellType.IMAGE_TO_IMAGE && (
-                                <IconButton
-                                    sx={{
-                                        '&:hover': {
-                                            backgroundColor: 'transparent',
-                                            cursor: 'pointer',
-                                        },
-                                    }}
-                                    onClick={handleImageInput}>
-                                    <div
-                                        className={
-                                            'w-48 h-full bg-slate-200 rounded-xl overflow-hidden flex justify-center items-center'
-                                        }>
-                                        {inputImage && (
-                                            <img
-                                                src={inputImage}
-                                                alt={'Latent Diffusion Model'}
-                                                className={'w-48 h-48'}
-                                            />
-                                        )}
-                                        {inputImage === '' && (
-                                            <AddPhotoAlternateIcon
-                                                sx={{
-                                                    color: 'rgb(39,46,63)',
-                                                }}
-                                                fontSize={'large'}
-                                            />
-                                        )}
-                                    </div>
-                                </IconButton>
-                            )}
+                <div
+                    className={
+                        'grid gap-4 p-4 ' +
+                        'grid-cols-1 grid-rows-11 ' +
+                        'lg:grid-cols-7 lg:grid-rows-6 ' +
+                        'xl:grid-cols-11 xl:grid-rows-4'
+                    }>
+                    {/*Prompt and Image Container*/}
+                    <div
+                        className={
+                            'row-span-2 ' +
+                            'lg:col-span-7 lg:row-span-2 ' +
+                            'xl:col-span-8 xl:row-span-2 ' +
+                            'flex flex-row gap-4'
+                        }>
+                        {/*Prompt Container*/}
+                        <div className={'flex-1 flex flex-col justify-center gap-4'}>
+                            <CellPrompt
+                                value={positivePrompt}
+                                setValue={handlePositivePromptChange}
+                                promptType={'Positive'}
+                            />
+                            <CellPrompt
+                                value={negativePrompt}
+                                setValue={handleNegativePromptChange}
+                                promptType={'Negative'}
+                            />
                         </div>
-                        {/*Controls Container*/}
-                        <div className={'flex flex-row'}>
-                            <SizeControls index={index} />
-                            <SamplingControls index={index} />
-                        </div>
+                        {/*Input Image Container*/}
+                        {cellType === CellType.IMAGE_TO_IMAGE && (
+                            <IconButton
+                                onClick={handleImageInput}
+                                sx={{
+                                    'borderRadius': '1rem',
+                                    'padding': '0',
+                                    'overflow': 'hidden',
+                                    '&:hover': {
+                                        backgroundColor: 'transparent',
+                                        cursor: 'pointer',
+                                    },
+                                }}>
+                                <div
+                                    className={
+                                        'w-40 lg:w-52 h-full bg-slate-200 rounded-xl overflow-hidden flex justify-center items-center'
+                                    }>
+                                    {inputImage && (
+                                        <img
+                                            src={inputImage}
+                                            alt={'Latent Diffusion Model'}
+                                            className={'w-full h-full'}
+                                        />
+                                    )}
+                                    {inputImage === '' && (
+                                        <AddPhotoAlternateIcon
+                                            sx={{
+                                                color: 'rgb(39,46,63)',
+                                            }}
+                                            fontSize={'large'}
+                                        />
+                                    )}
+                                </div>
+                            </IconButton>
+                        )}
+                    </div>
+                    {/*Controls Container*/}
+                    <div
+                        className={
+                            'row-span-2 row-start-3 ' +
+                            'lg:col-span-4 lg:row-span-2 lg:row-start-3 ' +
+                            'xl:col-span-4 xl:row-span-2 xl:col-start-1 xl:row-start-3'
+                        }>
+                        <SizeControls index={index} />
+                    </div>
+                    <div
+                        className={
+                            'row-span-2 row-start-5 ' +
+                            'lg:col-span-4 lg:row-span-2 lg:col-start-1 lg:row-start-5 ' +
+                            'xl:col-span-4 xl:row-span-2 xl:col-start-5 xl:row-start-3'
+                        }>
+                        <SamplingControls index={index} />
                     </div>
                     {/*Output Container*/}
-                    <CellOutputBox
-                        openImageDialog={(image: string) => {
-                            setModalImage(image)
-                            setOpen(true)
-                        }}
-                        index={index}
-                        cellType={cellType}
-                    />
+                    <div
+                        className={
+                            'row-span-5 row-start-7 ' +
+                            'lg:col-span-3 lg:row-span-4 lg:col-start-5 lg:row-start-3 ' +
+                            'xl:col-span-3 xl:row-span-4 xl:col-start-9 xl:row-start-1'
+                        }>
+                        <CellOutputBox
+                            openImageDialog={(image: string) => {
+                                setModalImage(image)
+                                setOpen(true)
+                            }}
+                            index={index}
+                            cellType={cellType}
+                        />
+                    </div>
                 </div>
             </Paper>
             <ZoomableImageDialog

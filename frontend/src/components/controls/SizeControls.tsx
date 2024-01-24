@@ -62,13 +62,13 @@ const SizeControls: React.FC<SizeControlsProps> = ({ index }) => {
 
     return (
         <Paper
-            className={'flex-1 mx-4 my-2 p-2'}
+            className={'flex-1 p-2 h-full'}
             elevation={3}
             sx={{
                 borderRadius: '20px',
                 backgroundColor: '#e2ffe7',
             }}>
-            <div className={'h-full flex flex-col justify-center px-8 gap-4'}>
+            <div className={'h-full flex flex-col justify-center px-8 gap-2'}>
                 <div className={' flex flex-col'}>
                     <label className={'text-black text-md'}>Width</label>
                     <CustomMarksSlider
