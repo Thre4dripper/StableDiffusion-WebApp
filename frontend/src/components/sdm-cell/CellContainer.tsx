@@ -15,15 +15,15 @@ interface CellContainerProps {
 }
 
 const CellContainer: React.FC<CellContainerProps> = ({
-                                                         addCellAbove,
-                                                         addCellBelow,
-                                                         removeCell,
-                                                         index,
-                                                         cellType,
-                                                     }) => {
+    addCellAbove,
+    addCellBelow,
+    removeCell,
+    index,
+    cellType,
+}) => {
     const [isHovering, setIsHovering] = React.useState(false)
     const [openAddCellDialog, setOpenAddCellDialog] = React.useState<AddCellDialogState>(
-        AddCellDialogState.CLOSED,
+        AddCellDialogState.CLOSED
     )
 
     const handleDialogClose = () => {
@@ -35,7 +35,9 @@ const CellContainer: React.FC<CellContainerProps> = ({
             <div className={'w-full relative'}>
                 {isHovering && (
                     <RemoveCellButton
-                        className={'z-10 absolute right-10 top-8'}
+                        className={
+                            'z-10 absolute right-0 right-0 sm:right-2 md:right-4 lg:right-10 top-8'
+                        }
                         setIsHovering={setIsHovering}
                         removeCell={removeCell}
                         index={index}
