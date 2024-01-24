@@ -30,22 +30,26 @@ const HeaderFragment: React.FC = () => {
     return (
         <AppBar position='static'>
             <Toolbar className={'flex flex-row gap-4'}>
-                <IconButton
-                    edge='start'
-                    color='inherit'
-                    aria-label='menu'
-                    sx={{ display: { xs: 'block', sm: 'none' } }}
-                    onClick={() => {
-                        setMainDrawerOpen(true)
-                    }}>
-                    <MenuSharp />
-                </IconButton>
+                <div className={'block sm:hidden'}>
+                    <IconButton
+                        edge='start'
+                        color='inherit'
+                        aria-label='menu'
+                        onClick={() => {
+                            setMainDrawerOpen(true)
+                        }}>
+                        <MenuSharp />
+                    </IconButton>
+                </div>
                 <Typography variant='h6' noWrap component='div'>
                     Stable Diffusion Model
                 </Typography>
                 <div className={'flex-grow'} />
 
-                <div className={'hidden sm:block'}>
+                <div
+                    className={
+                        'hidden sm:block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
+                    }>
                     <CustomTooltip title={'Generated Images'} TransitionComponent={Zoom}>
                         <IconButton color={'inherit'}>
                             <AutoAwesome />
