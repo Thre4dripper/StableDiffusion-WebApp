@@ -1,11 +1,23 @@
 import React from 'react'
-import Image1 from '../assets/login-page-images/login_image1.webp'
 import Box from '@mui/material/Box'
-import { Card, CardContent, Grow } from '@mui/material'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import Grow from '@mui/material/Grow'
 import Typography from '@mui/material/Typography'
 import Paper from '@mui/material/Paper'
 import LinkPreview from '../components/LinkPreview.tsx'
 import Link from '@mui/material/Link'
+import image1 from '../assets/login-page-images/login_image1.webp'
+import image2 from '../assets/login-page-images/login_image2.webp'
+import image3 from '../assets/login-page-images/login_image3.png'
+import image4 from '../assets/login-page-images/login_image4.png'
+import image5 from '../assets/login-page-images/login_image5.jpg'
+import image6 from '../assets/login-page-images/login_image6.jpg'
+import image7 from '../assets/login-page-images/login_image7.png'
+import image8 from '../assets/login-page-images/login_image8.webp'
+
+const images = [image1, image2, image3, image4, image5, image6, image7, image8]
+const image = images[Math.floor(Math.random() * images.length)]
 
 const AboutScreen: React.FC = () => {
     const links = [
@@ -18,28 +30,35 @@ const AboutScreen: React.FC = () => {
             proxyLink: '/github/CompVis/stable-diffusion',
         },
         {
-            originalLink: 'https://github.com/woctezuma/stable-diffusion-colab',
-            proxyLink: '/github/woctezuma/stable-diffusion-colab',
+            originalLink: 'https://github.com/camenduru/stable-diffusion-webui-colab',
+            proxyLink: '/github/camenduru/stable-diffusion-webui-colab',
         },
     ]
 
     return (
         <div className={'flex flex-col justify-center items-center'}>
-            <Box className={'w-full h-96 overflow-hidden flex justify-center items-center'}>
+            <Box
+                className={
+                    'w-full h-[20rem] md:h-[40rem] overflow-hidden flex justify-center items-center'
+                }>
                 <img
-                    src={Image1}
+                    src={image}
                     alt='login_image1'
                     className={'w-full h-full object-cover'}
                     style={{ maskImage: 'linear-gradient(to top, transparent, black 100%)' }}
                 />
             </Box>
-            <div className={'w-2/3 -mt-40 z-10'}>
+            <div className={'w-full md:w-2/3 -mt-[10rem] md:-mt-[32rem] z-10'}>
                 <Grow in timeout={1000}>
                     <Card
                         sx={{
-                            padding: '1.5rem',
-                            textAlign: 'center',
-                            boxShadow: 5,
+                            'padding': '1.5rem',
+                            'textAlign': 'center',
+                            'boxShadow': 5,
+                            'backgroundColor': 'rgba(255, 255, 255, 0.8)',
+                            '&:hover': {
+                                backgroundColor: 'white',
+                            },
                         }}>
                         <CardContent>
                             <Typography variant='h4' component='div' mb={2}>
@@ -91,10 +110,10 @@ const AboutScreen: React.FC = () => {
                     </Card>
                 </Grow>
             </div>
-            <Typography variant='h4' component='div' mt={10}>
+            <Typography variant='h4' component='div' mt={6}>
                 Featured Repositories
             </Typography>
-            <div className={'grid grid-cols-3 gap-8 my-10 mx-16'}>
+            <div className={'grid grid-cols-1 md:grid-cols-3 gap-8 my-10 mx-4 lg:mx-16'}>
                 {links.map((link) => (
                     <Grow in timeout={1000} key={link.originalLink}>
                         <Paper

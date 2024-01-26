@@ -31,10 +31,6 @@ const LinkPreview: React.FC<LinkPreviewProps> = ({ originalLink, proxyLink }) =>
                 const response = await axios({
                     method: 'GET',
                     url: proxyLink,
-                    proxy: {
-                        host: originalLink,
-                        port: 8080,
-                    },
                 })
                 const data = response.data
 
