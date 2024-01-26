@@ -9,12 +9,18 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../redux/store.ts'
 import { AuthInitialState } from '../redux/reducers/authReducer.ts'
 import CustomTooltip from '../components/CustomTooltip.tsx'
+import { useNavigate } from 'react-router-dom'
 
 const HeaderFragment: React.FC = () => {
     const [mainDrawerOpen, setMainDrawerOpen] = React.useState(false)
     const [profileDrawerOpen, setProfileDrawerOpen] = React.useState(false)
 
     const { userData } = useSelector<RootState, AuthInitialState>((state) => state.auth)
+
+    const navigate = useNavigate()
+    const navigateToAbout = () => {
+        navigate('/about')
+    }
 
     const getInitials = () => {
         let initials = ''
@@ -61,7 +67,7 @@ const HeaderFragment: React.FC = () => {
                         </IconButton>
                     </CustomTooltip>
                     <CustomTooltip title={'About'} TransitionComponent={Zoom}>
-                        <IconButton color={'inherit'}>
+                        <IconButton color={'inherit'} onClick={navigateToAbout}>
                             <Info />
                         </IconButton>
                     </CustomTooltip>

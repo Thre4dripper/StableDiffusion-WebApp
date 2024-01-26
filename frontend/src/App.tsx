@@ -8,6 +8,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { SnackbarProvider } from 'notistack'
 import ProtectiveRoute from './components/ProtectiveRoute.tsx'
 import Wrapper from './components/Wrapper.tsx'
+import AboutScreen from './screens/AboutScreen.tsx'
 
 const defaultTheme = createTheme()
 const App: React.FC = () => {
@@ -42,7 +43,16 @@ const App: React.FC = () => {
                                 </Wrapper>
                             }
                         />
-                        
+                        <Route
+                            path='/about'
+                            element={
+                                <ProtectiveRoute>
+                                    <Wrapper>
+                                        <AboutScreen />
+                                    </Wrapper>
+                                </ProtectiveRoute>
+                            }
+                        />
                         <Route path='*' element={<NotFound404 />} />
                     </Routes>
                 </BrowserRouter>

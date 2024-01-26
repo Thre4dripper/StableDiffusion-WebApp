@@ -20,6 +20,11 @@ export default defineConfig({
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/api\/v1/, '/api/v1'),
             },
+            '/github': {
+                target: 'https://github.com',
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/github/, ''),
+            },
         },
     },
     plugins: [react()],
