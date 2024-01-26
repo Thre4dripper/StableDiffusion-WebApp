@@ -7,6 +7,7 @@ import RegisterScreen from './screens/RegisterScreen.tsx'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { SnackbarProvider } from 'notistack'
 import ProtectiveRoute from './components/ProtectiveRoute.tsx'
+import Wrapper from './components/Wrapper.tsx'
 
 const defaultTheme = createTheme()
 const App: React.FC = () => {
@@ -19,12 +20,29 @@ const App: React.FC = () => {
                             path='/'
                             element={
                                 <ProtectiveRoute>
-                                    <HomeScreen />
+                                    <Wrapper>
+                                        <HomeScreen />
+                                    </Wrapper>
                                 </ProtectiveRoute>
                             }
                         />
-                        <Route path='/login' element={<LoginScreen />} />
-                        <Route path='/register' element={<RegisterScreen />} />
+                        <Route
+                            path='/login'
+                            element={
+                                <Wrapper>
+                                    <LoginScreen />
+                                </Wrapper>
+                            }
+                        />
+                        <Route
+                            path='/register'
+                            element={
+                                <Wrapper>
+                                    <RegisterScreen />
+                                </Wrapper>
+                            }
+                        />
+                        
                         <Route path='*' element={<NotFound404 />} />
                     </Routes>
                 </BrowserRouter>
