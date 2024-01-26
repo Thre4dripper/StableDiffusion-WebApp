@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import GeneratedImageCard from '../components/GeneratedImageCard.tsx'
 import Loader from '../components/Loader.tsx'
+import Grow from '@mui/material/Grow'
 
 const ImagesScreen: React.FC = () => {
     const [images, setImages] = useState<string[]>([])
@@ -52,19 +53,25 @@ const ImagesScreen: React.FC = () => {
     return (
         <div className={'flex flex-col gap-4 my-8 mx-8 md:mx-10 lg:mx-14 xl:mx-16'}>
             <div className={'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'}>
-                {images.map((image, index) => (
-                    <GeneratedImageCard
-                        key={index}
-                        image={image}
-                        positivePrompt={'Cat'}
-                        dimensions={[100, 200]}
-                        samplingSteps={100}
-                        cfgScale={10}
-                        upScale={1}
-                        date={'awfa'}
-                        remove={() => {}}
-                    />
-                ))}
+                {images.map((image, index) => {
+                    const growDelay = Math.random() * (2000 - 500) + 500
+                    return (
+                        <Grow in timeout={growDelay} key={index}>
+                            <div>
+                                <GeneratedImageCard
+                                    image={image}
+                                    positivePrompt={'Cat'}
+                                    dimensions={[100, 200]}
+                                    samplingSteps={100}
+                                    cfgScale={10}
+                                    upScale={1}
+                                    date={'awfa'}
+                                    remove={() => {}}
+                                />
+                            </div>
+                        </Grow>
+                    )
+                })}
             </div>
             <div ref={observerTarget} className={'flex flex-row my-40 justify-center'}>
                 {isLoading && <Loader />}
