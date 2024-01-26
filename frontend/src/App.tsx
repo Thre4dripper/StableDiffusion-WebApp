@@ -9,6 +9,7 @@ import { SnackbarProvider } from 'notistack'
 import ProtectiveRoute from './components/ProtectiveRoute.tsx'
 import Wrapper from './components/Wrapper.tsx'
 import AboutScreen from './screens/AboutScreen.tsx'
+import ImagesScreen from './screens/ImagesScreen.tsx'
 
 const defaultTheme = createTheme()
 const App: React.FC = () => {
@@ -41,6 +42,16 @@ const App: React.FC = () => {
                                 <Wrapper>
                                     <RegisterScreen />
                                 </Wrapper>
+                            }
+                        />
+                        <Route
+                            path='/generated-images'
+                            element={
+                                <ProtectiveRoute>
+                                    <Wrapper>
+                                        <ImagesScreen />
+                                    </Wrapper>
+                                </ProtectiveRoute>
                             }
                         />
                         <Route

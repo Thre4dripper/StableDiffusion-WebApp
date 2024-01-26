@@ -18,6 +18,10 @@ const HeaderFragment: React.FC = () => {
     const { userData } = useSelector<RootState, AuthInitialState>((state) => state.auth)
 
     const navigate = useNavigate()
+
+    const navigateToGeneratedImages = () => {
+        navigate('/generated-images')
+    }
     const navigateToAbout = () => {
         navigate('/about')
     }
@@ -57,7 +61,7 @@ const HeaderFragment: React.FC = () => {
                         'hidden sm:block absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'
                     }>
                     <CustomTooltip title={'Generated Images'} TransitionComponent={Zoom}>
-                        <IconButton color={'inherit'}>
+                        <IconButton color={'inherit'} onClick={navigateToGeneratedImages}>
                             <AutoAwesome />
                         </IconButton>
                     </CustomTooltip>
