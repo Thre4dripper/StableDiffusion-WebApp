@@ -15,9 +15,17 @@ class UserService {
         data.password = await EncryptionUtil.hashPassword(data.password)
 
         const result = await userRepository.create(data)
+
+        const userObject = {
+            _id: result.toJSON()._id,
+            firstName: result.toJSON().firstName,
+            lastName: result.toJSON().lastName,
+            email: result.toJSON().email,
+        }
+
         return {
             ...result.toJSON(),
-            tokens: EncryptionUtil.generateJwtTokens(result.toJSON()),
+            tokens: EncryptionUtil.generateJwtTokens(userObject),
         }
     }
 
@@ -37,9 +45,16 @@ class UserService {
             throw new ValidationError(ErrorMessages.INVALID_CREDENTIALS)
         }
 
+        const userObject = {
+            _id: user.toJSON()._id,
+            firstName: user.toJSON().firstName,
+            lastName: user.toJSON().lastName,
+            email: user.toJSON().email,
+        }
+
         return {
             ...user.toJSON(),
-            tokens: EncryptionUtil.generateJwtTokens(user.toJSON()),
+            tokens: EncryptionUtil.generateJwtTokens(userObject),
         }
     }
 }
