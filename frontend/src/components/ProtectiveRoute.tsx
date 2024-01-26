@@ -54,7 +54,7 @@ const ProtectiveRoute: React.FC<Props> = ({ children }) => {
                 navigate('/login')
             },
         })
-    }, [callApi, dispatch, navigate])
+    }, [authStateToken, callApi, dispatch, navigate, userData])
 
     if (isLoading || isIdle) {
         return (

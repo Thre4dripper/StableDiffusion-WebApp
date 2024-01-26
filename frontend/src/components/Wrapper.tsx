@@ -9,7 +9,7 @@ const Wrapper: React.FC<IWrapperProps> = ({ children }) => {
     return (
         <div className={'flex flex-col'}>
             <HeaderFragment />
-            {children}
+            <div className={'flex-grow mt-16'}>{children}</div>
         </div>
     )
 }

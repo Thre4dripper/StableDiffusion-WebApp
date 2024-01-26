@@ -28,7 +28,7 @@ const HeaderFragment: React.FC = () => {
     }
 
     return (
-        <AppBar position='static'>
+        <AppBar position='fixed'>
             <Toolbar className={'flex flex-row gap-4'}>
                 <div className={'block sm:hidden'}>
                     <IconButton
