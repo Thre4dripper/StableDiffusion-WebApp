@@ -7,7 +7,7 @@ class ImageRepository {
     }
 
     async getImages(userId: string, limit: number, offset: number) {
-        return ImageModel.aggregate([
+        const result = await ImageModel.aggregate([
             {
                 $match: {
                     userId: new mongoose.Types.ObjectId(userId),
@@ -44,6 +44,8 @@ class ImageRepository {
                 },
             },
         ])
+
+        return result[0]
     }
 }
 
