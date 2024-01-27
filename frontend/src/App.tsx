@@ -28,22 +28,8 @@ const App: React.FC = () => {
                                 </ProtectiveRoute>
                             }
                         />
-                        <Route
-                            path='/login'
-                            element={
-                                <Wrapper>
-                                    <LoginScreen />
-                                </Wrapper>
-                            }
-                        />
-                        <Route
-                            path='/register'
-                            element={
-                                <Wrapper>
-                                    <RegisterScreen />
-                                </Wrapper>
-                            }
-                        />
+                        <Route path='/login' element={<LoginScreen />} />
+                        <Route path='/register' element={<RegisterScreen />} />
                         <Route
                             path='/generated-images'
                             element={

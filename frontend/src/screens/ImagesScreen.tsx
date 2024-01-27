@@ -65,7 +65,7 @@ const ImagesScreen: React.FC = () => {
                                     samplingSteps={100}
                                     cfgScale={10}
                                     upScale={1}
-                                    date={'awfa'}
+                                    date={new Date()}
                                     remove={() => {}}
                                 />
                             </div>

@@ -4,21 +4,30 @@ import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Chip from '@mui/material/Chip'
 import Typography from '@mui/material/Typography'
-import { CardActions } from '@mui/material'
-import Button from '@mui/material/Button'
+import { CardActions, IconButton } from '@mui/material'
+import CustomTooltip from './CustomTooltip.tsx'
+import Box from '@mui/material/Box'
+import moment from 'moment'
+import { AccessTime, Delete } from '@mui/icons-material'
 
 interface ICircularProgressBarProps {
     value: number
     maxValue: number
     color: string
+    title: string
 }
 
-const CircularProgressBar: React.FC<ICircularProgressBarProps> = ({ value, maxValue, color }) => {
-    const strokeWidth = 5
-    const size = 50
+const CircularProgressBar: React.FC<ICircularProgressBarProps> = ({
+    value,
+    maxValue,
+    color,
+    title,
+}) => {
+    const strokeWidth = 7
+    const size = 60
     const radius = (size - strokeWidth) / 2
     const circumference = radius * 2 * Math.PI
-    const animationDuration = 1500 // Set the duration in milliseconds
+    const animationDuration = 1500
     const [animatingValue, setAnimatingValue] = React.useState(0)
 
     useEffect(() => {
@@ -42,37 +51,39 @@ const CircularProgressBar: React.FC<ICircularProgressBarProps> = ({ value, maxVa
     const offset = circumference - (animatingValue / maxValue) * circumference
 
     return (
-        <div className={'relative'}>
-            <svg height={size} width={size}>
-                <circle
-                    stroke={'#e0e0e0'}
-                    fill='transparent'
-                    strokeWidth={strokeWidth}
-                    strokeDasharray={circumference + ' ' + circumference}
-                    strokeDashoffset={0} // No offset for the gray circle
-                    r={radius}
-                    cx={size / 2}
-                    cy={size / 2}
-                    strokeLinecap='round' // Rounded caps
-                />
-                <circle
-                    stroke={color}
-                    fill='transparent'
-                    strokeWidth={strokeWidth}
-                    strokeDasharray={circumference + ' ' + circumference}
-                    style={{ strokeDashoffset: offset }}
-                    r={radius}
-                    cx={size / 2}
-                    cy={size / 2}
-                    strokeLinecap='round' // Rounded caps
-                />
-            </svg>
-            <div
-                className={'absolute flex flex-col justify-center items-center'}
-                style={{ top: 0, left: 0, width: size, height: size }}>
-                <span className={'text-gray-500'}>{Math.round(animatingValue)}</span>
+        <CustomTooltip title={title}>
+            <div className={'relative select-none'}>
+                <svg height={size} width={size}>
+                    <circle
+                        stroke={`${color}20`}
+                        fill='transparent'
+                        strokeWidth={strokeWidth}
+                        strokeDasharray={circumference + ' ' + circumference}
+                        strokeDashoffset={0}
+                        r={radius}
+                        cx={size / 2}
+                        cy={size / 2}
+                        strokeLinecap='round'
+                    />
+                    <circle
+                        stroke={color}
+                        fill='transparent'
+                        strokeWidth={strokeWidth}
+                        strokeDasharray={circumference + ' ' + circumference}
+                        style={{ strokeDashoffset: offset }}
+                        r={radius}
+                        cx={size / 2}
+                        cy={size / 2}
+                        strokeLinecap='round'
+                    />
+                </svg>
+                <div
+                    className={'absolute flex flex-col justify-center items-center'}
+                    style={{ top: 0, left: 0, width: size, height: size }}>
+                    <span className={'text-gray-500'}>{Math.round(animatingValue)}</span>
+                </div>
             </div>
-        </div>
+        </CustomTooltip>
     )
 }
 
@@ -84,7 +95,7 @@ interface IGeneratedImageCardProps {
     samplingSteps: number
     cfgScale: number
     upScale: number
-    date: string
+    date: Date
     remove: () => void
 }
 
@@ -99,28 +110,46 @@ const GeneratedImageCard: React.FC<IGeneratedImageCardProps> = ({
     date,
     remove,
 }) => {
+    //format like time ago or if more than 1 day ago, format like date time
+    const parseAndFormatDate = (inputDate: Date) => {
+        const parsedDate = moment(inputDate)
+
+        return parsedDate.format('MMM DD, YYYY h:mm A')
+    }
     return (
-        <Card elevation={5}>
+        <Card
+            elevation={5}
+            sx={{ backgroundColor: '#f9f9f9', borderRadius: '12px', overflow: 'hidden' }}>
             <CardMedia
                 component='img'
                 alt='Generated Image'
                 sx={{
                     height: 200,
+                    objectFit: 'cover',
                 }}
                 image={image}
             />
             <CardContent>
                 <div className={'flex flex-row gap-2'}>
                     <Chip
-                        label='Positive Prompt'
-                        size='medium'
+                        label={<span className={'font-semibold'}>Positive Prompt</span>}
+                        size='small'
                         color='success'
                         variant={'outlined'}
                     />
                     <div className={'flex-grow'} />
-                    <span className={'text-gray-500'}>{dimensions.join(' x ')}</span>
+                    <Chip
+                        label={
+                            <span className={'font-semibold text-gray-500'}>
+                                {dimensions[0]} x {dimensions[1]}
+                            </span>
+                        }
+                        size='small'
+                        color={'default'}
+                        variant={'outlined'}
+                    />
                 </div>
-                <Typography gutterBottom variant='h6' component='div'>
+                <Typography variant='subtitle1' component='div' sx={{ mt: 2, fontWeight: 600 }}>
                     {positivePrompt}
                 </Typography>
                 {negativePrompt && (
@@ -130,25 +159,57 @@ const GeneratedImageCard: React.FC<IGeneratedImageCardProps> = ({
                             size='medium'
                             color='error'
                             variant={'outlined'}
+                            sx={{ mt: 1 }}
                         />
-                        <Typography gutterBottom variant='h6' component='div'>
+                        <Typography variant='h6' component='div' sx={{ mt: 1 }}>
                             {negativePrompt}s
                         </Typography>
                     </>
                 )}
             </CardContent>
-            <div className={'flex flex-row justify-evenly'}>
-                <CircularProgressBar value={samplingSteps} maxValue={150} color={'#eb6b02'} />
-                <CircularProgressBar value={cfgScale} maxValue={35} color={'#9b27af'} />
-                <CircularProgressBar value={upScale} maxValue={4} color={'#0287d0'} />
-            </div>
-            <CardActions>
-                <div>{date}</div>
-                <div className={'flex-grow'} />
-                <Button variant={'text'} color={'error'} onClick={remove}>
-                    Remove
-                </Button>
-            </CardActions>
+            <Box
+                sx={{
+                    p: 1,
+                    backgroundColor: '#fff',
+                    borderBottomLeftRadius: '12px',
+                    borderBottomRightRadius: '12px',
+                }}>
+                <div className={'flex flex-row justify-evenly'}>
+                    <CircularProgressBar
+                        value={samplingSteps}
+                        maxValue={150}
+                        color={'#eb6b02'}
+                        title={'Sampling Steps'}
+                    />
+                    <CircularProgressBar
+                        value={cfgScale}
+                        maxValue={35}
+                        color={'#9b27af'}
+                        title={'CFG Scale'}
+                    />
+                    <CircularProgressBar
+                        value={upScale}
+                        maxValue={4}
+                        color={'#0287d0'}
+                        title={'Up Scale'}
+                    />
+                </div>
+                <CardActions sx={{ mt: 2, justifyContent: 'space-between' }}>
+                    <div className={'flex flex-row items-center text-gray-500'}>
+                        <AccessTime sx={{ marginRight: '4px' }} />
+                        <span className={'text-sm font-semibold'}>{parseAndFormatDate(date)}</span>
+                    </div>
+                    <CustomTooltip title={'Delete'}>
+                        <IconButton
+                            onClick={remove}
+                            sx={{ color: '#ff5151' }}
+                            aria-label='delete'
+                            size='large'>
+                            <Delete />
+                        </IconButton>
+                    </CustomTooltip>
+                </CardActions>
+            </Box>
         </Card>
     )
 }
