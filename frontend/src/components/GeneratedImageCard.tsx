@@ -115,11 +115,32 @@ const GeneratedImageCard: React.FC<IGeneratedImageCardProps> = ({
     createdAt,
     remove,
 }) => {
-    //format like time ago or if more than 1 day ago, format like date time
     const parseAndFormatDate = (inputDate: Date) => {
         const parsedDate = moment(inputDate)
 
         return parsedDate.format('MMM DD, YYYY')
+    }
+
+    const openImageInNewTab = () => {
+        const imageBase64 = image.split(',')[1] // remove data:image/png;base64, part
+        const byteCharacters = atob(imageBase64)
+        const byteNumbers = new Array(byteCharacters.length)
+        for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i)
+        }
+        const byteArray = new Uint8Array(byteNumbers)
+        const blob = new Blob([byteArray], { type: 'image/jpeg' })
+        const blobUrl = URL.createObjectURL(blob)
+        window.open(blobUrl, '_blank')
+    }
+
+    const downloadImage = () => {
+        const link = document.createElement('a')
+        link.href = image
+        link.download = 'image.jpg'
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
     }
     return (
         <Card
@@ -207,12 +228,17 @@ const GeneratedImageCard: React.FC<IGeneratedImageCardProps> = ({
                         </span>
                         <div className={'flex-1'} />
                         <CustomTooltip title={'Open'}>
-                            <IconButton sx={{ color: '#272e3f' }} aria-label='open' size='large'>
+                            <IconButton
+                                sx={{ color: '#272e3f' }}
+                                aria-label='open'
+                                size='large'
+                                onClick={openImageInNewTab}>
                                 <OpenInNew />
                             </IconButton>
                         </CustomTooltip>
                         <CustomTooltip title={'Download'}>
                             <IconButton
+                                onClick={downloadImage}
                                 sx={{ color: '#272e3f' }}
                                 aria-label='download'
                                 size='large'>
