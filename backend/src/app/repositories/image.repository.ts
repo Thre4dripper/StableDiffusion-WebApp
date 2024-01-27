@@ -2,6 +2,10 @@ import ImageModel from '../models/image.model'
 import mongoose from 'mongoose'
 
 class ImageRepository {
+    async find(filter: {}) {
+        return ImageModel.findOne(filter)
+    }
+
     async createImage(data: any) {
         return ImageModel.create(data)
     }
@@ -46,6 +50,13 @@ class ImageRepository {
         ])
 
         return result[0]
+    }
+
+    async deleteImage(userId: string, imageId: string) {
+        return ImageModel.deleteOne({
+            _id: new mongoose.Types.ObjectId(imageId),
+            userId: new mongoose.Types.ObjectId(userId),
+        })
     }
 }
 

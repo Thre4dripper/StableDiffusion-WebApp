@@ -4,4 +4,7 @@ export enum ErrorMessages {
     USER_NOT_FOUND = 'User not found',
     INVALID_CREDENTIALS = 'Invalid credentials',
     UNAUTHORISED = 'Unauthorised',
+
+    //images
+    IMAGE_NOT_FOUND = 'Image not found',
 }
