@@ -1,5 +1,21 @@
 import mongoose, { Schema } from 'mongoose'
 
+const dimensionsSchema = new Schema(
+    {
+        width: {
+            type: Number,
+            required: true,
+        },
+        height: {
+            type: Number,
+            required: true,
+        },
+    },
+    {
+        _id: false,
+    }
+)
+
 const imageSchema = new Schema({
     userId: {
         type: Schema.Types.ObjectId,
@@ -22,10 +38,7 @@ const imageSchema = new Schema({
         trim: true,
     },
     dimensions: {
-        type: {
-            width: Number,
-            height: Number,
-        },
+        type: dimensionsSchema,
         required: true,
     },
     samplingSteps: {
