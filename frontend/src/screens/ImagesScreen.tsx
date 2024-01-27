@@ -104,7 +104,11 @@ const ImagesScreen: React.FC = () => {
             },
             token: token!,
             onSuccess: () => {
-                setImages((prevImages) => prevImages.filter((image) => image._id !== id))
+                //reset whole state
+                setImages([])
+                setTotalImages(0)
+                setOffset(0)
+                fetchImages().then()
             },
             onError: (error) => {
                 console.log(error)
