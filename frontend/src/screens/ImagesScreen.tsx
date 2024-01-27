@@ -6,6 +6,8 @@ import useApi, { RequestMethod } from '../hooks/useApi.ts'
 import { useSelector } from 'react-redux'
 import { AuthInitialState } from '../redux/reducers/authReducer.ts'
 import { RootState } from '../redux/store.ts'
+import AlertDialog from '../components/dialogs/AlertDialog.tsx'
+import { useSnackbar } from 'notistack'
 
 export interface ImageData {
     userId: string
@@ -27,10 +29,15 @@ const ImagesScreen: React.FC = () => {
     const [images, setImages] = useState<ImageData[]>([])
     const [totalImages, setTotalImages] = useState<number>(0)
     const [offset, setOffset] = useState<number>(0)
+    const [removeDialogOpen, setRemoveDialogOpen] = React.useState({
+        open: false,
+        imageId: '',
+    })
 
     const { token } = useSelector<RootState, AuthInitialState>((state) => state.auth)
+    const { enqueueSnackbar } = useSnackbar()
 
-    const { callApi, isLoading } = useApi({
+    const { callApi, isLoading: isFetching } = useApi({
         url: `/api/v1/images?limit=4&offset=${offset}`,
         method: RequestMethod.GET,
     })
@@ -51,16 +58,18 @@ const ImagesScreen: React.FC = () => {
         })
     }, [callApi, token])
 
-    //first time call
+    //first time call for image fetching
     useEffect(() => {
         fetchImages().then()
     }, [])
 
     const observerTarget = useRef(null)
-    const observeIntersection = () => {
+
+    //for infinite scrolling
+    useEffect(() => {
         const observer = new IntersectionObserver(
             async (entries) => {
-                if (entries[0].isIntersecting && !isLoading) {
+                if (entries[0].isIntersecting && !isFetching) {
                     await fetchImages()
                 }
             },
@@ -77,9 +86,75 @@ const ImagesScreen: React.FC = () => {
                 observer.unobserve(target)
             }
         }
+    }, [fetchImages, isFetching])
+
+    const {
+        callApi: removeImageApi,
+        isLoading: isDeleting,
+        isSuccess: isDeleted,
+        isFailed: isDeleteFailed,
+    } = useApi({
+        url: `/api/v1/images`,
+        method: RequestMethod.DELETE,
+    })
+    const removeImage = (id: string) => {
+        removeImageApi({
+            body: {
+                imageId: id,
+            },
+            token: token!,
+            onSuccess: () => {},
+            onError: (error) => {
+                enqueueSnackbar(error, {
+                    variant: 'error',
+                    autoHideDuration: 3000,
+                    anchorOrigin: {
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    },
+                })
+            },
+        })
     }
 
-    useEffect(observeIntersection, [fetchImages, isLoading])
+    useEffect(() => {
+        if (isDeleted) {
+            enqueueSnackbar('Image Deleted Successfully', {
+                variant: 'success',
+                autoHideDuration: 3000,
+                anchorOrigin: {
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                },
+                preventDuplicate: true,
+            })
+
+            //remove image from state
+            setImages((prevImages) =>
+                prevImages.filter((image) => image._id !== removeDialogOpen.imageId)
+            )
+        } else if (isDeleteFailed) {
+            enqueueSnackbar('Failed to Delete Image', {
+                variant: 'error',
+                autoHideDuration: 3000,
+                anchorOrigin: {
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                },
+                preventDuplicate: true,
+            })
+        } else if (isDeleting) {
+            enqueueSnackbar('Deleting Image', {
+                variant: 'info',
+                autoHideDuration: 3000,
+                anchorOrigin: {
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                },
+                preventDuplicate: true,
+            })
+        }
+    }, [enqueueSnackbar, isDeleteFailed, isDeleted, isDeleting])
 
     return (
         <div className={'flex flex-col gap-4 my-8 mx-8 md:mx-10 lg:mx-14 xl:mx-16'}>
@@ -92,17 +167,45 @@ const ImagesScreen: React.FC = () => {
                     return (
                         <Grow in timeout={growDelay} key={index}>
                             <div>
-                                <GeneratedImageCard {...image} />
+                                <GeneratedImageCard
+                                    {...image}
+                                    removeImage={(id) => {
+                                        setRemoveDialogOpen({
+                                            open: true,
+                                            imageId: id,
+                                        })
+                                    }}
+                                />
                             </div>
                         </Grow>
                     )
                 })}
             </div>
-            {(images.length < totalImages || isLoading) && (
+            {(images.length < totalImages || isFetching) && (
                 <div ref={observerTarget} className={'flex flex-row my-40 justify-center'}>
-                    {isLoading && <Loader />}
+                    {isFetching && <Loader />}
                 </div>
             )}
+            <AlertDialog
+                title={'Delete Image'}
+                description={'Are you sure you want to delete this image?'}
+                positiveButtonText={'Delete'}
+                negativeButtonText={'Cancel'}
+                positiveAction={() => {
+                    removeImage(removeDialogOpen.imageId)
+                    setRemoveDialogOpen({
+                        open: false,
+                        imageId: '',
+                    })
+                }}
+                negativeAction={() => {
+                    setRemoveDialogOpen({
+                        open: false,
+                        imageId: '',
+                    })
+                }}
+                open={removeDialogOpen.open}
+            />
         </div>
     )
 }

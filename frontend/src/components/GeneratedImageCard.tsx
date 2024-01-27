@@ -9,13 +9,7 @@ import CustomTooltip from './CustomTooltip.tsx'
 import Box from '@mui/material/Box'
 import moment from 'moment'
 import { AccessTime, Delete, Download, OpenInNew } from '@mui/icons-material'
-import useApi, { RequestMethod } from '../hooks/useApi.ts'
-import { useSelector } from 'react-redux'
-import { AuthInitialState } from '../redux/reducers/authReducer.ts'
-import { RootState } from '../redux/store.ts'
 import { ImageData } from '../screens/ImagesScreen.tsx'
-import { useSnackbar } from 'notistack'
-import AlertDialog from './dialogs/AlertDialog.tsx'
 
 interface ICircularProgressBarProps {
     value: number
@@ -96,7 +90,11 @@ const CircularProgressBar: React.FC<ICircularProgressBarProps> = ({
     )
 }
 
-const GeneratedImageCard: React.FC<ImageData> = ({
+interface GeneratedImageCardProps extends ImageData {
+    removeImage: (id: string) => void
+}
+
+const GeneratedImageCard: React.FC<GeneratedImageCardProps> = ({
     _id,
     image,
     positivePrompt,
@@ -106,11 +104,8 @@ const GeneratedImageCard: React.FC<ImageData> = ({
     cfgScale,
     upScale,
     createdAt,
+    removeImage,
 }) => {
-    const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false)
-    const { token } = useSelector<RootState, AuthInitialState>((state) => state.auth)
-
-    const { enqueueSnackbar } = useSnackbar()
     const parseAndFormatDate = (inputDate: Date) => {
         const parsedDate = moment(inputDate)
 
@@ -138,52 +133,6 @@ const GeneratedImageCard: React.FC<ImageData> = ({
         link.click()
         document.body.removeChild(link)
     }
-
-    const { callApi: removeImageApi, isLoading } = useApi({
-        url: `/api/v1/images/${_id}`,
-        method: RequestMethod.DELETE,
-    })
-    const removeImage = () => {
-        removeImageApi({
-            body: JSON.stringify({}),
-            token: token!,
-            onSuccess: () => {
-                enqueueSnackbar('Image Deleted Successfully', {
-                    variant: 'success',
-                    autoHideDuration: 3000,
-                    anchorOrigin: {
-                        vertical: 'bottom',
-                        horizontal: 'right',
-                    },
-                    preventDuplicate: true,
-                })
-            },
-            onError: (error) => {
-                enqueueSnackbar(error, {
-                    variant: 'error',
-                    autoHideDuration: 3000,
-                    anchorOrigin: {
-                        vertical: 'bottom',
-                        horizontal: 'right',
-                    },
-                })
-            },
-        })
-    }
-
-    useEffect(() => {
-        if (isLoading) {
-            enqueueSnackbar('Deleting Image', {
-                variant: 'info',
-                autoHideDuration: 3000,
-                anchorOrigin: {
-                    vertical: 'bottom',
-                    horizontal: 'right',
-                },
-                preventDuplicate: true,
-            })
-        }
-    }, [enqueueSnackbar, isLoading])
 
     return (
         <Card
@@ -291,7 +240,7 @@ const GeneratedImageCard: React.FC<ImageData> = ({
                         <CustomTooltip title={'Delete'}>
                             <IconButton
                                 onClick={() => {
-                                    setRemoveDialogOpen(true)
+                                    removeImage(_id)
                                 }}
                                 sx={{ color: '#ff5151' }}
                                 aria-label='delete'
@@ -302,20 +251,6 @@ const GeneratedImageCard: React.FC<ImageData> = ({
                     </div>
                 </CardActions>
             </Box>
-            <AlertDialog
-                title={'Delete Image'}
-                description={'Are you sure you want to delete this image?'}
-                positiveButtonText={'Delete'}
-                negativeButtonText={'Cancel'}
-                positiveAction={() => {
-                    removeImage()
-                    setRemoveDialogOpen(false)
-                }}
-                negativeAction={() => {
-                    setRemoveDialogOpen(false)
-                }}
-                open={removeDialogOpen}
-            />
         </Card>
     )
 }
