@@ -7,5 +7,5 @@ import DeleteImageController from '../apis/images/controllers/delete.image.contr
 export default (app: express.Application) => {
     UploadImageController.post(app, '/api/v1/images/upload', [Auth])
     GetImagesController.get(app, '/api/v1/images', [Auth])
-    DeleteImageController.delete(app, '/api/v1/images/:imageId', [Auth])
+    DeleteImageController.delete(app, '/api/v1/images', [Auth])
 }

@@ -22,7 +22,7 @@ export default class DeleteImageController extends MasterController<
     public static validate() {
         const payload = new RequestBuilder()
 
-        payload.addToParams(
+        payload.addToBody(
             Joi.object().keys({
                 imageId: Joi.string().required(),
             })
@@ -44,7 +44,7 @@ export default class DeleteImageController extends MasterController<
             user: { _id: userId },
             imageId,
         } = allData
-        
+
         const response = await imageService.deleteImage({ userId, imageId })
 
         return new ResponseBuilder(StatusCodes.SUCCESS, response, SuccessMessages.IMAGE_DELETED)
