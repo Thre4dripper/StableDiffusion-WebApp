@@ -93,11 +93,14 @@ interface IGeneratedImageCardProps {
     image: string
     positivePrompt: string
     negativePrompt?: string
-    dimensions: number[]
+    dimensions: {
+        width: number
+        height: number
+    }
     samplingSteps: number
     cfgScale: number
     upScale: number
-    date: Date
+    createdAt: Date
     remove: () => void
 }
 
@@ -109,7 +112,7 @@ const GeneratedImageCard: React.FC<IGeneratedImageCardProps> = ({
     samplingSteps,
     cfgScale,
     upScale,
-    date,
+    createdAt,
     remove,
 }) => {
     //format like time ago or if more than 1 day ago, format like date time
@@ -143,7 +146,7 @@ const GeneratedImageCard: React.FC<IGeneratedImageCardProps> = ({
                     <Chip
                         label={
                             <span className={'font-semibold text-gray-500'}>
-                                {dimensions[0]} x {dimensions[1]}
+                                {dimensions.width} x {dimensions.height}
                             </span>
                         }
                         size='small'
@@ -200,7 +203,7 @@ const GeneratedImageCard: React.FC<IGeneratedImageCardProps> = ({
                     <div className={'w-full flex flex-row justify-center items-center'}>
                         <AccessTime sx={{ color: '#272e3f', marginRight: 1 }} />
                         <span className={'text-sm text-gray-500 font-semibold'}>
-                            {parseAndFormatDate(date)}
+                            {parseAndFormatDate(createdAt)}
                         </span>
                         <div className={'flex-1'} />
                         <CustomTooltip title={'Open'}>

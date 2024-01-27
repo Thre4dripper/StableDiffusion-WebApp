@@ -43,6 +43,7 @@ const ImagesScreen: React.FC = () => {
                 const newImages = response?.data?.data?.entries
                 setImages((prevImages) => [...prevImages, ...newImages])
                 setTotalImages(response?.data?.data?.totalCount)
+                setOffset((prevOffset) => prevOffset + 4)
             },
             onError: (error) => {
                 console.log(error)
@@ -50,9 +51,9 @@ const ImagesScreen: React.FC = () => {
         })
     }, [callApi, token])
 
+    //first time call
     useEffect(() => {
         fetchImages().then()
-        setOffset((prevOffset) => prevOffset + 4)
     }, [])
 
     const observerTarget = useRef(null)
@@ -61,7 +62,6 @@ const ImagesScreen: React.FC = () => {
             async (entries) => {
                 if (entries[0].isIntersecting && !isLoading) {
                     await fetchImages()
-                    setOffset((prevOffset) => prevOffset + 4)
                 }
             },
             { threshold: 1 }
@@ -92,24 +92,12 @@ const ImagesScreen: React.FC = () => {
                     return (
                         <Grow in timeout={growDelay} key={index}>
                             <div>
-                                <GeneratedImageCard
-                                    image={image.image}
-                                    positivePrompt={'Cat'}
-                                    dimensions={[100, 200]}
-                                    samplingSteps={100}
-                                    cfgScale={10}
-                                    upScale={1}
-                                    date={new Date()}
-                                    remove={() => {}}
-                                />
+                                <GeneratedImageCard {...image} remove={() => {}} />
                             </div>
                         </Grow>
                     )
                 })}
             </div>
-            {/*<div ref={observerTarget} className={'flex flex-row my-40 justify-center'}>*/}
-            {/*    {isLoading && <Loader />}*/}
-            {/*</div>*/}
             {(images.length < totalImages || isLoading) && (
                 <div ref={observerTarget} className={'flex flex-row my-40 justify-center'}>
                     {isLoading && <Loader />}
