@@ -5,4 +5,7 @@ export enum SuccessMessages {
 
     //profile
     GET_PROFILE_SUCCESS = 'Profile fetched successfully',
+
+    //image
+    CREATE_IMAGE_SUCCESS = 'Image created successfully',
 }
