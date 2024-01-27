@@ -23,7 +23,7 @@ export default class UploadImageController extends MasterController<null, null, 
             Joi.object().keys({
                 image: Joi.string().required(),
                 positivePrompt: Joi.string().required(),
-                negativePrompt: Joi.string().required(),
+                negativePrompt: Joi.string().required().allow(''),
                 dimensions: Joi.object()
                     .keys({
                         width: Joi.number().required(),
@@ -32,7 +32,7 @@ export default class UploadImageController extends MasterController<null, null, 
                     .required(),
                 samplingSteps: Joi.number().required(),
                 cfgScale: Joi.number().required(),
-                upscale: Joi.number().required(),
+                upScale: Joi.number().required(),
             })
         )
 
@@ -54,7 +54,7 @@ export default class UploadImageController extends MasterController<null, null, 
             dimensions,
             samplingSteps,
             cfgScale,
-            upscale,
+            upScale,
         } = allData
 
         const response = await imageService.createImage({
@@ -65,7 +65,7 @@ export default class UploadImageController extends MasterController<null, null, 
             dimensions,
             samplingSteps,
             cfgScale,
-            upscale,
+            upScale,
         })
 
         return new ResponseBuilder(

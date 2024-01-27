@@ -34,7 +34,7 @@ const imageSchema = new Schema({
     },
     negativePrompt: {
         type: String,
-        required: true,
+        required: false,
         trim: true,
     },
     dimensions: {
@@ -53,7 +53,7 @@ const imageSchema = new Schema({
         min: 1,
         max: 35,
     },
-    upscale: {
+    upScale: {
         type: Number,
         required: true,
         min: 1,

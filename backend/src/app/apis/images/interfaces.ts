@@ -9,5 +9,5 @@ export interface ICreateImage {
     }
     samplingSteps: number
     cfgScale: number
-    upscale: number
+    upScale: number
 }
