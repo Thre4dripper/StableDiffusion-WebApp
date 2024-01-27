@@ -1,36 +1,67 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import GeneratedImageCard from '../components/GeneratedImageCard.tsx'
 import Loader from '../components/Loader.tsx'
 import Grow from '@mui/material/Grow'
+import useApi, { RequestMethod } from '../hooks/useApi.ts'
+import { useSelector } from 'react-redux'
+import { AuthInitialState } from '../redux/reducers/authReducer.ts'
+import { RootState } from '../redux/store.ts'
+
+interface ImageData {
+    userId: string
+    image: string
+    positivePrompt: string
+    negativePrompt: string
+    dimensions: {
+        width: number
+        height: number
+    }
+    samplingSteps: number
+    cfgScale: number
+    upScale: number
+    createdAt: Date
+}
 
 const ImagesScreen: React.FC = () => {
-    const [images, setImages] = useState<string[]>([])
-    const [isLoading, setIsLoading] = useState(false)
+    const [images, setImages] = useState<ImageData[]>([])
+    const [totalImages, setTotalImages] = useState<number>(0)
+    const [offset, setOffset] = useState<number>(0)
+
+    const { token } = useSelector<RootState, AuthInitialState>((state) => state.auth)
+
+    const { callApi, isLoading } = useApi({
+        url: `/api/v1/images?limit=4&offset=${offset}`,
+        method: RequestMethod.GET,
+    })
+
+    const fetchImages = useCallback(async () => {
+        callApi({
+            body: null,
+            token: token!,
+            onSuccess: (response) => {
+                console.log(response)
+                const newImages = response?.data?.data?.entries
+                setImages((prevImages) => [...prevImages, ...newImages])
+                setTotalImages(response?.data?.data?.totalCount)
+            },
+            onError: (error) => {
+                console.log(error)
+            },
+        })
+    }, [callApi, token])
+
+    useEffect(() => {
+        fetchImages().then()
+        setOffset((prevOffset) => prevOffset + 4)
+    }, [])
 
     const observerTarget = useRef(null)
-
-    const randomImage = () => {
-        const randomWidth = Math.floor(Math.random() * 10) + 300
-        const randomHeight = Math.floor(Math.random() * 10) + 300
-        return `https://picsum.photos/${randomWidth}/${randomHeight}`
-    }
-
     const observeIntersection = () => {
         const observer = new IntersectionObserver(
-            (entries) => {
+            async (entries) => {
                 if (entries[0].isIntersecting && !isLoading) {
-                    setIsLoading(true)
-                    // Simulate fetching more images from an API
-                    setTimeout(() => {
-                        setImages((prevImages) => [
-                            ...prevImages,
-                            randomImage(),
-                            randomImage(),
-                            randomImage(),
-                            randomImage(),
-                        ])
-                        setIsLoading(false)
-                    }, 500) // Simulated delay, replace with actual fetch logic
+                    await fetchImages()
+                    setOffset((prevOffset) => prevOffset + 4)
                 }
             },
             { threshold: 1 }
@@ -48,7 +79,7 @@ const ImagesScreen: React.FC = () => {
         }
     }
 
-    useEffect(observeIntersection, [isLoading])
+    useEffect(observeIntersection, [fetchImages, isLoading])
 
     return (
         <div className={'flex flex-col gap-4 my-8 mx-8 md:mx-10 lg:mx-14 xl:mx-16'}>
@@ -62,7 +93,7 @@ const ImagesScreen: React.FC = () => {
                         <Grow in timeout={growDelay} key={index}>
                             <div>
                                 <GeneratedImageCard
-                                    image={image}
+                                    image={image.image}
                                     positivePrompt={'Cat'}
                                     dimensions={[100, 200]}
                                     samplingSteps={100}
@@ -76,9 +107,14 @@ const ImagesScreen: React.FC = () => {
                     )
                 })}
             </div>
-            <div ref={observerTarget} className={'flex flex-row my-40 justify-center'}>
-                {isLoading && <Loader />}
-            </div>
+            {/*<div ref={observerTarget} className={'flex flex-row my-40 justify-center'}>*/}
+            {/*    {isLoading && <Loader />}*/}
+            {/*</div>*/}
+            {(images.length < totalImages || isLoading) && (
+                <div ref={observerTarget} className={'flex flex-row my-40 justify-center'}>
+                    {isLoading && <Loader />}
+                </div>
+            )}
         </div>
     )
 }
