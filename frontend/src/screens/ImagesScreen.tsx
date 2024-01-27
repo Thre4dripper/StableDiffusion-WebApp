@@ -103,16 +103,11 @@ const ImagesScreen: React.FC = () => {
                 imageId: id,
             },
             token: token!,
-            onSuccess: () => {},
+            onSuccess: () => {
+                setImages((prevImages) => prevImages.filter((image) => image._id !== id))
+            },
             onError: (error) => {
-                enqueueSnackbar(error, {
-                    variant: 'error',
-                    autoHideDuration: 3000,
-                    anchorOrigin: {
-                        vertical: 'bottom',
-                        horizontal: 'right',
-                    },
-                })
+                console.log(error)
             },
         })
     }
@@ -128,11 +123,6 @@ const ImagesScreen: React.FC = () => {
                 },
                 preventDuplicate: true,
             })
-
-            //remove image from state
-            setImages((prevImages) =>
-                prevImages.filter((image) => image._id !== removeDialogOpen.imageId)
-            )
         } else if (isDeleteFailed) {
             enqueueSnackbar('Failed to Delete Image', {
                 variant: 'error',
@@ -154,7 +144,7 @@ const ImagesScreen: React.FC = () => {
                 preventDuplicate: true,
             })
         }
-    }, [enqueueSnackbar, isDeleteFailed, isDeleted, isDeleting])
+    }, [enqueueSnackbar, isDeleteFailed, isDeleted, isDeleting, removeDialogOpen.imageId])
 
     return (
         <div className={'flex flex-col gap-4 my-8 mx-8 md:mx-10 lg:mx-14 xl:mx-16'}>
