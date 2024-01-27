@@ -8,7 +8,7 @@ import { CardActions, IconButton } from '@mui/material'
 import CustomTooltip from './CustomTooltip.tsx'
 import Box from '@mui/material/Box'
 import moment from 'moment'
-import { AccessTime, Delete } from '@mui/icons-material'
+import { AccessTime, Delete, Download, OpenInNew } from '@mui/icons-material'
 
 interface ICircularProgressBarProps {
     value: number
@@ -80,7 +80,9 @@ const CircularProgressBar: React.FC<ICircularProgressBarProps> = ({
                 <div
                     className={'absolute flex flex-col justify-center items-center'}
                     style={{ top: 0, left: 0, width: size, height: size }}>
-                    <span className={'text-gray-500'}>{Math.round(animatingValue)}</span>
+                    <span className={'text-gray-500 font-semibold'}>
+                        {Math.round(animatingValue)}
+                    </span>
                 </div>
             </div>
         </CustomTooltip>
@@ -114,7 +116,7 @@ const GeneratedImageCard: React.FC<IGeneratedImageCardProps> = ({
     const parseAndFormatDate = (inputDate: Date) => {
         const parsedDate = moment(inputDate)
 
-        return parsedDate.format('MMM DD, YYYY h:mm A')
+        return parsedDate.format('MMM DD, YYYY')
     }
     return (
         <Card
@@ -194,20 +196,36 @@ const GeneratedImageCard: React.FC<IGeneratedImageCardProps> = ({
                         title={'Up Scale'}
                     />
                 </div>
-                <CardActions sx={{ mt: 2, justifyContent: 'space-between' }}>
-                    <div className={'flex flex-row items-center text-gray-500'}>
-                        <AccessTime sx={{ marginRight: '4px' }} />
-                        <span className={'text-sm font-semibold'}>{parseAndFormatDate(date)}</span>
+                <CardActions sx={{ mt: 2 }}>
+                    <div className={'w-full flex flex-row justify-center items-center'}>
+                        <AccessTime sx={{ color: '#272e3f', marginRight: 1 }} />
+                        <span className={'text-sm text-gray-500 font-semibold'}>
+                            {parseAndFormatDate(date)}
+                        </span>
+                        <div className={'flex-1'} />
+                        <CustomTooltip title={'Open'}>
+                            <IconButton sx={{ color: '#272e3f' }} aria-label='open' size='large'>
+                                <OpenInNew />
+                            </IconButton>
+                        </CustomTooltip>
+                        <CustomTooltip title={'Download'}>
+                            <IconButton
+                                sx={{ color: '#272e3f' }}
+                                aria-label='download'
+                                size='large'>
+                                <Download />
+                            </IconButton>
+                        </CustomTooltip>
+                        <CustomTooltip title={'Delete'}>
+                            <IconButton
+                                onClick={remove}
+                                sx={{ color: '#ff5151' }}
+                                aria-label='delete'
+                                size='large'>
+                                <Delete />
+                            </IconButton>
+                        </CustomTooltip>
                     </div>
-                    <CustomTooltip title={'Delete'}>
-                        <IconButton
-                            onClick={remove}
-                            sx={{ color: '#ff5151' }}
-                            aria-label='delete'
-                            size='large'>
-                            <Delete />
-                        </IconButton>
-                    </CustomTooltip>
                 </CardActions>
             </Box>
         </Card>

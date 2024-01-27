@@ -52,7 +52,10 @@ const ImagesScreen: React.FC = () => {
 
     return (
         <div className={'flex flex-col gap-4 my-8 mx-8 md:mx-10 lg:mx-14 xl:mx-16'}>
-            <div className={'grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'}>
+            <div
+                className={
+                    'grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4'
+                }>
                 {images.map((image, index) => {
                     const growDelay = Math.random() * (2000 - 500) + 500
                     return (
