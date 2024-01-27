@@ -11,3 +11,9 @@ export interface ICreateImage {
     cfgScale: number
     upScale: number
 }
+
+export interface IGetImages {
+    userId: string
+    limit: number
+    offset: number
+}

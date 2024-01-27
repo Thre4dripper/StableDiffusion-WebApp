@@ -8,4 +8,5 @@ export enum SuccessMessages {
 
     //image
     CREATE_IMAGE_SUCCESS = 'Image created successfully',
+    IMAGES_FETCHED = 'Images fetched successfully',
 }
