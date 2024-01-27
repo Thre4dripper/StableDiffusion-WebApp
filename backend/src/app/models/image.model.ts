@@ -16,49 +16,54 @@ const dimensionsSchema = new Schema(
     }
 )
 
-const imageSchema = new Schema({
-    userId: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
+const imageSchema = new Schema(
+    {
+        userId: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true,
+        },
+        image: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+        positivePrompt: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+        negativePrompt: {
+            type: String,
+            required: false,
+            trim: true,
+        },
+        dimensions: {
+            type: dimensionsSchema,
+            required: true,
+        },
+        samplingSteps: {
+            type: Number,
+            required: true,
+            min: 1,
+            max: 150,
+        },
+        cfgScale: {
+            type: Number,
+            required: true,
+            min: 1,
+            max: 35,
+        },
+        upScale: {
+            type: Number,
+            required: true,
+            min: 1,
+            max: 4,
+        },
     },
-    image: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    positivePrompt: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    negativePrompt: {
-        type: String,
-        required: false,
-        trim: true,
-    },
-    dimensions: {
-        type: dimensionsSchema,
-        required: true,
-    },
-    samplingSteps: {
-        type: Number,
-        required: true,
-        min: 1,
-        max: 150,
-    },
-    cfgScale: {
-        type: Number,
-        required: true,
-        min: 1,
-        max: 35,
-    },
-    upScale: {
-        type: Number,
-        required: true,
-        min: 1,
-        max: 4,
-    },
-})
+    {
+        timestamps: true,
+    }
+)
 
 export default mongoose.model('Image', imageSchema)
