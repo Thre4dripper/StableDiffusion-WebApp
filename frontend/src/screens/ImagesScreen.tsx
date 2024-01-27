@@ -104,7 +104,7 @@ const ImagesScreen: React.FC = () => {
             },
             token: token!,
             onSuccess: () => {
-                //reset whole state
+                //reset the whole state
                 setImages([])
                 setTotalImages(0)
                 setOffset(0)

@@ -22,6 +22,9 @@ const HeaderFragment: React.FC = () => {
     const navigateToGeneratedImages = () => {
         navigate('/generated-images')
     }
+    const navigateToModel = () => {
+        navigate('/model')
+    }
     const navigateToAbout = () => {
         navigate('/about')
     }
@@ -66,7 +69,7 @@ const HeaderFragment: React.FC = () => {
                         </IconButton>
                     </CustomTooltip>
                     <CustomTooltip title={'AI Model'} TransitionComponent={Zoom}>
-                        <IconButton color={'inherit'}>
+                        <IconButton color={'inherit'} onClick={navigateToModel}>
                             <FaceRetouchingNatural />
                         </IconButton>
                     </CustomTooltip>

@@ -17,9 +17,9 @@ import image7 from '../assets/login-page-images/login_image7.png'
 import image8 from '../assets/login-page-images/login_image8.webp'
 
 const images = [image1, image2, image3, image4, image5, image6, image7, image8]
-const image = images[Math.floor(Math.random() * images.length)]
 
 const AboutScreen: React.FC = () => {
+    const image = images[Math.floor(Math.random() * images.length)]
     const links = [
         {
             originalLink: 'https://github.com/Stability-AI/stablediffusion',

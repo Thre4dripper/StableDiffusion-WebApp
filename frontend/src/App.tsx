@@ -10,6 +10,7 @@ import ProtectiveRoute from './components/ProtectiveRoute.tsx'
 import Wrapper from './components/Wrapper.tsx'
 import AboutScreen from './screens/AboutScreen.tsx'
 import ImagesScreen from './screens/ImagesScreen.tsx'
+import ModelScreen from './screens/ModelScreen.tsx'
 
 const defaultTheme = createTheme()
 const App: React.FC = () => {
@@ -36,6 +37,16 @@ const App: React.FC = () => {
                                 <ProtectiveRoute>
                                     <Wrapper>
                                         <ImagesScreen />
+                                    </Wrapper>
+                                </ProtectiveRoute>
+                            }
+                        />
+                        <Route
+                            path='/model'
+                            element={
+                                <ProtectiveRoute>
+                                    <Wrapper>
+                                        <ModelScreen />
                                     </Wrapper>
                                 </ProtectiveRoute>
                             }
