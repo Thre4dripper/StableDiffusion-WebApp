@@ -12,6 +12,7 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
 import { ImagesInitialState } from '../../redux/reducers/imagesReducer.ts'
 import { setOutputImage } from '../../redux/actions/imagesActions.ts'
 import { CellType } from '../../enums/CellType.ts'
+import { AuthInitialState } from '../../redux/reducers/authReducer.ts'
 
 interface CellOutputBoxProps {
     openImageDialog: (image: string) => void
@@ -35,12 +36,19 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
         (state) => state.images[index]
     )
 
+    const { token, userData } = useSelector<RootState, AuthInitialState>((state) => state.auth)
+
     const dispatch = useDispatch()
 
-    const { isLoading, callApi } = useApi({
+    const { isLoading: isImageGenerating, callApi: generateImageApi } = useApi({
         url: `https://api.wizmodel.com/sdapi/v1/${
             cellType === CellType.TEXT_TO_IMAGE ? 'txt' : 'img'
         }2img`,
+        method: RequestMethod.POST,
+    })
+
+    const { callApi: uploadImageApi } = useApi({
+        url: '/api/v1/images/upload',
         method: RequestMethod.POST,
     })
 
@@ -57,7 +65,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
             }
             return
         }
-        callApi({
+        generateImageApi({
             body: {
                 init_images: [inputImage],
                 prompt: positivePrompt,
@@ -73,6 +81,29 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
             onSuccess: (data) => {
                 const parsedImage = `data:image/png;base64,${data?.data?.images[0]}`
                 dispatch(setOutputImage(parsedImage, index))
+
+                uploadImageApi({
+                    body: {
+                        userId: userData?.id,
+                        image: parsedImage,
+                        positivePrompt: positivePrompt,
+                        negativePrompt: negativePrompt,
+                        dimensions: {
+                            width: width,
+                            height: height,
+                        },
+                        samplingSteps: samplingSteps,
+                        cfgScale: cfgScale,
+                        upScale: upScale,
+                    },
+                    token: token!,
+                    onSuccess: (data) => {
+                        console.log(data)
+                    },
+                    onError: (error) => {
+                        console.log(error)
+                    },
+                })
             },
             onError: (error) => {
                 console.log(error)
@@ -107,7 +138,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                     onClick={() => {
                         if (outputImage !== '') openImageDialog(outputImage)
                     }}>
-                    {!isLoading && outputImage && (
+                    {!isImageGenerating && outputImage && (
                         <img
                             src={outputImage}
                             alt={'Latent Diffusion Model'}
@@ -115,7 +146,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                         />
                     )}
 
-                    {!isLoading && !outputImage && (
+                    {!isImageGenerating && !outputImage && (
                         <div
                             className={
                                 'w-full h-full bg-slate-400 flex justify-center items-center'
@@ -124,7 +155,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                         </div>
                     )}
 
-                    {isLoading && (
+                    {isImageGenerating && (
                         <div className={'flex w-full h-full justify-center items-center'}>
                             <CircularProgress />
                         </div>
@@ -140,7 +171,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                                 backgroundColor: '#5d799d',
                             },
                         }}
-                        disabled={isLoading}
+                        disabled={isImageGenerating}
                         onClick={generateImage}
                         startIcon={<AutoAwesomeIcon />}>
                         Generate
@@ -156,7 +187,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                                 color: '#5d799d',
                             },
                         }}
-                        disabled={isLoading || outputImage === ''}
+                        disabled={isImageGenerating || outputImage === ''}
                         onClick={downloadImage}>
                         Download
                     </Button>
