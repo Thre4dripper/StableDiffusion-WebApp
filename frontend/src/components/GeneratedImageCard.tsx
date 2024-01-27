@@ -9,6 +9,13 @@ import CustomTooltip from './CustomTooltip.tsx'
 import Box from '@mui/material/Box'
 import moment from 'moment'
 import { AccessTime, Delete, Download, OpenInNew } from '@mui/icons-material'
+import useApi, { RequestMethod } from '../hooks/useApi.ts'
+import { useSelector } from 'react-redux'
+import { AuthInitialState } from '../redux/reducers/authReducer.ts'
+import { RootState } from '../redux/store.ts'
+import { ImageData } from '../screens/ImagesScreen.tsx'
+import { useSnackbar } from 'notistack'
+import AlertDialog from './dialogs/AlertDialog.tsx'
 
 interface ICircularProgressBarProps {
     value: number
@@ -89,22 +96,8 @@ const CircularProgressBar: React.FC<ICircularProgressBarProps> = ({
     )
 }
 
-interface IGeneratedImageCardProps {
-    image: string
-    positivePrompt: string
-    negativePrompt?: string
-    dimensions: {
-        width: number
-        height: number
-    }
-    samplingSteps: number
-    cfgScale: number
-    upScale: number
-    createdAt: Date
-    remove: () => void
-}
-
-const GeneratedImageCard: React.FC<IGeneratedImageCardProps> = ({
+const GeneratedImageCard: React.FC<ImageData> = ({
+    _id,
     image,
     positivePrompt,
     negativePrompt,
@@ -113,8 +106,11 @@ const GeneratedImageCard: React.FC<IGeneratedImageCardProps> = ({
     cfgScale,
     upScale,
     createdAt,
-    remove,
 }) => {
+    const [removeDialogOpen, setRemoveDialogOpen] = React.useState(false)
+    const { token } = useSelector<RootState, AuthInitialState>((state) => state.auth)
+
+    const { enqueueSnackbar } = useSnackbar()
     const parseAndFormatDate = (inputDate: Date) => {
         const parsedDate = moment(inputDate)
 
@@ -122,7 +118,7 @@ const GeneratedImageCard: React.FC<IGeneratedImageCardProps> = ({
     }
 
     const openImageInNewTab = () => {
-        const imageBase64 = image.split(',')[1] // remove data:image/png;base64, part
+        const imageBase64 = image.split(',')[1] // removeImage data:image/png;base64, part
         const byteCharacters = atob(imageBase64)
         const byteNumbers = new Array(byteCharacters.length)
         for (let i = 0; i < byteCharacters.length; i++) {
@@ -142,6 +138,53 @@ const GeneratedImageCard: React.FC<IGeneratedImageCardProps> = ({
         link.click()
         document.body.removeChild(link)
     }
+
+    const { callApi: removeImageApi, isLoading } = useApi({
+        url: `/api/v1/images/${_id}`,
+        method: RequestMethod.DELETE,
+    })
+    const removeImage = () => {
+        removeImageApi({
+            body: JSON.stringify({}),
+            token: token!,
+            onSuccess: () => {
+                enqueueSnackbar('Image Deleted Successfully', {
+                    variant: 'success',
+                    autoHideDuration: 3000,
+                    anchorOrigin: {
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    },
+                    preventDuplicate: true,
+                })
+            },
+            onError: (error) => {
+                enqueueSnackbar(error, {
+                    variant: 'error',
+                    autoHideDuration: 3000,
+                    anchorOrigin: {
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    },
+                })
+            },
+        })
+    }
+
+    useEffect(() => {
+        if (isLoading) {
+            enqueueSnackbar('Deleting Image', {
+                variant: 'info',
+                autoHideDuration: 3000,
+                anchorOrigin: {
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                },
+                preventDuplicate: true,
+            })
+        }
+    }, [enqueueSnackbar, isLoading])
+
     return (
         <Card
             elevation={5}
@@ -247,7 +290,9 @@ const GeneratedImageCard: React.FC<IGeneratedImageCardProps> = ({
                         </CustomTooltip>
                         <CustomTooltip title={'Delete'}>
                             <IconButton
-                                onClick={remove}
+                                onClick={() => {
+                                    setRemoveDialogOpen(true)
+                                }}
                                 sx={{ color: '#ff5151' }}
                                 aria-label='delete'
                                 size='large'>
@@ -257,6 +302,20 @@ const GeneratedImageCard: React.FC<IGeneratedImageCardProps> = ({
                     </div>
                 </CardActions>
             </Box>
+            <AlertDialog
+                title={'Delete Image'}
+                description={'Are you sure you want to delete this image?'}
+                positiveButtonText={'Delete'}
+                negativeButtonText={'Cancel'}
+                positiveAction={() => {
+                    removeImage()
+                    setRemoveDialogOpen(false)
+                }}
+                negativeAction={() => {
+                    setRemoveDialogOpen(false)
+                }}
+                open={removeDialogOpen}
+            />
         </Card>
     )
 }

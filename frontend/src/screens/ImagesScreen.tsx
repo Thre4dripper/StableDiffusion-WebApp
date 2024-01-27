@@ -7,8 +7,9 @@ import { useSelector } from 'react-redux'
 import { AuthInitialState } from '../redux/reducers/authReducer.ts'
 import { RootState } from '../redux/store.ts'
 
-interface ImageData {
+export interface ImageData {
     userId: string
+    _id: string
     image: string
     positivePrompt: string
     negativePrompt: string
@@ -39,7 +40,6 @@ const ImagesScreen: React.FC = () => {
             body: null,
             token: token!,
             onSuccess: (response) => {
-                console.log(response)
                 const newImages = response?.data?.data?.entries
                 setImages((prevImages) => [...prevImages, ...newImages])
                 setTotalImages(response?.data?.data?.totalCount)
@@ -92,7 +92,7 @@ const ImagesScreen: React.FC = () => {
                     return (
                         <Grow in timeout={growDelay} key={index}>
                             <div>
-                                <GeneratedImageCard {...image} remove={() => {}} />
+                                <GeneratedImageCard {...image} />
                             </div>
                         </Grow>
                     )
