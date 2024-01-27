@@ -13,8 +13,8 @@ import SwaggerConfig from './swaggerConfig'
 const server = async () => {
     const app = express()
     app.use(express.static('public'))
-    app.use(express.json())
-    app.use(express.urlencoded({ extended: true }))
+    app.use(express.json({ limit: '200mb' }))
+    app.use(express.urlencoded({ limit: '200mb', extended: true }))
     app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
     app.use(
         cors({
@@ -65,7 +65,7 @@ const server = async () => {
             optionsSuccessStatus: 204,
             credentials: true,
             preflightContinue: false,
-        }),
+        })
     )
     const loadRouters = async (dir: string) => {
         //load all routers from dir and sub dir
@@ -77,11 +77,13 @@ const server = async () => {
             if (entry.isDirectory()) {
                 //recursive call to sub dir
                 await loadRouters(fullPath)
-            } else if (entry.isFile() && (entry.name.endsWith('.router.ts') || entry.name.endsWith('.router.js'))) {
+            } else if (
+                entry.isFile() &&
+                (entry.name.endsWith('.router.ts') || entry.name.endsWith('.router.js'))
+            ) {
                 const router = require(fullPath)
                 //to support both default exports in commonjs and es6
-                if (router.default)
-                    router.default(app)
+                if (router.default) router.default(app)
                 else router(app)
             }
         }
@@ -100,7 +102,7 @@ const server = async () => {
         (err: any, _req: Request, res: Response, _next: NextFunction) => {
             console.error(err) // Log the error for debugging
             return res.status(500).json({ error: 'Internal Server Error' }) // Respond with a 500 Internal Server Error
-        },
+        }
     )
 
     // no route found
