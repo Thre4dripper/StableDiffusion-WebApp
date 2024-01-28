@@ -8,6 +8,9 @@ import { AuthInitialState } from '../redux/reducers/authReducer.ts'
 import { RootState } from '../redux/store.ts'
 import AlertDialog from '../components/dialogs/AlertDialog.tsx'
 import { useSnackbar } from 'notistack'
+import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button'
+import { useNavigate } from 'react-router-dom'
 
 export interface ImageData {
     userId: string
@@ -26,6 +29,8 @@ export interface ImageData {
 }
 
 const ImagesScreen: React.FC = () => {
+    const navigate = useNavigate()
+
     const [images, setImages] = useState<ImageData[]>([])
     const [totalImages, setTotalImages] = useState<number>(0)
     const [offset, setOffset] = useState<number>(0)
@@ -178,6 +183,25 @@ const ImagesScreen: React.FC = () => {
             {(images.length < totalImages || isFetching) && (
                 <div ref={observerTarget} className={'flex flex-row my-40 justify-center'}>
                     {isFetching && <Loader />}
+                </div>
+            )}
+            {images.length === 0 && !isFetching && (
+                <div className={'flex flex-col my-40 justify-center items-center gap-8'}>
+                    <Typography
+                        variant='body2'
+                        component='div'
+                        className={'text-slate-500 select-none'}
+                        style={{ fontSize: '36px', fontWeight: 'bold' }}>
+                        No Images Found :(
+                    </Typography>
+                    <Button
+                        variant='contained'
+                        color={'secondary'}
+                        onClick={() => {
+                            navigate('/')
+                        }}>
+                        Generate Images
+                    </Button>
                 </div>
             )}
             <AlertDialog
