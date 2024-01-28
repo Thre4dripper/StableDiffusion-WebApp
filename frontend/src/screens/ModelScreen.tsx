@@ -4,10 +4,11 @@ import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
 import useApi, { RequestMethod } from '../hooks/useApi.ts'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { AuthInitialState, Model } from '../redux/reducers/authReducer.ts'
 import { RootState } from '../redux/store.ts'
 import { useSnackbar } from 'notistack'
+import { setUserData } from '../redux/actions/authActions.ts'
 
 const cards = [
     {
@@ -32,6 +33,7 @@ const ModelScreen: React.FC = () => {
     const [selectedCard, setSelectedCard] = useState<Model>(userData?.model ?? Model.WIZ_MODEL)
     const [apiKey, setApiKey] = useState<string>(userData?.stabilityAIKey ?? '')
 
+    const dispatch = useDispatch()
     const { enqueueSnackbar } = useSnackbar()
 
     const handleCardClick = (title: Model) => {
@@ -50,8 +52,14 @@ const ModelScreen: React.FC = () => {
                 apiKey,
             },
             token: token!,
-            onSuccess: (response) => {
-                console.log(response)
+            onSuccess: () => {
+                dispatch(
+                    setUserData({
+                        ...userData!,
+                        model: selectedCard,
+                        stabilityAIKey: apiKey,
+                    })
+                )
             },
             onError: (error) => {
                 console.log(error)
