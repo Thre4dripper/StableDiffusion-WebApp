@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../redux/store.ts'
 import { SamplingInitialState } from '../../redux/reducers/samplingReducer.ts'
 import { setCfgScale, setSamplingSteps, setUpScale } from '../../redux/actions/samplingActions.ts'
+import { Model } from '../../redux/reducers/authReducer.ts'
 
 interface SamplingControlsProps {
     index: number
@@ -15,6 +16,10 @@ const SamplingControls: React.FC<SamplingControlsProps> = ({ index }) => {
         (state) => state.sampling[index]
     )
 
+    const selectedModel = useSelector<RootState, Model>(
+        (state) => state.auth.userData?.model ?? Model.WIZ_MODEL
+    )
+
     const dispatch = useDispatch()
     return (
         <Paper
@@ -23,13 +28,17 @@ const SamplingControls: React.FC<SamplingControlsProps> = ({ index }) => {
             sx={{
                 borderRadius: '20px',
                 backgroundColor: '#fff4d7',
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'center',
+                alignItems: 'center',
             }}>
-            <div className={'flex flex-col justify-between px-8 gap-2'}>
+            <div className={'w-full flex flex-col justify-between px-8 gap-2'}>
                 <SamplingInput
                     sliderProps={{
                         value: samplingSteps,
                         min: 1,
-                        max: 150,
+                        max: selectedModel === Model.WIZ_MODEL ? 150 : 50,
                         valueLabelDisplay: 'auto',
                         color: 'warning',
                         step: 1,
@@ -55,21 +64,23 @@ const SamplingControls: React.FC<SamplingControlsProps> = ({ index }) => {
                     }}
                     isMarked={true}
                 />
-                <SamplingInput
-                    sliderProps={{
-                        value: upScale,
-                        min: 1,
-                        max: 4,
-                        valueLabelDisplay: 'auto',
-                        color: 'info',
-                        step: 0.1,
-                    }}
-                    label='Upscale By'
-                    setValue={(value) => {
-                        dispatch(setUpScale(value, index))
-                    }}
-                    isMarked={true}
-                />
+                {selectedModel === Model.WIZ_MODEL && (
+                    <SamplingInput
+                        sliderProps={{
+                            value: upScale,
+                            min: 1,
+                            max: 4,
+                            valueLabelDisplay: 'auto',
+                            color: 'info',
+                            step: 0.1,
+                        }}
+                        label='Upscale By'
+                        setValue={(value) => {
+                            dispatch(setUpScale(value, index))
+                        }}
+                        isMarked={true}
+                    />
+                )}
             </div>
         </Paper>
     )
