@@ -11,7 +11,11 @@ import { AuthInitialState } from '../redux/reducers/authReducer.ts'
 import CustomTooltip from '../components/CustomTooltip.tsx'
 import { useNavigate } from 'react-router-dom'
 
-const HeaderFragment: React.FC = () => {
+interface IHeaderFragmentProps {
+    toolbarColor: string
+}
+
+const HeaderFragment: React.FC<IHeaderFragmentProps> = ({ toolbarColor }) => {
     const [mainDrawerOpen, setMainDrawerOpen] = React.useState(false)
     const [profileDrawerOpen, setProfileDrawerOpen] = React.useState(false)
 
@@ -19,6 +23,9 @@ const HeaderFragment: React.FC = () => {
 
     const navigate = useNavigate()
 
+    const navigateToHome = () => {
+        navigate('/')
+    }
     const navigateToGeneratedImages = () => {
         navigate('/generated-images')
     }
@@ -42,7 +49,12 @@ const HeaderFragment: React.FC = () => {
 
     return (
         <AppBar position='fixed'>
-            <Toolbar className={'flex flex-row gap-4'}>
+            <Toolbar
+                className={'flex flex-row gap-4'}
+                sx={{
+                    backgroundColor: toolbarColor,
+                    color: 'white',
+                }}>
                 <div className={'block sm:hidden'}>
                     <IconButton
                         edge='start'
@@ -54,7 +66,14 @@ const HeaderFragment: React.FC = () => {
                         <MenuSharp />
                     </IconButton>
                 </div>
-                <Typography variant='h6' noWrap component='div'>
+                <Typography
+                    variant='h6'
+                    noWrap
+                    component='div'
+                    onClick={navigateToHome}
+                    sx={{
+                        cursor: 'pointer',
+                    }}>
                     Stable Diffusion Model
                 </Typography>
                 <div className={'flex-grow'} />

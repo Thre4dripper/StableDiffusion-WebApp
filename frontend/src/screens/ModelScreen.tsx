@@ -69,7 +69,7 @@ const ModelScreen: React.FC = () => {
                         <Typography
                             variant='body2'
                             align='justify'
-                            className={'text-slate-400 font-semibold'}
+                            className={'text-slate-600 font-semibold'}
                             style={{ fontSize: '16px' }}>
                             {card.description}
                         </Typography>
@@ -77,8 +77,13 @@ const ModelScreen: React.FC = () => {
                             variant='outlined'
                             href={card.link}
                             sx={{
-                                color: '#a755f5',
-                                borderColor: '#a755f5',
+                                'color': '#a755f5',
+                                'borderColor': '#a755f5',
+                                '&:hover': {
+                                    borderColor: '#a755f5',
+                                    backgroundColor: '#a755f5',
+                                    color: '#fff',
+                                },
                             }}>
                             Learn More
                         </Button>
@@ -100,8 +105,13 @@ const ModelScreen: React.FC = () => {
                         <Button
                             variant='outlined'
                             sx={{
-                                color: '#a755f5',
-                                borderColor: '#a755f5',
+                                'color': '#a755f5',
+                                'borderColor': '#a755f5',
+                                '&:hover': {
+                                    borderColor: '#a755f5',
+                                    backgroundColor: '#a755f5',
+                                    color: '#fff',
+                                },
                             }}
                             onClick={() => {
                                 setSelectedCard(Model.STABILITY)
@@ -114,7 +124,11 @@ const ModelScreen: React.FC = () => {
                         <Button
                             variant='contained'
                             sx={{
-                                backgroundColor: '#a755f5',
+                                'backgroundColor': '#a755f5',
+                                '&:hover': {
+                                    backgroundColor: '#a755f5',
+                                    color: '#fff',
+                                },
                             }}
                             href={'https://platform.stability.ai/docs/getting-started'}>
                             Get API Key
