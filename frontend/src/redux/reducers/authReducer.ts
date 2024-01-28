@@ -1,11 +1,18 @@
 import { ActionTypes } from '../actions/actionTypes.ts'
 
+export enum Model {
+    WIZ_MODEL = 'wiz_model',
+    STABILITY_AI = 'stability_ai',
+}
+
 export interface UserData {
     id: string
     firstName: string
     lastName: string
     email: string
     profilePic: string
+    model: Model
+    stabilityApiKey: string
 }
 
 export interface AuthInitialState {

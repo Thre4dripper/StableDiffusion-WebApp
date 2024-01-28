@@ -1,23 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 import TextField from '@mui/material/TextField'
-
-enum Model {
-    WIZ = 'Wiz Model',
-    STABILITY = 'Stability API',
-}
+import useApi, { RequestMethod } from '../hooks/useApi.ts'
+import { useSelector } from 'react-redux'
+import { AuthInitialState, Model } from '../redux/reducers/authReducer.ts'
+import { RootState } from '../redux/store.ts'
+import { useSnackbar } from 'notistack'
 
 const cards = [
     {
-        title: Model.WIZ,
+        title: 'Wiz Model',
+        value: Model.WIZ_MODEL,
         description:
             'Embark on a journey with the Wiz Model, a freely accessible Stable Diffusion Model. Unleash your creativity as you explore the possibilities it offers. Please note, while the Wiz Model is freely available to all users, the accuracy is not guaranteed.',
         link: 'https://www.wizmodel.com/',
     },
     {
-        title: Model.STABILITY,
+        title: 'Stability AI',
+        value: Model.STABILITY_AI,
         description:
             'Dive into the advanced Stability API, powered by the latest SDXL Model. Experience top-notch accuracy and reliability in predicting molecular stability. The API is available for free with limited access, requiring your unique API key for full utilization.',
         link: 'https://platform.stability.ai/',
@@ -25,14 +27,68 @@ const cards = [
 ]
 
 const ModelScreen: React.FC = () => {
-    const [selectedCard, setSelectedCard] = useState<Model>(Model.WIZ)
+    const { token, userData } = useSelector<RootState, AuthInitialState>((state) => state.auth)
+    const [selectedCard, setSelectedCard] = useState<Model>(userData?.model ?? Model.WIZ_MODEL)
+
+    const { enqueueSnackbar } = useSnackbar()
 
     const handleCardClick = (title: Model) => {
         setSelectedCard(title)
     }
 
+    const { isLoading, isSuccess, isFailed, callApi } = useApi({
+        url: `/api/v1/ai-model`,
+        method: RequestMethod.PUT,
+    })
+
+    const updateModel = () => {
+        callApi({
+            body: {
+                model: selectedCard,
+            },
+            token: token!,
+            onSuccess: (response) => {
+                console.log(response)
+            },
+            onError: (error) => {
+                console.log(error)
+            },
+        })
+    }
+
+    useEffect(() => {
+        if (isLoading) {
+            enqueueSnackbar('Updating Model...', {
+                variant: 'info',
+                autoHideDuration: 1000,
+                anchorOrigin: {
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                },
+            })
+        } else if (isSuccess) {
+            enqueueSnackbar('Model Updated Successfully', {
+                variant: 'success',
+                autoHideDuration: 1000,
+                anchorOrigin: {
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                },
+            })
+        } else if (isFailed) {
+            enqueueSnackbar('Failed to update Model', {
+                variant: 'error',
+                autoHideDuration: 1000,
+                anchorOrigin: {
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                },
+            })
+        }
+    }, [isLoading, isSuccess, isFailed, enqueueSnackbar])
+
     return (
-        <div className={'flex flex-col justify-center items-center gap-2 py-8'}>
+        <div className={'select-none flex flex-col justify-center items-center gap-2 py-8'}>
             <Typography
                 variant='h2'
                 component='div'
@@ -46,12 +102,12 @@ const ModelScreen: React.FC = () => {
                 }>
                 {cards.map((card) => (
                     <Paper
-                        key={card.title}
+                        key={card.value}
                         className={`px-8 py-4 cursor-pointer border-8 ${
-                            selectedCard === card.title ? 'border-purple-500' : 'border-transparent'
+                            selectedCard === card.value ? 'border-purple-500' : 'border-transparent'
                         }`}
-                        elevation={selectedCard === card.title ? 8 : 2}
-                        onClick={() => handleCardClick(card.title)}
+                        elevation={selectedCard === card.value ? 8 : 2}
+                        onClick={() => handleCardClick(card.value)}
                         sx={{
                             minHeight: '16rem',
                             transition: 'all 0.2s ease-in-out',
@@ -94,7 +150,7 @@ const ModelScreen: React.FC = () => {
                 ))}
             </div>
             <div className={'w-full flex justify-center items-center'}>
-                {selectedCard === Model.WIZ ? (
+                {selectedCard === Model.WIZ_MODEL ? (
                     <div
                         className={
                             'h-32 flex flex-col justify-center items-center gap-4 max-w-2xl mx-4 md:mx-8'
@@ -106,7 +162,7 @@ const ModelScreen: React.FC = () => {
                             style={{ fontSize: '20px' }}>
                             Please note, while the Wiz Model is freely available to all users, the
                             accuracy is not guaranteed. For a more accurate prediction, please use
-                            the Stability API.
+                            the Stability AI.
                         </Typography>
                         <Button
                             variant='outlined'
@@ -120,9 +176,9 @@ const ModelScreen: React.FC = () => {
                                 },
                             }}
                             onClick={() => {
-                                setSelectedCard(Model.STABILITY)
+                                setSelectedCard(Model.STABILITY_AI)
                             }}>
-                            Switch to Stability API
+                            Switch to Stability AI
                         </Button>
                     </div>
                 ) : (
@@ -171,6 +227,7 @@ const ModelScreen: React.FC = () => {
             <div className={'w-full flex flex-row justify-end'}>
                 <div className={'mx-4 md:mx-8 lg:mx-12 my-4 xl:mx-16'}>
                     <Button
+                        disabled={isLoading}
                         variant='contained'
                         sx={{
                             'backgroundColor': '#a755f5',
@@ -178,7 +235,8 @@ const ModelScreen: React.FC = () => {
                                 backgroundColor: '#a755f5',
                                 color: '#fff',
                             },
-                        }}>
+                        }}
+                        onClick={updateModel}>
                         Update
                     </Button>
                 </div>
