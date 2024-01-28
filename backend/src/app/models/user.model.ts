@@ -37,7 +37,7 @@ const UserSchema = new mongoose.Schema(
             enum: Object.values(AiModel),
             default: AiModel.WIZ_MODEL,
         },
-        stabilityApi: {
+        stabilityAIKey: {
             type: String,
             trim: true,
         },
