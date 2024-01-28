@@ -7,4 +7,7 @@ export enum ErrorMessages {
 
     //images
     IMAGE_NOT_FOUND = 'Image not found',
+
+    //generators
+    IMAGE_GENERATION_FAILED = 'Image generation failed',
 }

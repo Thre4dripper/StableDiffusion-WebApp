@@ -13,4 +13,7 @@ export enum SuccessMessages {
 
     //ai model
     AI_MODEL_UPDATED = 'AI Model updated successfully',
+
+    //wiz model
+    WIZ_TEXT_TO_IMAGE_SUCCESS = 'Wiz Text To Image success',
 }
