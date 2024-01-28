@@ -10,4 +10,7 @@ export enum SuccessMessages {
     CREATE_IMAGE_SUCCESS = 'Image created successfully',
     IMAGES_FETCHED = 'Images fetched successfully',
     IMAGE_DELETED = 'Image deleted successfully',
+
+    //ai model
+    AI_MODEL_UPDATED = 'AI Model updated successfully',
 }
