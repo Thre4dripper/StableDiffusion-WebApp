@@ -28,7 +28,9 @@ const cards = [
 
 const ModelScreen: React.FC = () => {
     const { token, userData } = useSelector<RootState, AuthInitialState>((state) => state.auth)
+
     const [selectedCard, setSelectedCard] = useState<Model>(userData?.model ?? Model.WIZ_MODEL)
+    const [apiKey, setApiKey] = useState<string>(userData?.stabilityAIKey ?? '')
 
     const { enqueueSnackbar } = useSnackbar()
 
@@ -45,6 +47,7 @@ const ModelScreen: React.FC = () => {
         callApi({
             body: {
                 model: selectedCard,
+                apiKey,
             },
             token: token!,
             onSuccess: (response) => {
@@ -205,6 +208,10 @@ const ModelScreen: React.FC = () => {
                             label='API Key'
                             variant='outlined'
                             className={'w-full'}
+                            value={apiKey}
+                            onChange={(event) => {
+                                setApiKey(event.target.value)
+                            }}
                             sx={{
                                 '& .MuiOutlinedInput-root': {
                                     borderRadius: '16px',

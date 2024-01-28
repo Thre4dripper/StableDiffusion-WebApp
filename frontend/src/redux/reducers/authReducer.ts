@@ -12,7 +12,7 @@ export interface UserData {
     email: string
     profilePic: string
     model: Model
-    stabilityApiKey: string
+    stabilityAIKey: string
 }
 
 export interface AuthInitialState {
