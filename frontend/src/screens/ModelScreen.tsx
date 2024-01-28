@@ -32,25 +32,28 @@ const ModelScreen: React.FC = () => {
     }
 
     return (
-        <div className={'flex flex-col justify-center items-center gap-8 py-8'}>
+        <div className={'flex flex-col justify-center items-center gap-2 py-8'}>
             <Typography
                 variant='h2'
                 component='div'
-                className={'my-8 text-slate-500'}
+                className={'text-slate-500'}
                 style={{ fontSize: '36px', fontWeight: 'bold' }}>
                 Select a Model
             </Typography>
-            <div className={'mx-16 my-8 flex flex-row justify-center items-center gap-16'}>
+            <div
+                className={
+                    'mx-4 md:mx-8 lg:mx-12 xl:mx-16 my-8 flex flex-col lg:flex-row justify-center items-center gap-8'
+                }>
                 {cards.map((card) => (
                     <Paper
                         key={card.title}
-                        className={`flex flex-col justify-center items-center p-8 cursor-pointer border-8 ${
+                        className={`px-8 py-4 cursor-pointer border-8 ${
                             selectedCard === card.title ? 'border-purple-500' : 'border-transparent'
                         }`}
                         elevation={selectedCard === card.title ? 8 : 2}
                         onClick={() => handleCardClick(card.title)}
                         sx={{
-                            width: 600,
+                            minHeight: '16rem',
                             transition: 'all 0.2s ease-in-out',
                             borderRadius: '20px',
                             display: 'flex',
@@ -62,7 +65,7 @@ const ModelScreen: React.FC = () => {
                         <Typography
                             variant='h4'
                             component='div'
-                            className={'mb-2 text-purple-500'}
+                            className={'text-purple-500'}
                             style={{ fontSize: '24px', fontWeight: 'bold' }}>
                             {card.title}
                         </Typography>
@@ -90,14 +93,17 @@ const ModelScreen: React.FC = () => {
                     </Paper>
                 ))}
             </div>
-            <div>
+            <div className={'w-full flex justify-center items-center'}>
                 {selectedCard === Model.WIZ ? (
-                    <div className={'flex flex-col justify-center items-center gap-8'}>
+                    <div
+                        className={
+                            'h-32 flex flex-col justify-center items-center gap-4 max-w-2xl mx-4 md:mx-8'
+                        }>
                         <Typography
                             variant='body2'
                             align='justify'
                             className={'text-slate-400 font-semibold'}
-                            style={{ fontSize: '20px', width: '600px' }}>
+                            style={{ fontSize: '20px' }}>
                             Please note, while the Wiz Model is freely available to all users, the
                             accuracy is not guaranteed. For a more accurate prediction, please use
                             the Stability API.
@@ -120,12 +126,17 @@ const ModelScreen: React.FC = () => {
                         </Button>
                     </div>
                 ) : (
-                    <div className={'flex flex-col justify-center items-center gap-8'}>
+                    <div
+                        className={
+                            'h-32 flex flex-col justify-center items-center gap-8 w-full max-w-2xl mx-4 md:mx-8'
+                        }>
                         <Button
-                            variant='contained'
+                            variant='outlined'
                             sx={{
-                                'backgroundColor': '#a755f5',
+                                'color': '#a755f5',
+                                'borderColor': '#a755f5',
                                 '&:hover': {
+                                    borderColor: '#a755f5',
                                     backgroundColor: '#a755f5',
                                     color: '#fff',
                                 },
@@ -137,8 +148,7 @@ const ModelScreen: React.FC = () => {
                             id='outlined-basic'
                             label='API Key'
                             variant='outlined'
-                            className={'my-8'}
-                            style={{ width: '600px' }}
+                            className={'w-full'}
                             sx={{
                                 '& .MuiOutlinedInput-root': {
                                     borderRadius: '16px',
@@ -157,6 +167,21 @@ const ModelScreen: React.FC = () => {
                         />
                     </div>
                 )}
+            </div>
+            <div className={'w-full flex flex-row justify-end'}>
+                <div className={'mx-4 md:mx-8 lg:mx-12 my-4 xl:mx-16'}>
+                    <Button
+                        variant='contained'
+                        sx={{
+                            'backgroundColor': '#a755f5',
+                            '&:hover': {
+                                backgroundColor: '#a755f5',
+                                color: '#fff',
+                            },
+                        }}>
+                        Update
+                    </Button>
+                </div>
             </div>
         </div>
     )
