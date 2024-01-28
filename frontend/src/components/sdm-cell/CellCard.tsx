@@ -12,6 +12,8 @@ import CellOutputBox from './CellOutputBox.tsx'
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate'
 import { CellType } from '../../enums/CellType.ts'
 import { setInputImage } from '../../redux/actions/imagesActions.ts'
+import { Model } from '../../redux/reducers/authReducer.ts'
+import CustomTooltip from '../CustomTooltip.tsx'
 
 interface CellCardProps {
     index: number
@@ -26,6 +28,10 @@ const CellCard: React.FC<CellCardProps> = ({ index, setIsHovering, cellType }) =
     const { positivePrompt, negativePrompt } = useSelector<RootState, PromptsInitialState>(
         (state) => state.prompts[index]
     )
+    const selectedModel = useSelector<RootState, Model>(
+        (state) => state.auth.userData?.model ?? Model.WIZ_MODEL
+    )
+
     const inputImage = useSelector<RootState, string>((state) => state.images[index].inputImage)
     const dispatch = useDispatch()
 
@@ -137,14 +143,41 @@ const CellCard: React.FC<CellCardProps> = ({ index, setIsHovering, cellType }) =
                         )}
                     </div>
                     {/*Controls Container*/}
-                    <div
-                        className={
-                            'row-span-2 row-start-3 ' +
-                            'lg:col-span-4 lg:row-span-2 lg:row-start-3 ' +
-                            'xl:col-span-4 xl:row-span-2 xl:col-start-1 xl:row-start-3'
-                        }>
-                        <SizeControls index={index} />
-                    </div>
+                    <CustomTooltip
+                        title={
+                            selectedModel === Model.STABILITY_AI &&
+                            cellType === CellType.IMAGE_TO_IMAGE
+                                ? 'Size controls are disabled for Stability AI Image-to-Image models, ' +
+                                  'The size of the output image is determined by the size of the input image.'
+                                : ''
+                        }
+                        placement={'bottom'}>
+                        <div
+                            style={{
+                                opacity:
+                                    selectedModel === Model.STABILITY_AI &&
+                                    cellType === CellType.IMAGE_TO_IMAGE
+                                        ? 0.7
+                                        : 1,
+                            }}
+                            className={
+                                'row-span-2 row-start-3 ' +
+                                'lg:col-span-4 lg:row-span-2 lg:row-start-3 ' +
+                                'xl:col-span-4 xl:row-span-2 xl:col-start-1 xl:row-start-3'
+                            }>
+                            <div
+                                className={'w-full h-full'}
+                                style={{
+                                    pointerEvents:
+                                        selectedModel === Model.STABILITY_AI &&
+                                        cellType === CellType.IMAGE_TO_IMAGE
+                                            ? 'none'
+                                            : 'auto',
+                                }}>
+                                <SizeControls index={index} />
+                            </div>
+                        </div>
+                    </CustomTooltip>
                     <div
                         className={
                             'row-span-2 row-start-5 ' +
