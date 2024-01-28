@@ -1,4 +1,5 @@
 import { ActionTypes } from './actionTypes'
+import { SamplingInitialState } from '../reducers/samplingReducer.ts'
 
 export const setSamplingSteps = (samplingSteps: number, index: number) => ({
     type: ActionTypes.SET_SAMPLING_STEPS,
@@ -18,10 +19,7 @@ export const setUpScale = (upScale: number, index: number) => ({
     index,
 })
 
-export const addSamplingCell = (
-    sampling: { samplingSteps: number; cfgScale: number; upScale: number },
-    index: number
-) => ({
+export const addSamplingCell = (sampling: SamplingInitialState, index: number) => ({
     type: ActionTypes.ADD_SAMPLING_CELL,
     payload: sampling,
     index,

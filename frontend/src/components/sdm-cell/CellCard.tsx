@@ -32,7 +32,9 @@ const CellCard: React.FC<CellCardProps> = ({ index, setIsHovering, cellType }) =
         (state) => state.auth.userData?.model ?? Model.WIZ_MODEL
     )
 
-    const inputImage = useSelector<RootState, string>((state) => state.images[index].inputImage)
+    const inputImage = useSelector<RootState, File | null>(
+        (state) => state.images[index].inputImage
+    )
     const dispatch = useDispatch()
 
     const handlePositivePromptChange = (value: string) => {
@@ -50,12 +52,7 @@ const CellCard: React.FC<CellCardProps> = ({ index, setIsHovering, cellType }) =
         input.onchange = (event: Event) => {
             const target = event.target as HTMLInputElement
             if (target.files && target.files.length > 0) {
-                const reader = new FileReader()
-                reader.readAsDataURL(target.files[0])
-                reader.onloadend = () => {
-                    const base64data = reader.result
-                    dispatch(setInputImage(base64data as string, index))
-                }
+                dispatch(setInputImage(target.files[0], index))
             }
         }
         input.click()
@@ -125,12 +122,12 @@ const CellCard: React.FC<CellCardProps> = ({ index, setIsHovering, cellType }) =
                                     }>
                                     {inputImage && (
                                         <img
-                                            src={inputImage}
+                                            src={URL.createObjectURL(inputImage)}
                                             alt={'Latent Diffusion Model'}
                                             className={'w-full h-full'}
                                         />
                                     )}
-                                    {inputImage === '' && (
+                                    {inputImage === null && (
                                         <AddPhotoAlternateIcon
                                             sx={{
                                                 color: 'rgb(39,46,63)',

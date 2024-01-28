@@ -1,4 +1,5 @@
 import { ActionTypes } from './actionTypes'
+import { DimensionsInitialState } from '../reducers/dimensionsReducer.ts'
 
 export const setWidth = (width: number, index: number) => ({
     type: ActionTypes.SET_WIDTH,
@@ -12,7 +13,7 @@ export const setHeight = (height: number, index: number) => ({
     index,
 })
 
-export const addDimensionCell = (dimensions: { width: number; height: number }, index: number) => ({
+export const addDimensionCell = (dimensions: DimensionsInitialState, index: number) => ({
     type: ActionTypes.ADD_DIMENSION_CELL,
     payload: dimensions,
     index,

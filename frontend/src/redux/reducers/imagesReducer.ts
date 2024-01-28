@@ -2,13 +2,13 @@ import { ActionTypes } from '../actions/actionTypes.ts'
 import lodash from 'lodash'
 
 export interface ImagesInitialState {
-    inputImage: string
+    inputImage: File | null
     outputImage: string
 }
 
 interface SetInputImageAction {
     type: ActionTypes.SET_INPUT_IMAGE
-    payload: string
+    payload: File | null
     index: number
 }
 
@@ -32,7 +32,7 @@ interface RemoveLdmCellAction {
 type Action = SetInputImageAction | SetOutputImageAction | AddLdmCellAction | RemoveLdmCellAction
 
 export const imagesInitialState: ImagesInitialState = {
-    inputImage: '',
+    inputImage: null,
     outputImage: '',
 }
 
