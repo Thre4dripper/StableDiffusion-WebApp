@@ -40,6 +40,7 @@ const UserSchema = new mongoose.Schema(
         stabilityAIKey: {
             type: String,
             trim: true,
+            default: '',
         },
     },
     {

@@ -6,15 +6,12 @@ import aiModelService from '../services/ai.model.service'
 import ResponseBuilder from '../../../utils/ResponseBuilder'
 import { StatusCodes } from '../../../enums/StatusCodes'
 import { SuccessMessages } from '../../../enums/SuccessMessages'
+import { IUpdateAiModel } from '../interfaces'
 
-export default class UpdateAiModelController extends MasterController<
-    null,
-    null,
-    { model: AiModel }
-> {
+export default class UpdateAiModelController extends MasterController<null, null, IUpdateAiModel> {
     static doc() {
         return {
-            tags: ['AiModel'],
+            tags: ['AI Model'],
             description: 'Update AiModel',
             summary: '',
         }
@@ -28,6 +25,7 @@ export default class UpdateAiModelController extends MasterController<
                 model: Joi.string()
                     .valid(...Object.values(AiModel))
                     .required(),
+                apiKey: Joi.string().required().allow(''),
             })
         )
 
@@ -37,18 +35,21 @@ export default class UpdateAiModelController extends MasterController<
     async restController(
         _params: null,
         _query: null,
-        _body: {
-            model: AiModel
-        },
+        _body: IUpdateAiModel,
         _headers: any,
         allData: any
     ): Promise<any> {
         const {
             user: { _id },
             model,
+            apiKey,
         } = allData
 
-        const response = await aiModelService.updateAiModel(_id, model)
+        const response = await aiModelService.updateAiModel({
+            userId: _id,
+            model,
+            apiKey,
+        })
 
         return new ResponseBuilder(StatusCodes.SUCCESS, response, SuccessMessages.AI_MODEL_UPDATED)
     }
