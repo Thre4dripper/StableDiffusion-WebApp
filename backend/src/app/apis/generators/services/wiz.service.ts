@@ -30,7 +30,12 @@ class WizService {
             },
         }
 
-        const response = await axios(config)
+        let response = null
+        try {
+            response = await axios(config)
+        } catch (error) {
+            throw new ValidationError(ErrorMessages.IMAGE_GENERATION_FAILED)
+        }
 
         const savedImage = await imageService.createImage({
             userId,
@@ -50,7 +55,7 @@ class WizService {
             throw new ValidationError(ErrorMessages.IMAGE_GENERATION_FAILED)
         }
 
-        return response.data
+        return response.data.images[0]
     }
 }
 

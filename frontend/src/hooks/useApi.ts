@@ -44,6 +44,8 @@ const useApi = ({ url, method = RequestMethod.GET }: UseApiConfig): UseApiResult
                     'Content-Type': 'application/json',
                 },
                 data: body,
+                timeout: 120000,
+                timeoutErrorMessage: 'Request timed out',
             }
 
             if (token) axiosConfig.headers!['Authorization'] = `Bearer ${token}`
@@ -60,6 +62,7 @@ const useApi = ({ url, method = RequestMethod.GET }: UseApiConfig): UseApiResult
                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                     // @ts-ignore
                     onError(error.response?.data?.error || 'Something went wrong')
+                    console.log(error)
                 })
         },
         [url, method]

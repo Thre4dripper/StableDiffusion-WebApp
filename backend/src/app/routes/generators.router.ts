@@ -3,5 +3,5 @@ import WizTextToImageController from '../apis/generators/controllers/wiz.text.to
 import Auth from '../middlewares/Auth'
 
 export default (app: express.Application) => {
-    WizTextToImageController.post(app, '/api/v1/generators/wiz/text-to-image', [Auth])
+    WizTextToImageController.post(app, '/api/v1/generate/wiz/text-to-image', [Auth])
 }

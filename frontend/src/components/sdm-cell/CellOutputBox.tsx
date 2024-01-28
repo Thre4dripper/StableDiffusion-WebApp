@@ -1,5 +1,5 @@
 import React from 'react'
-import { Alert, Button, CircularProgress, IconButton, Snackbar } from '@mui/material'
+import { Button, CircularProgress, IconButton } from '@mui/material'
 import ImageIcon from '@mui/icons-material/Image'
 import DownloadIcon from '@mui/icons-material/Download'
 import useApi, { RequestMethod } from '../../hooks/useApi.ts'
@@ -12,7 +12,8 @@ import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
 import { ImagesInitialState } from '../../redux/reducers/imagesReducer.ts'
 import { setOutputImage } from '../../redux/actions/imagesActions.ts'
 import { CellType } from '../../enums/CellType.ts'
-import { AuthInitialState } from '../../redux/reducers/authReducer.ts'
+import { AuthInitialState, Model } from '../../redux/reducers/authReducer.ts'
+import { useSnackbar } from 'notistack'
 
 interface CellOutputBoxProps {
     openImageDialog: (image: string) => void
@@ -21,8 +22,6 @@ interface CellOutputBoxProps {
 }
 
 const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, cellType }) => {
-    const [snackbarOpen, setSnackbarOpen] = React.useState(false)
-
     const { positivePrompt, negativePrompt } = useSelector<RootState, PromptsInitialState>(
         (state) => state.prompts[index]
     )
@@ -39,76 +38,53 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
     const { token, userData } = useSelector<RootState, AuthInitialState>((state) => state.auth)
 
     const dispatch = useDispatch()
+    const { enqueueSnackbar } = useSnackbar()
 
-    const { isLoading: isImageGenerating, callApi: generateImageApi } = useApi({
-        url: `https://api.wizmodel.com/sdapi/v1/${
-            cellType === CellType.TEXT_TO_IMAGE ? 'txt' : 'img'
-        }2img`,
+    const { isLoading: isWizTextToImageLoading, callApi: wizTextToImageApi } = useApi({
+        url: '/api/v1/generate/wiz/text-to-image',
         method: RequestMethod.POST,
     })
 
-    const { callApi: uploadImageApi } = useApi({
-        url: '/api/v1/images/upload',
-        method: RequestMethod.POST,
-    })
-
-    const generateImage = () => {
-        if (positivePrompt === '') {
-            //close and reopen snackbar
-            if (snackbarOpen) {
-                setSnackbarOpen(false)
-                setTimeout(() => {
-                    setSnackbarOpen(true)
-                }, 100)
-            } else {
-                setSnackbarOpen(true)
-            }
-            return
-        }
-        generateImageApi({
+    const wizTextToImageGenerate = () => {
+        wizTextToImageApi({
             body: {
-                init_images: [inputImage],
-                prompt: positivePrompt,
-                negative_prompt: negativePrompt,
-                width: width,
-                height: height,
-                steps: samplingSteps,
-                cfg_scale: cfgScale,
-                enable_hr: true,
-                hr_scale: upScale,
+                positivePrompt,
+                negativePrompt,
+                samplingSteps,
+                cfgScale,
+                width,
+                height,
+                upScale,
             },
-            token: import.meta.env.VITE_WIZMODEL_API_KEY,
-            onSuccess: (data) => {
-                const parsedImage = `data:image/png;base64,${data?.data?.images[0]}`
+            token: token!,
+            onSuccess: (response) => {
+                const parsedImage = `data:image/png;base64,${response?.data?.data}`
                 dispatch(setOutputImage(parsedImage, index))
-
-                uploadImageApi({
-                    body: {
-                        userId: userData?.id,
-                        image: parsedImage,
-                        positivePrompt: positivePrompt,
-                        negativePrompt: negativePrompt,
-                        dimensions: {
-                            width: width,
-                            height: height,
-                        },
-                        samplingSteps: samplingSteps,
-                        cfgScale: cfgScale,
-                        upScale: upScale,
-                    },
-                    token: token!,
-                    onSuccess: (data) => {
-                        console.log(data)
-                    },
-                    onError: (error) => {
-                        console.log(error)
-                    },
-                })
             },
             onError: (error) => {
                 console.log(error)
             },
         })
+    }
+
+    const generateImage = () => {
+        if (positivePrompt === '') {
+            enqueueSnackbar('Please enter a prompt', {
+                variant: 'error',
+                autoHideDuration: 3000,
+                anchorOrigin: {
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                },
+            })
+            return
+        }
+
+        if (userData?.model === Model.WIZ_MODEL) {
+            if (cellType === CellType.TEXT_TO_IMAGE) {
+                wizTextToImageGenerate()
+            }
+        }
     }
 
     const downloadImage = () => {
@@ -138,7 +114,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                     onClick={() => {
                         if (outputImage !== '') openImageDialog(outputImage)
                     }}>
-                    {!isImageGenerating && outputImage && (
+                    {!isWizTextToImageLoading && outputImage && (
                         <img
                             src={outputImage}
                             alt={'Latent Diffusion Model'}
@@ -146,7 +122,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                         />
                     )}
 
-                    {!isImageGenerating && !outputImage && (
+                    {!isWizTextToImageLoading && !outputImage && (
                         <div
                             className={
                                 'w-full h-full bg-slate-400 flex justify-center items-center'
@@ -155,7 +131,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                         </div>
                     )}
 
-                    {isImageGenerating && (
+                    {isWizTextToImageLoading && (
                         <div className={'flex w-full h-full justify-center items-center'}>
                             <CircularProgress />
                         </div>
@@ -171,7 +147,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                                 backgroundColor: '#5d799d',
                             },
                         }}
-                        disabled={isImageGenerating}
+                        disabled={isWizTextToImageLoading}
                         onClick={generateImage}
                         startIcon={<AutoAwesomeIcon />}>
                         Generate
@@ -187,23 +163,12 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                                 color: '#5d799d',
                             },
                         }}
-                        disabled={isImageGenerating || outputImage === ''}
+                        disabled={isWizTextToImageLoading || outputImage === ''}
                         onClick={downloadImage}>
                         Download
                     </Button>
                 </div>
             </div>
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={5000}
-                anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
-                onClose={() => {
-                    setSnackbarOpen(false)
-                }}>
-                <Alert severity='error' sx={{ width: '100%' }}>
-                    Please enter a prompt
-                </Alert>
-            </Snackbar>
         </>
     )
 }
