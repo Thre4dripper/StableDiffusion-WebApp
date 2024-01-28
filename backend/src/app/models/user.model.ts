@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { AiModel } from '../enums/AiModel'
 
 const UserSchema = new mongoose.Schema(
     {
@@ -30,7 +31,16 @@ const UserSchema = new mongoose.Schema(
             type: String,
             trim: true,
         },
-        //add more fields
+        model: {
+            type: String,
+            required: true,
+            enum: Object.values(AiModel),
+            default: AiModel.WIZ_MODEL,
+        },
+        stabilityApi: {
+            type: String,
+            trim: true,
+        },
     },
     {
         timestamps: true,
