@@ -39,9 +39,8 @@ export const promptsInitialState: PromptsInitialState = {
     positivePrompt: '',
     negativePrompt: '',
 }
-const promptsInitialStates: PromptsInitialState[] = [promptsInitialState]
 
-const promptsReducer = (state: PromptsInitialState[] = promptsInitialStates, action: Action) => {
+const promptsReducer = (state: PromptsInitialState[] = [], action: Action) => {
     const newState = lodash.cloneDeep(state)
     switch (action.type) {
         case ActionTypes.SET_POSITIVE_PROMPT:

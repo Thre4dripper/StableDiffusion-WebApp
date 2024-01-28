@@ -35,12 +35,8 @@ export const dimensionsInitialState: DimensionsInitialState = {
     width: 256,
     height: 256,
 }
-const dimensionsInitialStates: DimensionsInitialState[] = [dimensionsInitialState]
 
-const dimensionsReducer = (
-    state: DimensionsInitialState[] = dimensionsInitialStates,
-    action: Action
-) => {
+const dimensionsReducer = (state: DimensionsInitialState[] = [], action: Action) => {
     const newState = lodash.cloneDeep(state)
     switch (action.type) {
         case ActionTypes.SET_WIDTH:

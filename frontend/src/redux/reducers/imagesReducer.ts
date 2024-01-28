@@ -36,14 +36,7 @@ export const imagesInitialState: ImagesInitialState = {
     outputImage: '',
 }
 
-const imagesInitialStates: ImagesInitialState[] = [
-    {
-        inputImage: '',
-        outputImage: '',
-    },
-]
-
-const imagesReducer = (state = imagesInitialStates, action: Action) => {
+const imagesReducer = (state: ImagesInitialState[] = [], action: Action) => {
     const newState = lodash.cloneDeep(state)
     switch (action.type) {
         case ActionTypes.SET_INPUT_IMAGE:

@@ -48,9 +48,8 @@ export const samplingInitialState: SamplingInitialState = {
     cfgScale: 7,
     upScale: 1,
 }
-const samplingInitialStates: SamplingInitialState[] = [samplingInitialState]
 
-const samplingReducer = (state: SamplingInitialState[] = samplingInitialStates, action: Action) => {
+const samplingReducer = (state: SamplingInitialState[] = [], action: Action) => {
     const newState = lodash.cloneDeep(state)
     switch (action.type) {
         case ActionTypes.SET_SAMPLING_STEPS:
