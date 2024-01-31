@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import CellContainer from '../components/sdm-cell/CellContainer.tsx'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addDimensionCell, removeDimensionCell } from '../redux/actions/dimensionsActions.ts'
 import { addPromptCell, removePromptCell } from '../redux/actions/promptsActions.ts'
 import { addSamplingCell, removeSamplingCell } from '../redux/actions/samplingActions.ts'
@@ -9,9 +9,10 @@ import { promptsInitialState } from '../redux/reducers/promptsReducer.ts'
 import { samplingInitialState } from '../redux/reducers/samplingReducer.ts'
 import { CellType } from '../enums/CellType.ts'
 import { addImageCell, removeImageCell } from '../redux/actions/imagesActions.ts'
-import { imagesInitialState } from '../redux/reducers/imagesReducer.ts'
+import { ImagesInitialState, imagesInitialState } from '../redux/reducers/imagesReducer.ts'
 import AddCellDialog from '../components/dialogs/AddCellDialog.tsx'
 import { AddCellDialogState } from '../enums/AddCellDialogState.ts'
+import { RootState } from '../redux/store.ts'
 
 interface ISdmCell {
     id: number
@@ -19,7 +20,15 @@ interface ISdmCell {
 }
 
 const HomeScreen: React.FC = () => {
-    const [cells, setCells] = useState<ISdmCell[]>([])
+    const images = useSelector<RootState, ImagesInitialState[]>((state) => state.images)
+
+    const [cells, setCells] = useState<ISdmCell[]>(
+        images.map((image) => {
+            if (image.inputImage == null)
+                return { id: Date.now(), cellType: CellType.TEXT_TO_IMAGE }
+            else return { id: Date.now(), cellType: CellType.IMAGE_TO_IMAGE }
+        })
+    )
     const dispatch = useDispatch()
     const addCellAbove = (index: number, cellType: CellType) => {
         setCells((prevCells) => {
