@@ -50,6 +50,11 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
         method: RequestMethod.POST,
     })
 
+    const { isLoading: isStabilityTextToImageLoading, callApi: stabilityTextToImageApi } = useApi({
+        url: '/api/v1/generate/stability/text-to-image',
+        method: RequestMethod.POST,
+    })
+
     const wizTextToImageGenerate = () => {
         wizTextToImageApi({
             body: {
@@ -96,6 +101,28 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
         })
     }
 
+    const stabilityTextToImageGenerate = () => {
+        stabilityTextToImageApi({
+            body: {
+                positivePrompt,
+                negativePrompt,
+                samplingSteps,
+                cfgScale,
+                width,
+                height,
+                upScale,
+            },
+            token: token!,
+            onSuccess: (response) => {
+                const parsedImage = `data:image/png;base64,${response?.data?.data}`
+                dispatch(setOutputImage(parsedImage, index))
+            },
+            onError: (error) => {
+                console.log(error)
+            },
+        })
+    }
+
     const generateImage = () => {
         if (positivePrompt === '') {
             enqueueSnackbar('Please enter a prompt', {
@@ -114,6 +141,10 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                 wizTextToImageGenerate()
             } else if (cellType === CellType.IMAGE_TO_IMAGE) {
                 wizImageToImageGenerate()
+            }
+        } else if (userData?.model === Model.STABILITY_AI) {
+            if (cellType === CellType.TEXT_TO_IMAGE) {
+                stabilityTextToImageGenerate()
             }
         }
     }
@@ -145,24 +176,32 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                     onClick={() => {
                         if (outputImage !== '') openImageDialog(outputImage)
                     }}>
-                    {!isWizTextToImageLoading && !isWizImageToImageLoading && outputImage && (
-                        <img
-                            src={outputImage}
-                            alt={'Latent Diffusion Model'}
-                            className={'w-full h-full'}
-                        />
-                    )}
+                    {!isWizTextToImageLoading &&
+                        !isWizImageToImageLoading &&
+                        !isStabilityTextToImageLoading &&
+                        outputImage && (
+                            <img
+                                src={outputImage}
+                                alt={'Latent Diffusion Model'}
+                                className={'w-full h-full'}
+                            />
+                        )}
 
-                    {!isWizTextToImageLoading && !isWizImageToImageLoading && !outputImage && (
-                        <div
-                            className={
-                                'w-full h-full bg-slate-400 flex justify-center items-center'
-                            }>
-                            <ImageIcon fontSize={'large'} />
-                        </div>
-                    )}
+                    {!isWizTextToImageLoading &&
+                        !isWizImageToImageLoading &&
+                        !isStabilityTextToImageLoading &&
+                        !outputImage && (
+                            <div
+                                className={
+                                    'w-full h-full bg-slate-400 flex justify-center items-center'
+                                }>
+                                <ImageIcon fontSize={'large'} />
+                            </div>
+                        )}
 
-                    {(isWizTextToImageLoading || isWizImageToImageLoading) && (
+                    {(isWizTextToImageLoading ||
+                        isWizImageToImageLoading ||
+                        isStabilityTextToImageLoading) && (
                         <div className={'flex w-full h-full justify-center items-center'}>
                             <CircularProgress />
                         </div>
