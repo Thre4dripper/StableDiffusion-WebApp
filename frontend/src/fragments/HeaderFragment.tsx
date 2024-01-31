@@ -72,9 +72,15 @@ const HeaderFragment: React.FC<IHeaderFragmentProps> = ({ toolbarColor }) => {
                     component='div'
                     onClick={navigateToHome}
                     sx={{
+                        display: { xs: 'none', md: 'flex' },
+                        fontFamily: 'monospace',
+                        fontWeight: 700,
+                        letterSpacing: '.3rem',
+                        color: 'inherit',
                         cursor: 'pointer',
+                        textDecoration: 'none',
                     }}>
-                    Imaginify
+                    IMAGINIFY
                 </Typography>
                 <div className={'flex-grow'} />
 
