@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Copyright: React.FC<any> = (props: any) => {
     const origin = window.location.origin
-    console.log(window.location)
     return (
         <Typography variant='body2' color='text.secondary' align='center' {...props}>
             {'Copyright © '}

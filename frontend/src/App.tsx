@@ -11,9 +11,11 @@ import Wrapper from './components/Wrapper.tsx'
 import AboutScreen from './screens/AboutScreen.tsx'
 import ImagesScreen from './screens/ImagesScreen.tsx'
 import ModelScreen from './screens/ModelScreen.tsx'
+import axios from 'axios'
 
 const defaultTheme = createTheme()
 const App: React.FC = () => {
+    axios.defaults.baseURL = 'https://stable-diffusion-sdxl-backend.onrender.com'
     return (
         <ThemeProvider theme={defaultTheme}>
             <SnackbarProvider maxSnack={4}>
