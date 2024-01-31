@@ -3,8 +3,10 @@ import WizTextToImageController from '../apis/generators/controllers/wiz.text.to
 import WizImageToImageController from '../apis/generators/controllers/wiz.image.to.image.controller'
 import Auth from '../middlewares/Auth'
 import FileUpload from '../middlewares/FileUpload'
+import StabilityTextToImageController from '../apis/generators/controllers/stability.text.to.image.controller'
 
 export default (app: express.Application) => {
     WizTextToImageController.post(app, '/api/v1/generate/wiz/text-to-image', [Auth])
     WizImageToImageController.post(app, '/api/v1/generate/wiz/image-to-image', [Auth, FileUpload])
+    StabilityTextToImageController.post(app, '/api/v1/generate/stability/text-to-image', [Auth])
 }
