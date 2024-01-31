@@ -12,11 +12,18 @@ export interface IWizImageToImage extends IWizTextToImage {
     inputImage: Buffer
 }
 
-export interface IStabilityTextToImage {
+export interface IStability {
     positivePrompt: string
     negativePrompt: string
-    width: number
-    height: number
     samplingSteps: number
     cfgScale: number
+}
+
+export interface IStabilityTextToImage extends IStability {
+    width: number
+    height: number
+}
+
+export interface IStabilityImageToImage extends IStability {
+    inputImage: Buffer
 }
