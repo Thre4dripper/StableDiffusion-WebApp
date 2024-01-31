@@ -14,7 +14,7 @@ export default class WizTextToImageController extends MasterController<
 > {
     static doc() {
         return {
-            tags: ['Wiz Model'],
+            tags: ['Generators'],
             description: 'WizTextToImage',
             summary: '',
         }

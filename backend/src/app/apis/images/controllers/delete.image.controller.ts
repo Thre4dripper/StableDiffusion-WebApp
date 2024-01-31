@@ -1,7 +1,7 @@
 import MasterController from '../../../utils/MasterController'
 import RequestBuilder from '../../../utils/RequestBuilder'
 import Joi from 'joi'
-import imageService from '../service/image.service'
+import imageService from '../services/image.service'
 import ResponseBuilder from '../../../utils/ResponseBuilder'
 import { StatusCodes } from '../../../enums/StatusCodes'
 import { SuccessMessages } from '../../../enums/SuccessMessages'

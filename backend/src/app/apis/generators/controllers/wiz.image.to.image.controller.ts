@@ -14,7 +14,7 @@ export default class WizImageToImageController extends MasterController<
 > {
     public static doc() {
         return {
-            tags: ['Wiz Model'],
+            tags: ['Generators'],
             description: 'WizImageToImage API',
             summary: '',
         }

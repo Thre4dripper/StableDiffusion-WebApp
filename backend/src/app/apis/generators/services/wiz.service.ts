@@ -1,4 +1,4 @@
-import imageService from '../../images/service/image.service'
+import imageService from '../../images/services/image.service'
 import { IWizImageToImage, IWizTextToImage } from '../interfaces'
 import axios from 'axios'
 import { ValidationError } from '../../../handlers/CustomErrorHandler'
