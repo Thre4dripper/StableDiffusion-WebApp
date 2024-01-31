@@ -3,7 +3,6 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Chip from '@mui/material/Chip'
-import Typography from '@mui/material/Typography'
 import { CardActions, IconButton } from '@mui/material'
 import CustomTooltip from './CustomTooltip.tsx'
 import Box from '@mui/material/Box'
@@ -148,13 +147,25 @@ const GeneratedImageCard: React.FC<GeneratedImageCardProps> = ({
                 image={image}
             />
             <CardContent>
-                <div className={'flex flex-row gap-2'}>
-                    <Chip
-                        label={<span className={'font-semibold'}>Positive Prompt</span>}
-                        size='small'
-                        color='success'
-                        variant={'outlined'}
-                    />
+                <div className={'flex flex-row gap-1'}>
+                    <CustomTooltip title={positivePrompt}>
+                        <Chip
+                            label={<span>Positive Prompt</span>}
+                            size='small'
+                            color='success'
+                            variant={'outlined'}
+                        />
+                    </CustomTooltip>
+                    {negativePrompt && (
+                        <CustomTooltip title={negativePrompt}>
+                            <Chip
+                                label={<span>Negative Prompt</span>}
+                                size='small'
+                                color='error'
+                                variant={'outlined'}
+                            />
+                        </CustomTooltip>
+                    )}
                     <div className={'flex-grow'} />
                     <Chip
                         label={
@@ -167,23 +178,6 @@ const GeneratedImageCard: React.FC<GeneratedImageCardProps> = ({
                         variant={'outlined'}
                     />
                 </div>
-                <Typography variant='subtitle1' component='div' sx={{ mt: 2, fontWeight: 600 }}>
-                    {positivePrompt}
-                </Typography>
-                {negativePrompt && (
-                    <>
-                        <Chip
-                            label='Negative Prompt'
-                            size='medium'
-                            color='error'
-                            variant={'outlined'}
-                            sx={{ mt: 1 }}
-                        />
-                        <Typography variant='h6' component='div' sx={{ mt: 1 }}>
-                            {negativePrompt}s
-                        </Typography>
-                    </>
-                )}
             </CardContent>
             <Box
                 sx={{
