@@ -1,14 +1,7 @@
 import React from 'react'
-import {
-    Divider,
-    Drawer,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-} from '@mui/material'
+import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { AutoAwesome, FaceRetouchingNatural, Info } from '@mui/icons-material'
+import { useNavigate } from 'react-router-dom'
 
 interface MainDrawerProps {
     open: boolean
@@ -16,6 +9,23 @@ interface MainDrawerProps {
 }
 
 const MainDrawer: React.FC<MainDrawerProps> = ({ open, onClose }) => {
+    const navigate = useNavigate()
+
+    const navigateToModel = () => {
+        navigate('/model')
+        onClose()
+    }
+
+    const navigateToGeneratedImages = () => {
+        navigate('/generated-images')
+        onClose()
+    }
+
+    const navigateToAbout = () => {
+        navigate('/about')
+        onClose()
+    }
+
     return (
         <Drawer
             anchor={'left'}
@@ -29,7 +39,7 @@ const MainDrawer: React.FC<MainDrawerProps> = ({ open, onClose }) => {
             }}>
             <List>
                 <ListItem disablePadding>
-                    <ListItemButton>
+                    <ListItemButton onClick={navigateToModel}>
                         <ListItemIcon>
                             <FaceRetouchingNatural />
                         </ListItemIcon>
@@ -37,16 +47,15 @@ const MainDrawer: React.FC<MainDrawerProps> = ({ open, onClose }) => {
                     </ListItemButton>
                 </ListItem>
                 <ListItem disablePadding>
-                    <ListItemButton>
+                    <ListItemButton onClick={navigateToGeneratedImages}>
                         <ListItemIcon>
                             <AutoAwesome />
                         </ListItemIcon>
                         <ListItemText primary='Generated Images' />
                     </ListItemButton>
                 </ListItem>
-                <Divider />
                 <ListItem disablePadding>
-                    <ListItemButton>
+                    <ListItemButton onClick={navigateToAbout}>
                         <ListItemIcon>
                             <Info />
                         </ListItemIcon>
