@@ -62,6 +62,16 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
         }
     )
 
+    const errorSnackBar = (error: string) =>
+        enqueueSnackbar(error, {
+            variant: 'error',
+            autoHideDuration: 3000,
+            anchorOrigin: {
+                vertical: 'bottom',
+                horizontal: 'right',
+            },
+        })
+
     const wizTextToImageGenerate = () => {
         wizTextToImageApi({
             body: {
@@ -80,6 +90,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
             },
             onError: (error) => {
                 console.log(error)
+                errorSnackBar(error)
             },
         })
     }
@@ -104,6 +115,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
             },
             onError: (error) => {
                 console.log(error)
+                errorSnackBar(error)
             },
         })
     }
@@ -126,6 +138,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
             },
             onError: (error) => {
                 console.log(error)
+                errorSnackBar(error)
             },
         })
     }
@@ -148,6 +161,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
             },
             onError: (error) => {
                 console.log(error)
+                errorSnackBar(error)
             },
         })
     }
