@@ -74,7 +74,7 @@ const HeaderFragment: React.FC<IHeaderFragmentProps> = ({ toolbarColor }) => {
                     sx={{
                         cursor: 'pointer',
                     }}>
-                    Stable Diffusion Model
+                    Imaginify
                 </Typography>
                 <div className={'flex-grow'} />
 
