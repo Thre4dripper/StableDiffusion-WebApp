@@ -55,6 +55,13 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
         method: RequestMethod.POST,
     })
 
+    const { isLoading: isStabilityImageToImageLoading, callApi: stabilityImageToImageApi } = useApi(
+        {
+            url: '/api/v1/generate/stability/image-to-image',
+            method: RequestMethod.POST,
+        }
+    )
+
     const wizTextToImageGenerate = () => {
         wizTextToImageApi({
             body: {
@@ -123,6 +130,28 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
         })
     }
 
+    const stabilityImageToImageGenerate = () => {
+        const formData = new FormData()
+        formData.append('inputImage', inputImage!)
+        formData.append('positivePrompt', positivePrompt)
+        formData.append('negativePrompt', negativePrompt)
+        formData.append('samplingSteps', samplingSteps.toString())
+        formData.append('cfgScale', cfgScale.toString())
+        formData.append('upScale', upScale.toString())
+
+        stabilityImageToImageApi({
+            body: formData,
+            token: token!,
+            onSuccess: (response) => {
+                const parsedImage = `data:image/png;base64,${response?.data?.data}`
+                dispatch(setOutputImage(parsedImage, index))
+            },
+            onError: (error) => {
+                console.log(error)
+            },
+        })
+    }
+
     const generateImage = () => {
         if (positivePrompt === '') {
             enqueueSnackbar('Please enter a prompt', {
@@ -145,6 +174,8 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
         } else if (userData?.model === Model.STABILITY_AI) {
             if (cellType === CellType.TEXT_TO_IMAGE) {
                 stabilityTextToImageGenerate()
+            } else if (cellType === CellType.IMAGE_TO_IMAGE) {
+                stabilityImageToImageGenerate()
             }
         }
     }
@@ -179,6 +210,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                     {!isWizTextToImageLoading &&
                         !isWizImageToImageLoading &&
                         !isStabilityTextToImageLoading &&
+                        !isStabilityImageToImageLoading &&
                         outputImage && (
                             <img
                                 src={outputImage}
@@ -190,6 +222,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                     {!isWizTextToImageLoading &&
                         !isWizImageToImageLoading &&
                         !isStabilityTextToImageLoading &&
+                        !isStabilityImageToImageLoading &&
                         !outputImage && (
                             <div
                                 className={
@@ -201,7 +234,8 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
 
                     {(isWizTextToImageLoading ||
                         isWizImageToImageLoading ||
-                        isStabilityTextToImageLoading) && (
+                        isStabilityTextToImageLoading ||
+                        isStabilityImageToImageLoading) && (
                         <div className={'flex w-full h-full justify-center items-center'}>
                             <CircularProgress />
                         </div>
@@ -217,7 +251,12 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                                 backgroundColor: '#5d799d',
                             },
                         }}
-                        disabled={isWizTextToImageLoading || isWizImageToImageLoading}
+                        disabled={
+                            isWizTextToImageLoading ||
+                            isWizImageToImageLoading ||
+                            isStabilityTextToImageLoading ||
+                            isStabilityImageToImageLoading
+                        }
                         onClick={generateImage}
                         startIcon={<AutoAwesomeIcon />}>
                         Generate
@@ -233,7 +272,12 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                                 color: '#5d799d',
                             },
                         }}
-                        disabled={isWizTextToImageLoading || isWizImageToImageLoading}
+                        disabled={
+                            isWizTextToImageLoading ||
+                            isWizImageToImageLoading ||
+                            isStabilityTextToImageLoading ||
+                            isStabilityImageToImageLoading
+                        }
                         onClick={downloadImage}>
                         Download
                     </Button>
