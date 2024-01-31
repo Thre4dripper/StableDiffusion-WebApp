@@ -11,7 +11,7 @@ export default defineConfig({
                 rewrite: (path) => path.replace(/^\/local/, ''),
             },
             '/api/v1': {
-                target: 'http://localhost:8000',
+                target: 'https://stable-diffusion-sdxl-backend.onrender.com',
                 changeOrigin: true,
                 rewrite: (path) => path.replace(/^\/api\/v1/, '/api/v1'),
             },
