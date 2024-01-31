@@ -7,3 +7,7 @@ export interface IWizTextToImage {
     cfgScale: number
     upScale: number
 }
+
+export interface IWizImageToImage extends IWizTextToImage {
+    initImage: Buffer
+}
