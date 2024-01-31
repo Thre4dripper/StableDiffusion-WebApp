@@ -1,5 +1,8 @@
 import React from 'react'
 import HeaderFragment from '../fragments/HeaderFragment.tsx'
+import { useSelector } from 'react-redux'
+import { AuthInitialState } from '../redux/reducers/authReducer.ts'
+import { RootState } from '../redux/store.ts'
 
 interface IWrapperProps {
     children: React.ReactNode
@@ -17,10 +20,12 @@ const Wrapper: React.FC<IWrapperProps> = ({ children }) => {
         toolbarColor = '#ff4081'
     }
 
+    const { userData } = useSelector<RootState, AuthInitialState>((state) => state.auth)
+
     return (
         <div className={'flex flex-col'}>
-            <HeaderFragment toolbarColor={toolbarColor} />
-            <div className={'flex-grow mt-16'}>{children}</div>
+            {userData && <HeaderFragment toolbarColor={toolbarColor} />}
+            <div className={`flex-grow ${userData ? 'mt-16' : ''}`}>{children}</div>
         </div>
     )
 }

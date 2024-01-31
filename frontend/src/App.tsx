@@ -54,11 +54,9 @@ const App: React.FC = () => {
                         <Route
                             path='/about'
                             element={
-                                <ProtectiveRoute>
-                                    <Wrapper>
-                                        <AboutScreen />
-                                    </Wrapper>
-                                </ProtectiveRoute>
+                                <Wrapper>
+                                    <AboutScreen />
+                                </Wrapper>
                             }
                         />
                         <Route path='*' element={<NotFound404 />} />
