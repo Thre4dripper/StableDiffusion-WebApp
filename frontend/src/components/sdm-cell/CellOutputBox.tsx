@@ -45,6 +45,11 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
         method: RequestMethod.POST,
     })
 
+    const { isLoading: isWizImageToImageLoading, callApi: wizImageToImageApi } = useApi({
+        url: '/api/v1/generate/wiz/image-to-image',
+        method: RequestMethod.POST,
+    })
+
     const wizTextToImageGenerate = () => {
         wizTextToImageApi({
             body: {
@@ -56,6 +61,30 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                 height,
                 upScale,
             },
+            token: token!,
+            onSuccess: (response) => {
+                const parsedImage = `data:image/png;base64,${response?.data?.data}`
+                dispatch(setOutputImage(parsedImage, index))
+            },
+            onError: (error) => {
+                console.log(error)
+            },
+        })
+    }
+
+    const wizImageToImageGenerate = () => {
+        const formData = new FormData()
+        formData.append('inputImage', inputImage!)
+        formData.append('positivePrompt', positivePrompt)
+        formData.append('negativePrompt', negativePrompt)
+        formData.append('samplingSteps', samplingSteps.toString())
+        formData.append('cfgScale', cfgScale.toString())
+        formData.append('width', width.toString())
+        formData.append('height', height.toString())
+        formData.append('upScale', upScale.toString())
+
+        wizImageToImageApi({
+            body: formData,
             token: token!,
             onSuccess: (response) => {
                 const parsedImage = `data:image/png;base64,${response?.data?.data}`
@@ -83,6 +112,8 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
         if (userData?.model === Model.WIZ_MODEL) {
             if (cellType === CellType.TEXT_TO_IMAGE) {
                 wizTextToImageGenerate()
+            } else if (cellType === CellType.IMAGE_TO_IMAGE) {
+                wizImageToImageGenerate()
             }
         }
     }
@@ -114,7 +145,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                     onClick={() => {
                         if (outputImage !== '') openImageDialog(outputImage)
                     }}>
-                    {!isWizTextToImageLoading && outputImage && (
+                    {!isWizTextToImageLoading && !isWizImageToImageLoading && outputImage && (
                         <img
                             src={outputImage}
                             alt={'Latent Diffusion Model'}
@@ -122,7 +153,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                         />
                     )}
 
-                    {!isWizTextToImageLoading && !outputImage && (
+                    {!isWizTextToImageLoading && !isWizImageToImageLoading && !outputImage && (
                         <div
                             className={
                                 'w-full h-full bg-slate-400 flex justify-center items-center'
@@ -131,7 +162,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                         </div>
                     )}
 
-                    {isWizTextToImageLoading && (
+                    {(isWizTextToImageLoading || isWizImageToImageLoading) && (
                         <div className={'flex w-full h-full justify-center items-center'}>
                             <CircularProgress />
                         </div>
@@ -147,7 +178,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                                 backgroundColor: '#5d799d',
                             },
                         }}
-                        disabled={isWizTextToImageLoading}
+                        disabled={isWizTextToImageLoading || isWizImageToImageLoading}
                         onClick={generateImage}
                         startIcon={<AutoAwesomeIcon />}>
                         Generate
@@ -163,7 +194,7 @@ const CellOutputBox: React.FC<CellOutputBoxProps> = ({ openImageDialog, index, c
                                 color: '#5d799d',
                             },
                         }}
-                        disabled={isWizTextToImageLoading || outputImage === ''}
+                        disabled={isWizTextToImageLoading || isWizImageToImageLoading}
                         onClick={downloadImage}>
                         Download
                     </Button>
