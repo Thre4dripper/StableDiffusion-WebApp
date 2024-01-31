@@ -32,6 +32,17 @@ transform text prompts into captivating images and perform advanced manipulation
 1. **Responsive Design:** User-friendly interface that seamlessly works across devices.
 2. **Real-time Updates:** Stay informed with real-time updates for the most recent image transformations.
 
+#### Screenshots
+![Screenshot 2024-02-01 003834](https://github.com/Thre4dripper/StableDiffusion-WebApp/assets/82382156/703535cd-3dea-4c05-9a54-7e5b59fc722e)
+
+![Screenshot 2024-02-01 003541](https://github.com/Thre4dripper/StableDiffusion-WebApp/assets/82382156/4a49faf1-9405-4097-b454-e86157b072e6)
+
+![Screenshot 2024-02-01 003631](https://github.com/Thre4dripper/StableDiffusion-WebApp/assets/82382156/3465991e-ecbd-4f0f-a416-2311e1fd6297)
+
+![Screenshot 2024-02-01 003612](https://github.com/Thre4dripper/StableDiffusion-WebApp/assets/82382156/da36954e-d607-4f76-ae69-ade50e5d7a78)
+
+![Screenshot 2024-02-01 003802](https://github.com/Thre4dripper/StableDiffusion-WebApp/assets/82382156/8cedb128-f208-428b-b956-0d55f4f79a8f)
+
 ## Getting Started
 
 ### Prerequisites
