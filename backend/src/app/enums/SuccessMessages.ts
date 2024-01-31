@@ -17,4 +17,7 @@ export enum SuccessMessages {
     //wiz model
     WIZ_TEXT_TO_IMAGE_SUCCESS = 'Wiz Text To Image success',
     WIZ_IMAGE_TO_IMAGE_SUCCESS = 'Wiz Image To Image success',
+    //stability model
+    STABILITY_TEXT_TO_IMAGE_SUCCESS = 'Stability Text To Image success',
+    STABILITY_IMAGE_TO_IMAGE_SUCCESS = 'Stability Image To Image success',
 }

@@ -62,7 +62,7 @@ export default class StabilityTextToImageController extends MasterController<
         return new ResponseBuilder(
             StatusCodes.SUCCESS,
             response,
-            SuccessMessages.WIZ_TEXT_TO_IMAGE_SUCCESS
+            SuccessMessages.STABILITY_TEXT_TO_IMAGE_SUCCESS
         )
     }
 }
