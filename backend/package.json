@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "build": "tsc && copyfiles -u 1 \"src/**/*.{css,html,ico,png,svg}\" dist/src/",
+    "build": "tsc && copyfiles -u 1 \"src/**/*.{css,html,ico,png,svg}\" dist/src/ && copyfiles \"swagger.json\" dist/",
     "preview": "node dist/src/server.js",
     "start": "ts-node src/server.ts",
     "dev": "nodemon src/server.ts"
