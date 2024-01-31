@@ -47,14 +47,14 @@ export default class WizImageToImageController extends MasterController<
     ): Promise<any> {
         const {
             user: { _id },
-            file: initImage,
+            file: inputImage,
         } = allData
 
         const { positivePrompt, negativePrompt, width, height, samplingSteps, cfgScale, upScale } =
             body
 
         const response = await wizService.imageToImage(_id, {
-            initImage,
+            inputImage,
             positivePrompt,
             negativePrompt,
             width,

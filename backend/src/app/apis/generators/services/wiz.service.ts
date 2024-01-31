@@ -55,7 +55,7 @@ class WizService {
                 Authorization: `Bearer ${process.env.WIZ_API_KEY}`,
             },
             data: {
-                init_image: [this.bufferToBase64(data.initImage.buffer)],
+                init_images: [this.bufferToBase64(data.inputImage.buffer)],
                 prompt: data.positivePrompt,
                 negative_prompt: data.negativePrompt,
                 width: data.width,

@@ -9,5 +9,5 @@ export interface IWizTextToImage {
 }
 
 export interface IWizImageToImage extends IWizTextToImage {
-    initImage: Buffer
+    inputImage: Buffer
 }

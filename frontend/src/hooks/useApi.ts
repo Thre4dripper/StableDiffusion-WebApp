@@ -41,7 +41,8 @@ const useApi = ({ url, method = RequestMethod.GET }: UseApiConfig): UseApiResult
                 url,
                 method,
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type':
+                        body instanceof FormData ? 'multipart/form-data' : 'application/json',
                 },
                 data: body,
                 timeout: 120000,

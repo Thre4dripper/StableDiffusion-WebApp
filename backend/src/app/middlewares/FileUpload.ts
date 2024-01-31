@@ -16,7 +16,7 @@ const upload = multer({
 })
 const FileUpload = async (req: any, res: any, next: NextFunction) => {
     try {
-        const uploadFile = upload.single('init_image')
+        const uploadFile = upload.single('inputImage')
 
         uploadFile(req, res, (err: any) => {
             if (err instanceof MulterError) {
