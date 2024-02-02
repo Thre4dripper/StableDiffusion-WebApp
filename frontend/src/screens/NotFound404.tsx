@@ -1,104 +1,67 @@
-import React, { useState } from 'react'
-import { Box, Button, Container, Grid, Typography } from '@mui/material'
-import { keyframes } from '@mui/system'
-import { useNavigate } from 'react-router-dom'
+import React from 'react'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import Link from '@mui/material/Link'
+import Grid from '@mui/material/Grid'
+
+import image1 from '../assets/login-page-images/login_image1.webp'
+import image2 from '../assets/login-page-images/login_image2.webp'
+import image3 from '../assets/login-page-images/login_image3.png'
+import image4 from '../assets/login-page-images/login_image4.png'
+import image5 from '../assets/login-page-images/login_image5.jpg'
+import image6 from '../assets/login-page-images/login_image6.jpg'
+import image7 from '../assets/login-page-images/login_image7.png'
+import image8 from '../assets/login-page-images/login_image8.webp'
+import { ArrowBack } from '@mui/icons-material'
+
+const images = [image1, image2, image3, image4, image5, image6, image7, image8]
 
 const NotFound404: React.FC = () => {
-    const navigate = useNavigate()
-    const [isButtonClicked, setIsButtonClicked] = useState(false)
-
-    const handleGoBack = () => {
-        setIsButtonClicked(true)
-        setTimeout(() => {
-            setIsButtonClicked(false)
-            navigate('/')
-        }, 1000)
-    }
-
-    const bounce = keyframes`
-        0% {
-            transform: translateY(0);
-        }
-        50% {
-            transform: translateY(-20px);
-        }
-        100% {
-            transform: translateY(0);
-        }
-    `
-    const shake = keyframes`
-        0% {
-            transform: translateX(0);
-        }
-        25% {
-            transform: translateX(-5px);
-        }
-        50% {
-            transform: translateX(5px);
-        }
-        75% {
-            transform: translateX(-5px);
-        }
-        100% {
-            transform: translateX(0);
-        }
-    `
-    const fadeIn = keyframes`
-        0% {
-            opacity: 0;
-        }
-        100% {
-            opacity: 1;
-        }
-    `
+    const image = images[Math.floor(Math.random() * images.length)]
 
     return (
-        <Box
-            sx={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                minHeight: '100vh',
-                animation: `${fadeIn} 2s`,
-            }}>
-            <Container maxWidth='md'>
-                <Grid container spacing={2}>
-                    <Grid item xs={6}>
-                        <Typography variant='h1' sx={{ animation: `${bounce} 2s infinite` }}>
+        <Box sx={{ height: '100vh' }}>
+            <Grid container className='min-h-full bg-white lg:flex'>
+                <Grid item xs={12} lg={4} className='flex flex-col justify-end items-center'>
+                    <Box sx={{ maxWidth: 'lg' }} className={'flex flex-col gap-4'}>
+                        <Typography
+                            variant='h6'
+                            sx={{
+                                fontWeight: 'bold',
+                            }}
+                            className='text-indigo-600'>
                             404
                         </Typography>
-                        <Typography variant='h4'>
-                            Oops! Looks like you're lost in the digital wilderness.
+                        <Typography
+                            variant='h2'
+                            className='text-3xl font-bold tracking-tight text-gray-900 sm:text-5xl'>
+                            Page not found
                         </Typography>
-                        <Typography variant='body1'>
-                            The page you're searching for seems to have vanished into the virtual
-                            abyss. Don't worry; let's get you back on track.
+                        <Typography variant='body1' className='text-base leading-7 text-gray-600'>
+                            Sorry, we couldn’t find the page you’re looking for.
                         </Typography>
-                        <Button
-                            variant='contained'
-                            onClick={handleGoBack}
-                            sx={{
-                                'animation': isButtonClicked
-                                    ? `${shake} 0.82s cubic-bezier(.36,.07,.19,.97) both`
-                                    : 'none',
-                                '&:hover': { transform: 'scale(1.1)' },
-                                'marginTop': 2,
-                            }}>
-                            Take Me Home
-                        </Button>
-                    </Grid>
-                    <Grid item xs={6}>
-                        {/* Replace the SVG image URL with your own creative illustration */}
-                        <img
-                            src='https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569__340.jpg'
-                            alt='Creative Illustration'
-                            width={500}
-                            height={250}
-                            style={{ animation: `${bounce} 5s infinite` }}
-                        />
-                    </Grid>
+                        <Link href='/' underline={'none'} className='text-indigo-600'>
+                            <div className='flex items-center gap-2'>
+                                <ArrowBack className='' />
+                                <span className={'font-semibold'}>Go back home</span>
+                            </div>
+                        </Link>
+                    </Box>
                 </Grid>
-            </Container>
+                <Grid
+                    item
+                    xs={0}
+                    lg={8}
+                    sx={{
+                        display: { xs: 'none', lg: 'block' },
+                        position: 'relative',
+                        overflow: 'hidden',
+                    }}
+                    className={'relative'}>
+                    <div className='absolute inset-0 bg-gradient-to-r from-white to-transparent' />
+                    <img src={image} alt='' className='object-cover w-full h-screen' />
+                </Grid>
+            </Grid>
         </Box>
     )
 }
