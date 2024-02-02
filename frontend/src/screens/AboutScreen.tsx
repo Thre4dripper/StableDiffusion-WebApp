@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -15,25 +15,54 @@ import image5 from '../assets/login-page-images/login_image5.jpg'
 import image6 from '../assets/login-page-images/login_image6.jpg'
 import image7 from '../assets/login-page-images/login_image7.png'
 import image8 from '../assets/login-page-images/login_image8.webp'
+import useApi, { RequestMethod } from '../hooks/useApi.ts'
+import Loader from '../components/Loader.tsx'
 
 const images = [image1, image2, image3, image4, image5, image6, image7, image8]
 
+const links = [
+    'https://github.com/Stability-AI/stablediffusion',
+    'https://github.com/CompVis/stable-diffusion',
+    'https://github.com/camenduru/stable-diffusion-webui-colab',
+]
+
+interface LinkPreviewData {
+    title: string
+    description: string
+    image: string
+}
+
 const AboutScreen: React.FC = () => {
     const image = images[Math.floor(Math.random() * images.length)]
-    const links = [
-        {
-            originalLink: 'https://github.com/Stability-AI/stablediffusion',
-            proxyLink: '/github/Stability-AI/stablediffusion',
-        },
-        {
-            originalLink: 'https://github.com/CompVis/stable-diffusion',
-            proxyLink: '/github/CompVis/stable-diffusion',
-        },
-        {
-            originalLink: 'https://github.com/camenduru/stable-diffusion-webui-colab',
-            proxyLink: '/github/camenduru/stable-diffusion-webui-colab',
-        },
-    ]
+
+    const [previews, setPreviews] = useState<LinkPreviewData[]>([])
+
+    const { isLoading, isFailed, isSuccess, callApi } = useApi({
+        url: '/api/v1/link-preview',
+        method: RequestMethod.POST,
+    })
+
+    useEffect(() => {
+        callApi({
+            body: { urls: links },
+            onSuccess: (response) => {
+                console.log(response)
+                response?.data?.data.forEach((data: LinkPreviewData) => {
+                    setPreviews((prev) => [
+                        ...prev,
+                        {
+                            title: data.title,
+                            description: data.description,
+                            image: data.image,
+                        },
+                    ])
+                })
+            },
+            onError: (error) => {
+                console.error(error)
+            },
+        })
+    }, [callApi])
 
     return (
         <div className={'flex flex-col justify-center items-center'}>
@@ -113,27 +142,38 @@ const AboutScreen: React.FC = () => {
             <Typography variant='h4' component='div' mt={6}>
                 Featured Repositories
             </Typography>
-            <div className={'grid grid-cols-1 md:grid-cols-3 gap-8 my-10 mx-4 lg:mx-16'}>
-                {links.map((link) => (
-                    <Grow in timeout={1000} key={link.originalLink}>
-                        <Paper
-                            elevation={3}
-                            sx={{
-                                'textAlign': 'center',
-                                'boxShadow': 4,
-                                'overflow': 'hidden',
-                                '&:hover': {
-                                    boxShadow: 16,
-                                },
-                            }}>
-                            <LinkPreview
-                                originalLink={link.originalLink}
-                                proxyLink={link.proxyLink}
-                            />
-                        </Paper>
-                    </Grow>
-                ))}
-            </div>
+            {isLoading && (
+                <div className={'flex justify-center items-center p-4'}>
+                    <Loader />
+                </div>
+            )}
+            {isFailed && (
+                <div className={'flex justify-center items-center p-4'}>
+                    <Typography variant='h6' component='div'>
+                        Unable to fetch link preview
+                    </Typography>
+                </div>
+            )}
+            {isSuccess && (
+                <div className={'grid grid-cols-1 md:grid-cols-3 gap-8 my-10 mx-4 lg:mx-16'}>
+                    {previews.map((preview, index) => (
+                        <Grow in timeout={1000} key={index}>
+                            <Paper
+                                elevation={3}
+                                sx={{
+                                    'textAlign': 'center',
+                                    'boxShadow': 4,
+                                    'overflow': 'hidden',
+                                    '&:hover': {
+                                        boxShadow: 16,
+                                    },
+                                }}>
+                                <LinkPreview url={links[index]} {...preview} />
+                            </Paper>
+                        </Grow>
+                    ))}
+                </div>
+            )}
         </div>
     )
 }
