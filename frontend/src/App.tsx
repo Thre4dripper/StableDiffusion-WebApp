@@ -15,7 +15,9 @@ import axios from 'axios'
 
 const defaultTheme = createTheme()
 const App: React.FC = () => {
-    axios.defaults.baseURL = 'https://stable-diffusion-sdxl-backend.onrender.com'
+    axios.defaults.baseURL = import.meta.env.PROD
+        ? import.meta.env.VITE_REMOTE_API_URL
+        : import.meta.env.VITE_LOCAL_API_URL
     return (
         <ThemeProvider theme={defaultTheme}>
             <SnackbarProvider maxSnack={4}>
