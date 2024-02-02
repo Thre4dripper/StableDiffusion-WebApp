@@ -11,7 +11,7 @@ const NotFound404: React.FC = () => {
         setIsButtonClicked(true)
         setTimeout(() => {
             setIsButtonClicked(false)
-            navigate(-1)
+            navigate('/')
         }, 1000)
     }
 

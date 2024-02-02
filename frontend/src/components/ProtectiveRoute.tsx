@@ -8,10 +8,11 @@ import { AuthInitialState, UserData } from '../redux/reducers/authReducer.ts'
 import { RootState } from '../redux/store.ts'
 
 interface Props {
+    requireAuth: boolean
     children: React.ReactNode
 }
 
-const ProtectiveRoute: React.FC<Props> = ({ children }) => {
+const ProtectiveRoute: React.FC<Props> = ({ requireAuth, children }) => {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
@@ -24,6 +25,9 @@ const ProtectiveRoute: React.FC<Props> = ({ children }) => {
     })
 
     useEffect(() => {
+        if (!requireAuth) {
+            return
+        }
         const token = authStateToken || localStorage.getItem('token')
         if (!token) {
             navigate('/login')
@@ -56,9 +60,9 @@ const ProtectiveRoute: React.FC<Props> = ({ children }) => {
                 navigate('/login')
             },
         })
-    }, [authStateToken, callApi, dispatch, navigate, userData])
+    }, [authStateToken, callApi, dispatch, navigate, requireAuth, userData])
 
-    if (isLoading || isIdle) {
+    if ((isLoading || isIdle) && requireAuth) {
         return (
             <div className={'flex w-screen h-screen justify-center items-center'}>
                 <Loader />

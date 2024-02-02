@@ -24,7 +24,7 @@ const App: React.FC = () => {
                         <Route
                             path='/'
                             element={
-                                <ProtectiveRoute>
+                                <ProtectiveRoute requireAuth>
                                     <Wrapper>
                                         <HomeScreen />
                                     </Wrapper>
@@ -36,7 +36,7 @@ const App: React.FC = () => {
                         <Route
                             path='/generated-images'
                             element={
-                                <ProtectiveRoute>
+                                <ProtectiveRoute requireAuth>
                                     <Wrapper>
                                         <ImagesScreen />
                                     </Wrapper>
@@ -46,7 +46,7 @@ const App: React.FC = () => {
                         <Route
                             path='/model'
                             element={
-                                <ProtectiveRoute>
+                                <ProtectiveRoute requireAuth>
                                     <Wrapper>
                                         <ModelScreen />
                                     </Wrapper>
@@ -56,9 +56,11 @@ const App: React.FC = () => {
                         <Route
                             path='/about'
                             element={
-                                <Wrapper>
-                                    <AboutScreen />
-                                </Wrapper>
+                                <ProtectiveRoute requireAuth={false}>
+                                    <Wrapper>
+                                        <AboutScreen />
+                                    </Wrapper>
+                                </ProtectiveRoute>
                             }
                         />
                         <Route path='*' element={<NotFound404 />} />
