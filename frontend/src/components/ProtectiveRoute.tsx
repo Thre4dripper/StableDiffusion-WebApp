@@ -25,10 +25,10 @@ const ProtectiveRoute: React.FC<Props> = ({ requireAuth, children }) => {
     })
 
     useEffect(() => {
-        if (!requireAuth) {
+        const token = authStateToken || localStorage.getItem('token')
+        if (!requireAuth && !token) {
             return
         }
-        const token = authStateToken || localStorage.getItem('token')
         if (!token) {
             navigate('/login')
             return

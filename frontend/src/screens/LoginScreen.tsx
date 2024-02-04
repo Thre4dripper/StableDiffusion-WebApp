@@ -185,11 +185,7 @@ const LoginScreen: React.FC = () => {
                             Sign In
                         </Button>
                         <Grid container>
-                            <Grid item xs>
-                                <Link to={''} className={'underline'}>
-                                    Forgot password?
-                                </Link>
-                            </Grid>
+                            <Grid item xs></Grid>
                             <Grid item>
                                 <Link to={'/register'} className={'underline'}>
                                     {"Don't have an account? Sign Up"}
